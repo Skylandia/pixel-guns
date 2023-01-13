@@ -1,7 +1,8 @@
 package com.ultreon.mods.pixelguns.registry;
 
 import com.ultreon.mods.pixelguns.armor.ArmoredArmor;
-import com.ultreon.mods.pixelguns.client.item.renderer.*;
+import com.ultreon.mods.pixelguns.client.GeoModelGenerator;
+import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.item.*;
 import com.ultreon.mods.pixelguns.item.gun.variant.*;
 
@@ -47,7 +48,7 @@ public class ItemRegistry {
     public static final Item HEAVY_HANDGUN_BULLET = ItemRegistry.register("heavy_handgun_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
     public static final Item STANDARD_RIFLE_BULLET = ItemRegistry.register("standard_rifle_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
     public static final Item HEAVY_RIFLE_BULLET = ItemRegistry.register("heavy_rifle_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
-    public static final Item ROCKET = ItemRegistry.register("rocket", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
+    public static final Item ROCKET = ItemRegistry.register("rocket", new RocketItem());
     public static final Item ENERGY_BATTERY = ItemRegistry.register("energy_battery", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(12)){
         @Override
         public boolean hasGlint(ItemStack itemStack) {
@@ -84,14 +85,27 @@ public class ItemRegistry {
 
     // Register renderer
     public static void registerItemRenderers() {
-        GeoItemRenderer.registerItemRenderer(ItemRegistry.INFINITY_GUN, new InfinityGunItemRenderer());
-        GeoItemRenderer.registerItemRenderer(ItemRegistry.ROCKET_LAUNCHER, new RocketLauncherItemRenderer());
-        GeoItemRenderer.registerItemRenderer(ItemRegistry.KATANA, new KatanaItemRenderer());
-        GeoItemRenderer.registerItemRenderer(ItemRegistry.CROWBAR, new CrowbarItemRenderer());
-        GeoItemRenderer.registerItemRenderer(ItemRegistry.GRENADE, new GrenadeItemRenderer());
+        ItemRegistry.registerGunRenderer(INFINITY_GUN);
+        ItemRegistry.registerGunRenderer(ROCKET_LAUNCHER);
+        ItemRegistry.registerItemRenderer(ROCKET);
+        ItemRegistry.registerItemRenderer(KATANA);
+        ItemRegistry.registerItemRenderer(CROWBAR);
+        ItemRegistry.registerItemRenderer(GRENADE);
     }
 
-    // Register methods
+    /*
+     * REGISTER METHODS
+     */
+
+    // Renderer registry
+    public static void registerItemRenderer(Item item) {
+        GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item)));
+    }
+    public static void registerGunRenderer(Item item) {
+        GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item, "gun/")));
+    }
+
+    // Item registry
     private static Item register(Block block) {
         return ItemRegistry.register(new BlockItem(block, new Item.Settings()));
     }

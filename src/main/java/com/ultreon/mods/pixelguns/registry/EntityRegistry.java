@@ -1,18 +1,18 @@
 package com.ultreon.mods.pixelguns.registry;
 
-import com.ultreon.mods.pixelguns.PixelGuns;
-import com.ultreon.mods.pixelguns.client.entity.renderer.*;
+import com.ultreon.mods.pixelguns.client.GeoModelGenerator;
+import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.*;
 
 import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
 import com.ultreon.mods.pixelguns.entity.projectile.RocketEntity;
+import com.ultreon.mods.pixelguns.util.ResourcePath;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 public class EntityRegistry {
@@ -56,17 +56,20 @@ public class EntityRegistry {
     );
 
     public static void registerEntityRenderers() {
-        EntityRendererRegistry.register(EntityRegistry.GRENADE, GrenadeEntityRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.ROCKET, RocketEntityRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.NUCLEAR_BOMB, NuclearBombEntityRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.NUCLEAR_EXPLOSION, NuclearExplosionEntityRenderer::new);
-        EntityRendererRegistry.register(EntityRegistry.GAS, GasRenderer::new);
+        EntityRegistry.registerEntityRenderer(GRENADE);
+        EntityRegistry.registerEntityRenderer(ROCKET);
+        EntityRegistry.registerEntityRenderer(NUCLEAR_BOMB);
+        EntityRegistry.registerEntityRenderer(NUCLEAR_EXPLOSION);
+        EntityRegistry.registerEntityRenderer(GAS);
     }
 
+    private static void registerEntityRenderer(EntityType entityType) {
+        EntityRendererRegistry.register(entityType, (ctx) -> GeoRendererGenerator.generateEntityRenderer(ctx, GeoModelGenerator.generateEntityModel(entityType)));
+    }
     private static <T extends Entity> EntityType<T> register(String name, FabricEntityTypeBuilder<T> type) {
         return Registry.register(
             Registry.ENTITY_TYPE,
-            new Identifier(PixelGuns.MOD_ID, name),
+            ResourcePath.get(name),
             type.build()
         );
     }
