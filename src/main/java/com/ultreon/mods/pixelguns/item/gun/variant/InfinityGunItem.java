@@ -59,6 +59,10 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
         );
     }
 
+    public static boolean isShooting(ItemStack infinityGun) {
+        return infinityGun.getOrCreateSubNbt(NbtNames.INFINITY_GUN).getBoolean(NbtNames.IS_SHOOTING);
+    }
+
     @Override
     public void registerControllers(AnimationData data) {}
 
