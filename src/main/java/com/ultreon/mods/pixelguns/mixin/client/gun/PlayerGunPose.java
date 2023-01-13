@@ -41,7 +41,7 @@ public class PlayerGunPose {
     private void render(AbstractClientPlayerEntity player, float f, float g, MatrixStack poseStack, VertexConsumerProvider multiBufferSource, int i, CallbackInfo ci) {
         ItemStack itemInHand = player.getStackInHand(Hand.MAIN_HAND);
         if (itemInHand.getItem() instanceof InfinityGunItem) {
-            boolean isShooting = itemInHand.getOrCreateSubNbt(NbtNames.INFINITY_GUN).getBoolean(NbtNames.IS_SHOOTING);
+            boolean isShooting = InfinityGunItem.isShooting(itemInHand);
             if (isShooting) {
                 itemInHand.getOrCreateSubNbt(NbtNames.INFINITY_GUN).getInt(NbtNames.SHOOT_TICKS);
                 int tickCount = player.age;
