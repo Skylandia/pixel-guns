@@ -6,9 +6,8 @@ import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.sound.SoundEvent;
 
 public class LightPistolItem extends GunItem {
-    public LightPistolItem(Settings settings) {
+    public LightPistolItem() {
         super(
-                settings,
                 AmmoLoadingType.SEMI_AUTOMATIC,
                 5.5f,
                 250,

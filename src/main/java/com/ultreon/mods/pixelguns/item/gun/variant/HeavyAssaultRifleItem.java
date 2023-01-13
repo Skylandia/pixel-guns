@@ -7,9 +7,8 @@ import net.minecraft.sound.SoundEvent;
 
 public class HeavyAssaultRifleItem extends GunItem {
 
-    public HeavyAssaultRifleItem(Settings settings) {
+    public HeavyAssaultRifleItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.AUTOMATIC,
                 8.0f,
                 250,

@@ -34,9 +34,8 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-    public RocketLauncherItem(Settings settings) {
+    public RocketLauncherItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 25.0f,
                 250,

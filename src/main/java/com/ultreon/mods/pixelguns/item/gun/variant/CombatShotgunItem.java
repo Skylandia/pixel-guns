@@ -6,9 +6,8 @@ import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.sound.SoundEvent;
 
 public class CombatShotgunItem extends GunItem {
-    public CombatShotgunItem(Settings settings) {
+    public CombatShotgunItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 5.5f,
                 250,

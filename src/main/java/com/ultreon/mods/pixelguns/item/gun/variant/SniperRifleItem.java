@@ -6,9 +6,8 @@ import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.sound.SoundEvent;
 
 public class SniperRifleItem extends GunItem {
-    public SniperRifleItem(Settings settings) {
+    public SniperRifleItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 22.0f,
                 500,

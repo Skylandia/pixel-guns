@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -21,8 +22,8 @@ import software.bernie.geckolib3.util.GeckoLibUtil;
 
 public class GrenadeItem extends RangedWeaponItem implements IAnimatable {
 
-    public GrenadeItem(Settings settings) {
-        super(settings);
+    public GrenadeItem() {
+        super(new FabricItemSettings().maxCount(16).group(ModCreativeTab.WEAPONS));
     }
 
     @Override

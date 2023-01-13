@@ -38,9 +38,8 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-    public InfinityGunItem(Settings settings) {
+    public InfinityGunItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 80f,
                 250,

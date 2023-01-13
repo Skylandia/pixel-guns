@@ -1,5 +1,6 @@
 package com.ultreon.mods.pixelguns.item.gun;
 
+import com.ultreon.mods.pixelguns.item.ModCreativeTab;
 import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import io.netty.buffer.Unpooled;
@@ -7,6 +8,7 @@ import com.ultreon.mods.pixelguns.PixelGuns;
 import com.ultreon.mods.pixelguns.util.InventoryUtil;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -65,8 +67,8 @@ public abstract class GunItem extends Item {
     private final int reloadCycles;
     public final boolean isScoped;
 
-    public GunItem(Settings settings, AmmoLoadingType ammoLoadingType, float damage, int range, int fireCooldown, int magazineSize, Item ammunition, int reloadCooldown, float bulletSpread, float recoil, int pelletCount, LoadingType loadingType, SoundEvent[] reloadSounds, SoundEvent fireAudio, int reloadCycles, boolean isScoped, int[] reloadStages) {
-        super(settings);
+    public GunItem(AmmoLoadingType ammoLoadingType, float damage, int range, int fireCooldown, int magazineSize, Item ammunition, int reloadCooldown, float bulletSpread, float recoil, int pelletCount, LoadingType loadingType, SoundEvent[] reloadSounds, SoundEvent fireAudio, int reloadCycles, boolean isScoped, int[] reloadStages) {
+        super(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(1));
         this.ammoLoadingType = ammoLoadingType;
         this.damage = damage;
         this.range = range;

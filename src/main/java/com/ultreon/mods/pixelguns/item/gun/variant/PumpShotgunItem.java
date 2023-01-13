@@ -6,9 +6,8 @@ import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.sound.SoundEvent;
 
 public class PumpShotgunItem extends GunItem {
-    public PumpShotgunItem(Settings settings) {
+    public PumpShotgunItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 18.0f,
                 250,

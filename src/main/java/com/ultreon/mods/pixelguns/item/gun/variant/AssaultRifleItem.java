@@ -6,9 +6,8 @@ import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.sound.SoundEvent;
 
 public class AssaultRifleItem extends GunItem {
-    public AssaultRifleItem(Settings settings) {
+    public AssaultRifleItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.AUTOMATIC,
                 5.5f,
                 250,

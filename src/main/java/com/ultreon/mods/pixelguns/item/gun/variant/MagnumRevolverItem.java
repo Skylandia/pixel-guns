@@ -6,9 +6,8 @@ import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.sound.SoundEvent;
 
 public class MagnumRevolverItem extends GunItem {
-    public MagnumRevolverItem(Settings settings) {
+    public MagnumRevolverItem() {
         super(
-                settings,
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 11.0f,
                 250,
