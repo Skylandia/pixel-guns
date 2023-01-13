@@ -1,15 +1,18 @@
 package com.ultreon.mods.pixelguns.registry;
 
 import com.ultreon.mods.pixelguns.armor.ArmoredArmor;
+import com.ultreon.mods.pixelguns.client.item.renderer.*;
 import com.ultreon.mods.pixelguns.item.*;
 import com.ultreon.mods.pixelguns.item.gun.variant.*;
 
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 @SuppressWarnings("unused")
 public class ItemRegistry {
@@ -66,7 +69,7 @@ public class ItemRegistry {
     public static final Item ROCKET_LAUNCHER = ItemRegistry.register("rocket_launcher", new RocketLauncherItem());
 
     // Armor
-    public static final Item ARMORED_VEST = ItemRegistry.register("armored_vest", new ArmoredArmor());
+    public static final Item ARMORED_VEST = ItemRegistry.register("armored_vest", new ArmoredArmor(EquipmentSlot.CHEST));
     public static final Item GAS_MASK = ItemRegistry.register("gas_mask", new GasMaskItem());
 
     // Weapons
@@ -79,6 +82,14 @@ public class ItemRegistry {
     public static final Item UFO_INTERIOR = ItemRegistry.register(BlockRegistry.UFO_INTERIOR);
     public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ModCreativeTab.MISC);
 
+    // Register renderer
+    public static void registerItemRenderers() {
+        GeoItemRenderer.registerItemRenderer(ItemRegistry.INFINITY_GUN, new InfinityGunItemRenderer());
+        GeoItemRenderer.registerItemRenderer(ItemRegistry.ROCKET_LAUNCHER, new RocketLauncherItemRenderer());
+        GeoItemRenderer.registerItemRenderer(ItemRegistry.KATANA, new KatanaItemRenderer());
+        GeoItemRenderer.registerItemRenderer(ItemRegistry.CROWBAR, new CrowbarItemRenderer());
+        GeoItemRenderer.registerItemRenderer(ItemRegistry.GRENADE, new GrenadeItemRenderer());
+    }
 
     // Register methods
     private static Item register(Block block) {

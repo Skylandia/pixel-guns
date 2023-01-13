@@ -1,10 +1,8 @@
 package com.ultreon.mods.pixelguns.item;
 
 import com.ultreon.mods.pixelguns.armor.HazardArmor;
-import com.ultreon.mods.pixelguns.armor.ModArmorMaterials;
 import com.ultreon.mods.pixelguns.entity.GasEntity;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -14,7 +12,7 @@ import net.minecraft.world.World;
 public class GasMaskItem extends HazardArmor {
 
     public GasMaskItem() {
-        super(ModArmorMaterials.HAZARD, EquipmentSlot.HEAD, new FabricItemSettings().group(ModCreativeTab.MISC));
+        super(EquipmentSlot.HEAD);
     }
     
     @Override

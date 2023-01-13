@@ -1,10 +1,12 @@
 package com.ultreon.mods.pixelguns.registry;
 
 import com.ultreon.mods.pixelguns.PixelGuns;
+import com.ultreon.mods.pixelguns.client.entity.renderer.*;
 import com.ultreon.mods.pixelguns.entity.*;
 
 import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
 import com.ultreon.mods.pixelguns.entity.projectile.RocketEntity;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
@@ -52,6 +54,14 @@ public class EntityRegistry {
         FabricEntityTypeBuilder.create(SpawnGroup.MISC, GasEntity::new)
             .dimensions(EntityDimensions.fixed(1, 1))
     );
+
+    public static void registerEntityRenderers() {
+        EntityRendererRegistry.register(EntityRegistry.GRENADE, GrenadeEntityRenderer::new);
+        EntityRendererRegistry.register(EntityRegistry.ROCKET, RocketEntityRenderer::new);
+        EntityRendererRegistry.register(EntityRegistry.NUCLEAR_BOMB, NuclearBombEntityRenderer::new);
+        EntityRendererRegistry.register(EntityRegistry.NUCLEAR_EXPLOSION, NuclearExplosionEntityRenderer::new);
+        EntityRendererRegistry.register(EntityRegistry.GAS, GasRenderer::new);
+    }
 
     private static <T extends Entity> EntityType<T> register(String name, FabricEntityTypeBuilder<T> type) {
         return Registry.register(

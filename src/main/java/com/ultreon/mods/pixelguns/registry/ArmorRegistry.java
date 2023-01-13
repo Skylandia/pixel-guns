@@ -1,12 +1,15 @@
-package com.ultreon.mods.pixelguns.armor;
+package com.ultreon.mods.pixelguns.registry;
 
+import com.ultreon.mods.pixelguns.client.armor.renderer.ArmoredArmorRenderer;
+import com.ultreon.mods.pixelguns.client.armor.renderer.HazardArmorRenderer;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
-public enum ModArmorMaterials implements ArmorMaterial {
+public enum ArmorRegistry implements ArmorMaterial {
 
     ARMORED(
         "armored",
@@ -43,7 +46,12 @@ public enum ModArmorMaterials implements ArmorMaterial {
 
     record ProtectionAmounts(int helmet, int chestplate, int leggings, int boots) {}
 
-    ModArmorMaterials(String name, DurabilityAmounts durabilityAmounts, ProtectionAmounts protectionAmounts, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Ingredient ingredient) {
+    public static void registerArmorRenderers() {
+        GeoArmorRenderer.registerArmorRenderer(new ArmoredArmorRenderer(), ItemRegistry.ARMORED_VEST);
+        GeoArmorRenderer.registerArmorRenderer(new HazardArmorRenderer(), ItemRegistry.GAS_MASK);
+    }
+
+    ArmorRegistry(String name, DurabilityAmounts durabilityAmounts, ProtectionAmounts protectionAmounts, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Ingredient ingredient) {
         this.name = name;
         this.durabilityAmounts = durabilityAmounts;
         this.protectionAmounts = protectionAmounts;
