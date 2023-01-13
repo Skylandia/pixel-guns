@@ -1,27 +1,27 @@
-package com.ultreon.mods.pixelguns.util;
+package com.ultreon.mods.pixelguns.registry;
 
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
-import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 
-public class ModelPredicateProvider {
-    public static void registerModels() {
-        ModelPredicateProvider.registerGun(ItemRegistry.PISTOL);
-        ModelPredicateProvider.registerGun(ItemRegistry.HEAVY_PISTOL);
-        ModelPredicateProvider.registerGun(ItemRegistry.MAGNUM_REVOLVER);
-        ModelPredicateProvider.registerGun(ItemRegistry.MACHINE_PISTOL);
-        ModelPredicateProvider.registerGun(ItemRegistry.LIGHT_ASSAULT_RIFLE);
-        ModelPredicateProvider.registerGun(ItemRegistry.HEAVY_ASSAULT_RIFLE);
-        ModelPredicateProvider.registerGun(ItemRegistry.COMBAT_SHOTGUN);
-        ModelPredicateProvider.registerGun(ItemRegistry.CLASSIC_SNIPER_RIFLE);
+public class ModelPredicateRegistry {
+    public static void registerModelPredicates() {
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.PISTOL);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.HEAVY_PISTOL);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.MAGNUM_REVOLVER);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.MACHINE_PISTOL);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.LIGHT_ASSAULT_RIFLE);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.HEAVY_ASSAULT_RIFLE);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.COMBAT_SHOTGUN);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.CLASSIC_SNIPER_RIFLE);
+
         ModelPredicateProviderRegistry.register(ItemRegistry.ROCKET_LAUNCHER, new Identifier("pixel_guns", "aiming"), (stack, world, entity, seed) -> entity != null && MinecraftClient.getInstance().options.useKey.isPressed() && GunItem.isLoaded(stack) ? 1.0f : 0.0f);
     }
 
-    public static void registerGun(Item gun) {
+    private static void registerGunPredicate(Item gun) {
         ModelPredicateProviderRegistry.register(gun, new Identifier("pixel_guns", "load_tick"), (stack, world, entity, seed) -> entity != null && stack.getOrCreateNbt().getBoolean("isReloading") ? (float) stack.getOrCreateNbt().getInt("reloadTick") / 200.0f : 0.0f);
         ModelPredicateProviderRegistry.register(gun, new Identifier("pixel_guns", "loading"), (stack, world, entity, seed) -> entity != null && stack.getOrCreateNbt().getBoolean("isReloading") ? 1.0f : 0.0f);
         ModelPredicateProviderRegistry.register(gun, new Identifier("pixel_guns", "aiming"), (stack, world, entity, seed) -> entity != null && MinecraftClient.getInstance().options.useKey.isPressed() && GunItem.isLoaded(stack) ? 1.0f : 0.0f);

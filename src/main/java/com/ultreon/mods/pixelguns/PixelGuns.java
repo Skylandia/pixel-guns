@@ -18,8 +18,6 @@ public class PixelGuns implements ModInitializer {
     public static final String MOD_ID = "pixel_guns";
     public static final Logger LOGGER = LoggerFactory.getLogger("pixel_guns");
     public static final Identifier RECOIL_PACKET_ID = new Identifier("pixel_guns", "recoil");
-    
-    public static final String NBT_NAME = "pixelGuns";
 
     public void onInitialize() {
         new EntityRegistry();
