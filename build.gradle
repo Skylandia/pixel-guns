@@ -50,6 +50,12 @@ repositories {
 
 loom {
     accessWidenerPath = file("src/main/resources/pixel_guns.accesswidener")
+
+    runs {
+        client {
+            vmArgs "-Dgeckolib.disable_examples=true"
+        }
+    }
 }
 
 dependencies {
