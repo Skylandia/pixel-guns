@@ -1,6 +1,5 @@
 package com.ultreon.mods.pixelguns.client;
 
-import com.ultreon.mods.pixelguns.PixelGuns;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ArmorMaterial;
@@ -11,7 +10,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class GeoModelGenerator {
-    public static <T extends IAnimatable> AnimatedGeoModel<T> generateEntityModel(EntityType entityType) {
+    public static <T extends IAnimatable> AnimatedGeoModel<T> generateEntityModel(EntityType<? extends IAnimatable> entityType) {
         String entityName = Registry.ENTITY_TYPE.getId(entityType).getPath();
         return new AnimatedGeoModel<>() {
             @Override
@@ -35,7 +34,6 @@ public class GeoModelGenerator {
     }
     public static <T extends IAnimatable> AnimatedGeoModel<T> generateItemModel(Item item, String texturesPath) {
         String itemName = Registry.ITEM.getId(item).getPath();
-        PixelGuns.LOGGER.info(itemName);
         return new AnimatedGeoModel<>() {
             @Override
             public Identifier getAnimationResource(T animatable) {
@@ -58,17 +56,17 @@ public class GeoModelGenerator {
         return new AnimatedGeoModel<>() {
             @Override
             public Identifier getAnimationResource(T animatable) {
-                return ResourcePath.get("animations/" + armorName + ".animation.json");
+                return ResourcePath.get("animations/" + armorName + "_armor.animation.json");
             }
 
             @Override
             public Identifier getModelResource(T animatable) {
-                return ResourcePath.get("geo/" + armorName + ".geo.json");
+                return ResourcePath.get("geo/" + armorName + "_armor.geo.json");
             }
 
             @Override
             public Identifier getTextureResource(T animatable) {
-                return ResourcePath.get("textures/armor/" + armorName + ".png");
+                return ResourcePath.get("textures/armor/" + armorName + "_armor.png");
             }
         };
     }
