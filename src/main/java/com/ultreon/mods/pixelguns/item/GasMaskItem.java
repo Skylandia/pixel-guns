@@ -8,8 +8,9 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
+import software.bernie.geckolib3.core.IAnimatable;
 
-public class GasMaskItem extends HazardArmor {
+public class GasMaskItem extends HazardArmor implements IAnimatable {
 
     public GasMaskItem() {
         super(EquipmentSlot.HEAD);
