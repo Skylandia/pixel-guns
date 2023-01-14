@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.registry.Registry;
+import software.bernie.geckolib3.core.IAnimatable;
 
 public class EntityRegistry {
 
@@ -60,10 +61,10 @@ public class EntityRegistry {
         EntityRegistry.registerEntityRenderer(ROCKET);
         EntityRegistry.registerEntityRenderer(NUCLEAR_BOMB);
         EntityRegistry.registerEntityRenderer(NUCLEAR_EXPLOSION);
-        EntityRegistry.registerEntityRenderer(GAS);
+//        EntityRegistry.registerEntityRenderer(GAS);
     }
 
-    private static void registerEntityRenderer(EntityType entityType) {
+    private static void registerEntityRenderer(EntityType<? extends IAnimatable> entityType) {
         EntityRendererRegistry.register(entityType, (ctx) -> GeoRendererGenerator.generateEntityRenderer(ctx, GeoModelGenerator.generateEntityModel(entityType)));
     }
     private static <T extends Entity> EntityType<T> register(String name, FabricEntityTypeBuilder<T> type) {
