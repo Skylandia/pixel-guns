@@ -30,8 +30,7 @@
 		"category": "master", "sounds": [
 			"pixel_guns:gun/fire/smg_machinepistol_1",
 			"pixel_guns:gun/fire/smg_machinepistol_2",
-			"pixel_guns:gun/fire/smg_machinepistol_3",
-			"pixel_guns:gun/fire/smg_machinepistol_4"
+			"pixel_guns:gun/fire/smg_machinepistol_3"
 		]
 	},
 
