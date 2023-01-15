@@ -211,11 +211,11 @@ public abstract class GunItem extends Item {
             int range = this.range;
 
             // The following code handles the hit detection within 2ms, otherwise it silently fails
-            final Runnable stuffToDo = new Thread(() -> {
-                handleHit(getHitResult(world, player, player.getEyePos(), bulletVector, range), world, player);
-            });
+            final Runnable stuffToDo = new Thread(() ->
+                handleHit(getHitResult(world, player, player.getEyePos(), bulletVector, range), world, player)
+            );
             final ExecutorService executor = Executors.newSingleThreadExecutor();
-            final Future future = executor.submit(stuffToDo);
+            final Future<?> future = executor.submit(stuffToDo);
             executor.shutdown(); // This does not cancel the already-scheduled task.
 
             try {
@@ -282,7 +282,6 @@ public abstract class GunItem extends Item {
 
     public enum AmmoLoadingType {
         SEMI_AUTOMATIC,
-        BURST,
         AUTOMATIC
     }
 
