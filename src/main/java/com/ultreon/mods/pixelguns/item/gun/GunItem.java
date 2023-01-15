@@ -51,7 +51,7 @@ public abstract class GunItem extends Item {
     private final AmmoLoadingType ammoLoadingType;
     protected final float damage;
     protected final int range;
-    protected final int fireCooldown;
+    public final int fireCooldown;
     private final int magazineSize;
     public final Item ammunition;
     private final int reloadCooldown;

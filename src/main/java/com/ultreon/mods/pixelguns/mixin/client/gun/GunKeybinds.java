@@ -10,7 +10,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Hand;
 
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,10 +28,10 @@ public abstract class GunKeybinds {
 
     @Inject(method = "handleInputEvents", at = @At("TAIL"))
     public void handleGunShoot(CallbackInfo info) {
-        if (this.player.getMainHandStack().getItem() instanceof GunItem) {
-            if (MinecraftClient.getInstance().options.attackKey.isPressed()) {
-                PacketByteBuf buf = PacketByteBufs.create();
-                ClientPlayNetworking.send(PacketRegistry.GUN_SHOOT, buf);
+        if (this.player.getMainHandStack().getItem() instanceof GunItem gunItem) {
+            if (MinecraftClient.getInstance().options.attackKey.isPressed() && this.itemUseCooldown == 0) {
+                this.itemUseCooldown = gunItem.fireCooldown;
+                ClientPlayNetworking.send(PacketRegistry.GUN_SHOOT, PacketByteBufs.create());
             }
         }
     }
@@ -51,14 +50,14 @@ public abstract class GunKeybinds {
 
     // Prevents default item use cooldown when firing gun
 
-    @Inject(method = "doItemUse", at = @At("RETURN"))
+    @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     public void preventGunUseCooldown(CallbackInfo ci) {
         if (this.player == null) {
             return;
         }
-        ItemStack itemStack = this.player.getStackInHand(Hand.MAIN_HAND);
-        if (!itemStack.isEmpty() && itemStack.getItem() instanceof GunItem) {
-            this.itemUseCooldown = 0;
+        ItemStack itemStack = this.player.getMainHandStack();
+        if (itemStack.getItem() instanceof GunItem) {
+            ci.cancel();
         }
     }
 }
