@@ -55,6 +55,9 @@ loom {
         client {
             vmArgs "-Dgeckolib.disable_examples=true"
         }
+        server {
+            vmArgs "-Dgeckolib.disable_examples=true"
+        }
     }
 }
 
