@@ -30,7 +30,7 @@ public abstract class GunKeybinds {
     @Inject(method = "handleInputEvents", at = @At("TAIL"))
     public void handleGunShoot(CallbackInfo info) {
         if (this.player.getMainHandStack().getItem() instanceof GunItem) {
-            if (KeybindRegistry.shoot.isPressed()) {
+            if (MinecraftClient.getInstance().options.attackKey.isPressed()) {
                 PacketByteBuf buf = PacketByteBufs.create();
                 ClientPlayNetworking.send(PacketRegistry.GUN_SHOOT, buf);
             }
