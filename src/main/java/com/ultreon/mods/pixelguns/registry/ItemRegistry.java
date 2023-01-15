@@ -87,6 +87,8 @@ public class ItemRegistry {
     public static void registerItemRenderers() {
         ItemRegistry.registerGunRenderer(INFINITY_GUN);
         ItemRegistry.registerGunRenderer(ROCKET_LAUNCHER);
+        ItemRegistry.registerItemRenderer(GAS_MASK);
+        // ItemRegistry.registerItemRenderer(ARMORED_VEST);
         ItemRegistry.registerItemRenderer(ROCKET);
         ItemRegistry.registerItemRenderer(KATANA);
         ItemRegistry.registerItemRenderer(CROWBAR);

@@ -2,16 +2,15 @@ package com.ultreon.mods.pixelguns.item.gun;
 
 import com.ultreon.mods.pixelguns.item.ModCreativeTab;
 import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
+import com.ultreon.mods.pixelguns.registry.PacketRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import io.netty.buffer.Unpooled;
-import com.ultreon.mods.pixelguns.PixelGuns;
 import com.ultreon.mods.pixelguns.util.InventoryUtil;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -31,7 +30,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -170,22 +168,6 @@ public abstract class GunItem extends Item {
         }
     }
 
-    public TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity user, @NotNull Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (world.isClient && !MinecraftClient.getInstance().options.attackKey.isPressed()) {
-            return TypedActionResult.fail(itemStack);
-        }
-        if (hand == Hand.MAIN_HAND && !user.isSprinting() && GunItem.isLoaded(itemStack)) {
-            this.shoot(world, user, itemStack);
-            if (this.reloadCycles > 1) {
-                itemStack.getOrCreateNbt().putInt("currentCycle", itemStack.getOrCreateNbt().getInt("Clip"));
-            }
-            itemStack.getOrCreateNbt().putInt("reloadTick", 0);
-            itemStack.getOrCreateNbt().putBoolean("isReloading", false);
-        }
-        return TypedActionResult.fail(itemStack);
-    }
-
     public HitResult getHitResult(World world, PlayerEntity player, Vec3d origin, Vec3d direction, double maxDistance) {
         Vec3d destination = origin.add(direction.multiply(maxDistance));
         // The following line of code needs optimizing
@@ -217,46 +199,45 @@ public abstract class GunItem extends Item {
 
 
 
-    public void shoot(World world, PlayerEntity user, ItemStack stack) {
-        float kick = user.getPitch() - this.getRecoil();
-        user.getItemCooldownManager().set(this, this.fireCooldown);
-        if (!world.isClient()) {
-            for (int i = 0; i < this.pelletCount; ++i) {
+    public void shoot(ServerPlayerEntity player, ItemStack stack) {
+        ServerWorld world = player.getWorld();
+        float kick = player.getPitch() - this.getRecoil();
+        player.getItemCooldownManager().set(this, this.fireCooldown);
+        for (int i = 0; i < this.pelletCount; ++i) {
 
-                Random r = new Random();
-                Vec3d bulletVector = user.getRotationVector().add(new Vec3d(r.nextGaussian(), r.nextGaussian(), r.nextGaussian()).multiply(this.bulletSpread / 10));
+            Random r = new Random();
+            Vec3d bulletVector = player.getRotationVector().add(new Vec3d(r.nextGaussian(), r.nextGaussian(), r.nextGaussian()).multiply(this.bulletSpread / 10));
 
-                int range = this.range;
+            int range = this.range;
 
-                // The following code handles the hit detection within 2ms, otherwise it silently fails
-                final Runnable stuffToDo = new Thread(() -> {
-                    handleHit(getHitResult(world, user, user.getEyePos(), bulletVector, range), (ServerWorld) world, user);
-                });
-                final ExecutorService executor = Executors.newSingleThreadExecutor();
-                final Future future = executor.submit(stuffToDo);
-                executor.shutdown(); // This does not cancel the already-scheduled task.
+            // The following code handles the hit detection within 2ms, otherwise it silently fails
+            final Runnable stuffToDo = new Thread(() -> {
+                handleHit(getHitResult(world, player, player.getEyePos(), bulletVector, range), world, player);
+            });
+            final ExecutorService executor = Executors.newSingleThreadExecutor();
+            final Future future = executor.submit(stuffToDo);
+            executor.shutdown(); // This does not cancel the already-scheduled task.
 
-                try {
-                    future.get(2, TimeUnit.MILLISECONDS);
-                }
-                catch (Exception ie) {
-                    /* Handle the interruption. Or ignore it. */
-                }
-                if (!executor.isTerminated())
-                    executor.shutdownNow(); // If you want to stop the code that hasn't finished.
-                // end of "the following code"
-
+            try {
+                future.get(2, TimeUnit.MILLISECONDS);
             }
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeFloat(kick);
-            ServerPlayNetworking.send((ServerPlayerEntity) user, PixelGuns.RECOIL_PACKET_ID, buf);
-//            user.setXRot(kick);
+            catch (Exception ie) {
+                /* Handle the interruption. Or ignore it. */
+            }
+            if (!executor.isTerminated())
+                executor.shutdownNow(); // If you want to stop the code that hasn't finished.
+            // end of "the following code"
+
         }
-        if (!user.getAbilities().creativeMode) {
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeFloat(kick);
+        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
+
+        if (!player.getAbilities().creativeMode) {
             this.useAmmo(stack);
-//            stack.damage(10, (LivingEntity) user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
         }
-        playFireAudio(world, user);
+        this.playFireAudio(world, player);
     }
 
     public void playFireAudio(World world, PlayerEntity user) {
@@ -264,7 +245,7 @@ public abstract class GunItem extends Item {
     }
 
     protected float getRecoil() {
-        return MinecraftClient.getInstance().options.useKey.isPressed() ? this.recoil / 2.0f : this.recoil;
+        return this.recoil;
     }
 
     protected void useAmmo(ItemStack stack) {

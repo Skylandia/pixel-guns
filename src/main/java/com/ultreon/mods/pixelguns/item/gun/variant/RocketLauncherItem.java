@@ -1,9 +1,9 @@
 package com.ultreon.mods.pixelguns.item.gun.variant;
 
-import com.ultreon.mods.pixelguns.PixelGuns;
 import com.ultreon.mods.pixelguns.entity.projectile.RocketEntity;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
+import com.ultreon.mods.pixelguns.registry.PacketRegistry;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -57,30 +57,31 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
     }
 
     @Override
-    public void shoot(World world, PlayerEntity player, ItemStack stack) {
-        if (world instanceof ServerWorld serverWorld) {
-            sendAnimationPacket(ANIM_FIRE, serverWorld, player, stack);
-        }
+    public void shoot(ServerPlayerEntity player, ItemStack stack) {
+        ServerWorld world = player.getWorld();
+
+        this.sendAnimationPacket(ANIM_FIRE, world, player, stack);
 
         float kick = player.getPitch() - this.getRecoil();
         player.getItemCooldownManager().set(this, this.fireCooldown);
-        if (!world.isClient()) {
-            RocketEntity rocket = new RocketEntity(world, player);
-            rocket.setPosition(player.getEyePos().subtract(0, 0.1, 0));
-            rocket.setPitch(player.getPitch());
 
-            rocket.setVelocity(player.getRotationVector().normalize().multiply(1.5));
-            world.spawnEntity(rocket);
+        RocketEntity rocket = new RocketEntity(world, player);
+        rocket.setPosition(player.getEyePos().subtract(0, 0.1, 0));
+        rocket.setPitch(player.getPitch());
+
+        rocket.setVelocity(player.getRotationVector().normalize().multiply(1.5));
+        world.spawnEntity(rocket);
 
 
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeFloat(kick);
-            ServerPlayNetworking.send((ServerPlayerEntity) player, PixelGuns.RECOIL_PACKET_ID, buf);
-        }
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeFloat(kick);
+        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
+
         if (!player.getAbilities().creativeMode) {
             this.useAmmo(stack);
         }
-        playFireAudio(world, player);
+
+        this.playFireAudio(world, player);
     }
 
     @Override

@@ -10,6 +10,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -72,8 +73,8 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
     }
 
     @Override
-    public void shoot(World world, PlayerEntity user, ItemStack stack) {
-        super.shoot(world, user, stack);
+    public void shoot(ServerPlayerEntity user, ItemStack stack) {
+        super.shoot(user, stack);
         NbtCompound infinityGun = stack.getOrCreateSubNbt(NbtNames.INFINITY_GUN);
         infinityGun.putBoolean(NbtNames.IS_SHOOTING, true);
     }
