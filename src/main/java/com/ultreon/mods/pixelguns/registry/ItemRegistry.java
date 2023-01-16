@@ -66,7 +66,7 @@ public class ItemRegistry {
     public static final Item LIGHT_ASSAULT_RIFLE = ItemRegistry.register("assaultrifle_light", new AssaultRifleItem());
     public static final Item HEAVY_ASSAULT_RIFLE = ItemRegistry.register("assaultrifle_heavy", new HeavyAssaultRifleItem());
     public static final Item CLASSIC_SNIPER_RIFLE = ItemRegistry.register("sniper_classic", new SniperRifleItem());
-    public static final Item INFINITY_GUN = ItemRegistry.register("infinity_gun", new InfinityGunItem());
+//    public static final Item INFINITY_GUN = ItemRegistry.register("infinity_gun", new InfinityGunItem());
     public static final Item ROCKET_LAUNCHER = ItemRegistry.register("rocket_launcher", new RocketLauncherItem());
 
     // Armor
@@ -85,7 +85,7 @@ public class ItemRegistry {
 
     // Register renderer
     public static void registerItemRenderers() {
-        ItemRegistry.registerGunRenderer(INFINITY_GUN);
+//        ItemRegistry.registerGunRenderer(INFINITY_GUN);
         ItemRegistry.registerGunRenderer(ROCKET_LAUNCHER);
         ItemRegistry.registerItemRenderer(GAS_MASK);
         // ItemRegistry.registerItemRenderer(ARMORED_VEST);
