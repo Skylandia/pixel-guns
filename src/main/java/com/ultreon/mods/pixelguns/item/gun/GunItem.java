@@ -185,7 +185,7 @@ public abstract class GunItem extends Item {
         return hitResult;
     }
 
-    protected void handleHit(HitResult result, ServerWorld world, PlayerEntity damageSource) {
+    protected void handleHit(HitResult result, ServerWorld world, ServerPlayerEntity damageSource) {
         if (result instanceof EntityHitResult entityHitResult) {
             entityHitResult.getEntity().damage(DamageSource.player(damageSource), this.damage);
 
@@ -219,7 +219,7 @@ public abstract class GunItem extends Item {
             executor.shutdown(); // This does not cancel the already-scheduled task.
 
             try {
-                future.get(2, TimeUnit.MILLISECONDS);
+                future.get(5, TimeUnit.MILLISECONDS);
             }
             catch (Exception ie) {
                 /* Handle the interruption. Or ignore it. */
