@@ -15,7 +15,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -33,16 +32,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -168,30 +160,15 @@ public abstract class GunItem extends Item {
         }
     }
 
-    public HitResult getHitResult(World world, PlayerEntity player, Vec3d origin, Vec3d direction, double maxDistance) {
-        Vec3d destination = origin.add(direction.multiply(maxDistance));
-        // The following line of code needs optimizing
-        HitResult hitResult = world.raycast(new RaycastContext(origin, destination, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, player));
-        if (hitResult.getType() != HitResult.Type.MISS) {
-            destination = hitResult.getPos();
-        }
-        // Maybe this line too, run a test to find out
-        EntityHitResult entityHitResult = ProjectileUtil.getEntityCollision(world, player, origin, destination, player.getBoundingBox().stretch(direction.multiply(maxDistance)).expand(1.0), (entity) -> true);
-        if (entityHitResult != null) {
-            hitResult = entityHitResult;
-        }
-
-
-        return hitResult;
-    }
-
     protected void handleHit(HitResult result, ServerWorld world, ServerPlayerEntity damageSource) {
         if (result instanceof EntityHitResult entityHitResult) {
             entityHitResult.getEntity().damage(DamageSource.player(damageSource), this.damage);
 
 //            PixelGuns.LOGGER.info(damageSource.distanceTo(entityHitResult.getEntity()) + " " + damage + " " + entityHitResult.getEntity().getType().getUntranslatedName());
-        } else {
-            BlockHitResult blockHitResult = (BlockHitResult) result;
+        } else if (result instanceof BlockHitResult blockHitResult) {
+            if (blockHitResult.getType() == HitResult.Type.MISS) {
+                return;
+            }
             ParticleEffect particleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(blockHitResult.getBlockPos()));
             world.spawnParticles(particleEffect, blockHitResult.getPos().x, blockHitResult.getPos().y, blockHitResult.getPos().z, 1, 0, 0, 0, 1);
         }
@@ -204,30 +181,8 @@ public abstract class GunItem extends Item {
         float kick = player.getPitch() - this.getRecoil();
         player.getItemCooldownManager().set(this, this.fireCooldown);
         for (int i = 0; i < this.pelletCount; ++i) {
-
-            Random r = new Random();
-            Vec3d bulletVector = player.getRotationVector().add(new Vec3d(r.nextGaussian(), r.nextGaussian(), r.nextGaussian()).multiply(this.bulletSpread / 10));
-
-            int range = this.range;
-
-            // The following code handles the hit detection within 2ms, otherwise it silently fails
-            final Runnable stuffToDo = new Thread(() ->
-                handleHit(getHitResult(world, player, player.getEyePos(), bulletVector, range), world, player)
-            );
-            final ExecutorService executor = Executors.newSingleThreadExecutor();
-            final Future<?> future = executor.submit(stuffToDo);
-            executor.shutdown(); // This does not cancel the already-scheduled task.
-
-            try {
-                future.get(5, TimeUnit.MILLISECONDS);
-            }
-            catch (Exception ie) {
-                /* Handle the interruption. Or ignore it. */
-            }
-            if (!executor.isTerminated())
-                executor.shutdownNow(); // If you want to stop the code that hasn't finished.
-            // end of "the following code"
-
+            // TODO bullet spread
+            this.handleHit(GunHitscanHelper.getCollision(player, this.range), world, player);
         }
 
         PacketByteBuf buf = PacketByteBufs.create();
