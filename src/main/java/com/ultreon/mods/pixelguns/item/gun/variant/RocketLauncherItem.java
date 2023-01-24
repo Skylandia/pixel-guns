@@ -36,22 +36,22 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
 
     public RocketLauncherItem() {
         super(
-                GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
-                25.0f,
+            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            25.0f,
             128,
-                30,
-                1,
-                ItemRegistry.ROCKET,
-                30,
-                0,
-                0,
-                1,
-                LoadingType.INDIVIDUAL,
-                new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_GENERIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
-                SoundRegistry.SNIPER_CLASSIC,
-                1,
-                false,
-                new int[] {1, 8, 17}
+            30,
+            1,
+            ItemRegistry.ROCKET,
+            30,
+            0,
+            0,
+            1,
+            LoadingType.INDIVIDUAL,
+            new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_GENERIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
+            SoundRegistry.SNIPER_CLASSIC,
+            1,
+            false,
+            new int[] {1, 8, 17}
         );
         GeckoLibNetwork.registerSyncable(this);
     }

@@ -9,22 +9,22 @@ public class HeavyAssaultRifleItem extends GunItem {
 
     public HeavyAssaultRifleItem() {
         super(
-                GunItem.AmmoLoadingType.AUTOMATIC,
-                8.0f,
+            GunItem.AmmoLoadingType.AUTOMATIC,
+            8.0f,
             128,
-                3,
-                50,
-                ItemRegistry.STANDARD_RIFLE_BULLET,
-                48,
-                0.125f,
-                2.5f,
-                1,
-                LoadingType.CLIP,
-                new SoundEvent[] {SoundRegistry.RELOAD_HEAVY_AR_P1, SoundRegistry.RELOAD_HEAVY_AR_P2, SoundRegistry.RELOAD_HEAVY_AR_P3},
-                SoundRegistry.ASSAULTRIFLE_HEAVY,
-                1,
-                false,
-                new int[] {6, 22, 40}
+            3,
+            50,
+            ItemRegistry.STANDARD_RIFLE_BULLET,
+            48,
+            0.125f,
+            2.5f,
+            1,
+            LoadingType.CLIP,
+            new SoundEvent[] {SoundRegistry.RELOAD_HEAVY_AR_P1, SoundRegistry.RELOAD_HEAVY_AR_P2, SoundRegistry.RELOAD_HEAVY_AR_P3},
+            SoundRegistry.ASSAULTRIFLE_HEAVY,
+            1,
+            false,
+            new int[] {6, 22, 40}
         );
     }
 }

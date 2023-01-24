@@ -8,22 +8,22 @@ import net.minecraft.sound.SoundEvent;
 public class CombatShotgunItem extends GunItem {
     public CombatShotgunItem() {
         super(
-                GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
-                5.5f,
+            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            5.5f,
             128,
-                14,
-                6,
-                ItemRegistry.SHOTGUN_SHELL,
-                26,
-                9.25f,
-                8.25f,
-                5,
-                LoadingType.INDIVIDUAL,
-                new SoundEvent[] {SoundRegistry.RELOAD_COMBAT_SHOTGUN_P1, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P2, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P3},
-                SoundRegistry.SHOTGUN_COMBAT,
-                6,
-                false,
-                new int[] {1, 4, 13}
+            14,
+            6,
+            ItemRegistry.SHOTGUN_SHELL,
+            26,
+            9.25f,
+            8.25f,
+            5,
+            LoadingType.INDIVIDUAL,
+            new SoundEvent[] {SoundRegistry.RELOAD_COMBAT_SHOTGUN_P1, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P2, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P3},
+            SoundRegistry.SHOTGUN_COMBAT,
+            6,
+            false,
+            new int[] {1, 4, 13}
         );
     }
 }

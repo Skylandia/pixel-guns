@@ -8,22 +8,22 @@ import net.minecraft.sound.SoundEvent;
 public class HeavyPistolItem extends GunItem {
     public HeavyPistolItem() {
         super(
-                GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
-                11.0f,
+            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            11.0f,
             128,
-                5,
-                7,
-                ItemRegistry.HEAVY_HANDGUN_BULLET,
-                26,
-                0.25f,
-                7.5f,
-                1,
-                LoadingType.CLIP,
-                new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_PISTOL_P1, SoundRegistry.RELOAD_GENERIC_PISTOL_P2, SoundRegistry.RELOAD_GENERIC_PISTOL_P3},
-                SoundRegistry.PISTOL_HEAVY,
-                1,
-                false,
-                new int[] {6, 16, 20}
+            5,
+            7,
+            ItemRegistry.HEAVY_HANDGUN_BULLET,
+            26,
+            0.25f,
+            7.5f,
+            1,
+            LoadingType.CLIP,
+            new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_PISTOL_P1, SoundRegistry.RELOAD_GENERIC_PISTOL_P2, SoundRegistry.RELOAD_GENERIC_PISTOL_P3},
+            SoundRegistry.PISTOL_HEAVY,
+            1,
+            false,
+            new int[] {6, 16, 20}
         );
     }
 }

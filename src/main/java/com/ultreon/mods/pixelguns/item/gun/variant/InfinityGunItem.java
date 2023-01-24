@@ -39,22 +39,22 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
 
     public InfinityGunItem() {
         super(
-                GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
-                80f,
+            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            80f,
             128,
-                30,
-                5,
-                ItemRegistry.ENERGY_BATTERY,
-                40,
-                0,
-                20,
-                1,
-                LoadingType.CLIP,
-                new SoundEvent[] {SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_DOOR_OPEN},
-                SoundEvents.BLOCK_BEACON_DEACTIVATE,
-                1,
-                false,
-                new int[] {5, -1, -1}
+            30,
+            5,
+            ItemRegistry.ENERGY_BATTERY,
+            40,
+            0,
+            20,
+            1,
+            LoadingType.CLIP,
+            new SoundEvent[] {SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_DOOR_OPEN},
+            SoundEvents.BLOCK_BEACON_DEACTIVATE,
+            1,
+            false,
+            new int[] {5, -1, -1}
         );
     }
 
