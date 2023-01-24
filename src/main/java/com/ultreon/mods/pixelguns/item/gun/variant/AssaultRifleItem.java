@@ -10,7 +10,7 @@ public class AssaultRifleItem extends GunItem {
         super(
                 GunItem.AmmoLoadingType.AUTOMATIC,
                 5.5f,
-                250,
+                128,
                 2,
                 30,
                 ItemRegistry.STANDARD_RIFLE_BULLET,

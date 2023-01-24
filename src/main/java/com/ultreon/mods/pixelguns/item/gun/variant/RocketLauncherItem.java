@@ -38,7 +38,7 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
         super(
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 25.0f,
-                250,
+            128,
                 30,
                 1,
                 ItemRegistry.ROCKET,

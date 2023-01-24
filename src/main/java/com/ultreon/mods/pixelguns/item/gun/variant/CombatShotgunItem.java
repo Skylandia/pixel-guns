@@ -10,7 +10,7 @@ public class CombatShotgunItem extends GunItem {
         super(
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 5.5f,
-                250,
+            128,
                 14,
                 6,
                 ItemRegistry.SHOTGUN_SHELL,

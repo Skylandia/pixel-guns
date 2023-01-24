@@ -10,7 +10,7 @@ public class PumpShotgunItem extends GunItem {
         super(
                 GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
                 18.0f,
-                250,
+            128,
                 5,
                 5,
                 ItemRegistry.SHOTGUN_SHELL,
