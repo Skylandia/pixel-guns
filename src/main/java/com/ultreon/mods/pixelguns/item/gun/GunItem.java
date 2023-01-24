@@ -182,7 +182,7 @@ public abstract class GunItem extends Item {
         player.getItemCooldownManager().set(this, this.fireCooldown);
         for (int i = 0; i < this.pelletCount; ++i) {
             // TODO bullet spread
-            this.handleHit(GunHitscanHelper.getCollision(player, this.range), world, player);
+            this.handleHit(GunHitscanHelper.getEntityCollision(player, this.range), world, player);
         }
 
         PacketByteBuf buf = PacketByteBufs.create();
