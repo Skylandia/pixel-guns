@@ -178,7 +178,6 @@ public abstract class GunItem extends Item {
 
     public void shoot(ServerPlayerEntity player, ItemStack stack) {
         ServerWorld world = player.getWorld();
-        float kick = player.getPitch() - this.getRecoil();
         player.getItemCooldownManager().set(this, this.fireCooldown);
         for (int i = 0; i < this.pelletCount; ++i) {
             // TODO bullet spread
@@ -186,7 +185,8 @@ public abstract class GunItem extends Item {
         }
 
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(kick);
+        buf.writeFloat(player.getPitch() - this.getRecoil());
+        buf.writeUuid(player.getUuid());
         ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
 
         if (!player.getAbilities().creativeMode) {
