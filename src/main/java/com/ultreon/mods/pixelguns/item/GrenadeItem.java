@@ -3,42 +3,33 @@ package com.ultreon.mods.pixelguns.item;
 import java.util.function.Predicate;
 
 import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
+import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.RangedWeaponItem;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+
 import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.network.GeckoLibNetwork;
-import software.bernie.geckolib3.network.ISyncable;
 import software.bernie.geckolib3.util.GeckoLibUtil;
-import software.bernie.geckolib3.world.storage.GeckoLibIdTracker;
 
-public class GrenadeItem extends RangedWeaponItem implements IAnimatable, ISyncable {
+public class GrenadeItem extends RangedWeaponItem implements IAnimatable {
 
-    public GrenadeItem(Settings settings) {
-        super(settings);
-		GeckoLibNetwork.registerSyncable(this);
+    public GrenadeItem() {
+        super(new FabricItemSettings().maxCount(16).group(ModCreativeTab.WEAPONS));
     }
 
     @Override
     public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
         if (!(user instanceof PlayerEntity playerEntity)) return;
-		if (!world.isClient) {
-			stack.removeSubNbt("GeckoLibID");
-		}
+
 		if (remainingUseTicks < 0) return;
 
 		if (stack.isEmpty() && !playerEntity.isCreative()) return;
@@ -77,10 +68,6 @@ public class GrenadeItem extends RangedWeaponItem implements IAnimatable, ISynca
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
         player.setCurrentHand(hand);
-
-		if (!world.isClient) {
-			dispatchAnimationToClients((ServerWorld) world, player, stack);
-		}
 		return TypedActionResult.fail(stack);
     }
 
@@ -95,7 +82,7 @@ public class GrenadeItem extends RangedWeaponItem implements IAnimatable, ISynca
 
     @Override
     public Predicate<ItemStack> getProjectiles() {
-        return stack -> stack.isOf(ModItems.GRENADE);
+        return stack -> stack.isOf(ItemRegistry.GRENADE);
     }
 
     @Override
@@ -110,40 +97,11 @@ public class GrenadeItem extends RangedWeaponItem implements IAnimatable, ISynca
 
 	private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-	private void dispatchAnimationToClients(ServerWorld world, PlayerEntity player, ItemStack stack) {
-		final int id = GeckoLibIdTracker.from(world).getNextId(GeckoLibIdTracker.Type.ITEM);
-		stack.getOrCreateNbt().putInt("GeckoLibID", id);
-		GeckoLibNetwork.syncAnimation(player, this, id, GrenadeState.PULLING_PIN);
-		for (PlayerEntity otherPlayer : PlayerLookup.tracking(player)) {
-			GeckoLibNetwork.syncAnimation(otherPlayer, this, id, GrenadeState.PULLING_PIN);
-		}
-	}
-
-	private PlayState predicate(AnimationEvent<GrenadeItem> event) {
-		event.getController().setAnimation(new AnimationBuilder().addAnimation("grenade.throw"));
-		return PlayState.CONTINUE;
-	}
-
 	@Override
-	public void registerControllers(AnimationData data) {
-		data.addAnimationController(new AnimationController<>(this, "controller", 1, this::predicate));
-	}
+	public void registerControllers(AnimationData data) {}
 
 	@Override
 	public AnimationFactory getFactory() {
 		return factory;
-	}
-
-	private static class GrenadeState {
-		public static final int PULLING_PIN = 1;
-	}
-
-	@Override
-	public void onAnimationSync(int id, int state) {
-		@SuppressWarnings("unchecked")
-		final AnimationController<GrenadeItem> controller = GeckoLibUtil.getControllerForID(this.factory, id, "controller");
-		if (state == GrenadeState.PULLING_PIN) {
-			controller.setAnimation(new AnimationBuilder().addAnimation("grenade.throw"));
-		}
 	}
 }

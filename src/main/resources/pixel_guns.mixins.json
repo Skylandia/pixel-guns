@@ -9,13 +9,15 @@
     "client.ClientPlayerInteractionMixin",
     "client.CustomSwordSounds",
     "client.ModMenuMixin",
-
-    "client.gun.AdsZoom",
+    "client.gun.ads.AdsSensitivityPersistency",
+    "client.gun.ads.AdsSensitivityModifier",
+    "client.gun.ads.AdsSensitivityOption",
+    "client.gun.ads.AdsZoom",
     "client.gun.AmmoHud",
-    "client.gun.GunKeybinds",
-    "client.gun.ScopedSensitivity",
     "client.gun.AnimationPrevention",
-    "client.gun.PlayerGunPose"
+    "client.gun.GunKeybinds",
+    "client.gun.PlayerGunPose",
+    "client.gun.ScopedCrosshairRemover"
   ],
   "injectors": {
     "defaultRequire": 1

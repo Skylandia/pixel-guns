@@ -1,28 +1,26 @@
 package com.ultreon.mods.pixelguns.item.gun;
 
-import com.ultreon.mods.pixelguns.item.gun.variant.InfinityGunItem;
-import com.ultreon.mods.pixelguns.item.ModItems;
+import com.ultreon.mods.pixelguns.item.ModCreativeTab;
+import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
+import com.ultreon.mods.pixelguns.registry.PacketRegistry;
+import com.ultreon.mods.pixelguns.util.ResourcePath;
 import io.netty.buffer.Unpooled;
-import com.ultreon.mods.pixelguns.PixelGuns;
-import com.ultreon.mods.pixelguns.PixelGunsClient;
 import com.ultreon.mods.pixelguns.util.InventoryUtil;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -31,66 +29,52 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Random;
 
 import org.jetbrains.annotations.NotNull;
 
 public abstract class GunItem extends Item {
 
-    private final MinecraftClient client;
-
     private final AmmoLoadingType ammoLoadingType;
-    protected final float gunDamage;
-    private final int rateOfFire;
-    private final int magSize;
-    public final Item ammoType;
+    protected final float damage;
+    protected final int range;
+    public final int fireCooldown;
+    private final int magazineSize;
+    public final Item ammunition;
     private final int reloadCooldown;
-    private final float bulletSpread;
-    private final float gunRecoil;
-    private final int pelletCount;
-    private final int loadingType;
-    private final SoundEvent reload1;
-    private final SoundEvent reload2;
-    private final SoundEvent reload3;
-    protected final SoundEvent shootSound;
+    protected final float bulletSpread;
+    protected final float recoil;
+    protected final int pelletCount;
+    private final LoadingType loadingType;
+    private final SoundEvent[] reloadSounds;
+    private final int[] reloadSoundStages;
+    protected final SoundEvent fireAudio;
     private final int reloadCycles;
-    private final boolean isScoped;
-    private final int reloadStage1;
-    private final int reloadStage2;
-    private final int reloadStage3;
+    public final boolean isScoped;
 
-    public GunItem(Settings settings, AmmoLoadingType ammoLoadingType, float gunDamage, int rateOfFire, int magSize, Item ammoType, int reloadCooldown, float bulletSpread, float gunRecoil, int pelletCount, int loadingType, SoundEvent reload1, SoundEvent reload2, SoundEvent reload3, SoundEvent shootSound, int reloadCycles, boolean isScoped, int reloadStage1, int reloadStage2, int reloadStage3) {
-        super(settings);
+    public GunItem(AmmoLoadingType ammoLoadingType, float damage, int range, int fireCooldown, int magazineSize, Item ammunition, int reloadCooldown, float bulletSpread, float recoil, int pelletCount, LoadingType loadingType, SoundEvent[] reloadSounds, SoundEvent fireAudio, int reloadCycles, boolean isScoped, int[] reloadStages) {
+        super(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(1));
         this.ammoLoadingType = ammoLoadingType;
-        this.gunDamage = gunDamage;
-        this.rateOfFire = rateOfFire;
-        this.magSize = magSize;
-        this.ammoType = ammoType;
+        this.damage = damage;
+        this.range = range;
+        this.fireCooldown = fireCooldown;
+        this.magazineSize = magazineSize;
+        this.ammunition = ammunition;
         this.reloadCooldown = reloadCooldown;
         this.bulletSpread = bulletSpread;
-        this.gunRecoil = gunRecoil;
+        this.recoil = recoil;
         this.pelletCount = pelletCount;
         this.loadingType = loadingType;
-        this.reload1 = reload1;
-        this.reload2 = reload2;
-        this.reload3 = reload3;
-        this.shootSound = shootSound;
+        this.reloadSounds = reloadSounds;
+        this.fireAudio = fireAudio;
         this.reloadCycles = reloadCycles;
         this.isScoped = isScoped;
-        this.reloadStage1 = reloadStage1;
-        this.reloadStage2 = reloadStage2;
-        this.reloadStage3 = reloadStage3;
-
-        client = MinecraftClient.getInstance();
+        this.reloadSoundStages = reloadStages;
     }
 
     public static boolean isLoaded(ItemStack stack) {
@@ -116,7 +100,7 @@ public abstract class GunItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        tooltip.add(Text.literal(String.format("%s/%s", GunItem.remainingAmmo(stack), this.magSize)).formatted(Formatting.GRAY));
+        tooltip.add(Text.literal(String.format("%s/%s", GunItem.remainingAmmo(stack), this.magazineSize)).formatted(Formatting.GRAY));
     }
 
     @Override
@@ -126,133 +110,100 @@ public abstract class GunItem extends Item {
         if (!(nbtCompound.contains("reloadTick") && nbtCompound.contains("Clip") && nbtCompound.contains("isScoped") && nbtCompound.contains("isReloading"))) {
             this.setDefaultNBT(nbtCompound);
         }
-        if (world.isClient() && ((PlayerEntity) entity).getStackInHand(Hand.MAIN_HAND) == stack && PixelGunsClient.reloadToggle.isPressed() && GunItem.remainingAmmo(stack) < this.magSize && GunItem.reserveAmmoCount((PlayerEntity) entity, this.ammoType) > 0 && !nbtCompound.getBoolean("isReloading")) {
+        if (world.isClient() && ((PlayerEntity) entity).getStackInHand(Hand.MAIN_HAND) == stack && KeybindRegistry.reload.isPressed() && GunItem.remainingAmmo(stack) < this.magazineSize && GunItem.reserveAmmoCount((PlayerEntity) entity, this.ammunition) > 0 && !nbtCompound.getBoolean("isReloading")) {
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeBoolean(true);
-            ClientPlayNetworking.send(PixelGuns.res("reload"), buf);
+            ClientPlayNetworking.send(ResourcePath.get("reload"), buf);
         }
-        if (nbtCompound.getBoolean("isReloading") && (((PlayerEntity) entity).getStackInHand(Hand.MAIN_HAND) != stack || GunItem.reserveAmmoCount((PlayerEntity) entity, this.ammoType) <= 0 && this.reloadCycles <= 1 || nbtCompound.getInt("reloadTick") >= this.reloadCooldown || GunItem.remainingAmmo(stack) >= this.magSize && this.reloadCycles <= 1)) {
+        if (nbtCompound.getBoolean("isReloading") && (((PlayerEntity) entity).getStackInHand(Hand.MAIN_HAND) != stack || GunItem.reserveAmmoCount((PlayerEntity) entity, this.ammunition) <= 0 && this.reloadCycles <= 1 || nbtCompound.getInt("reloadTick") >= this.reloadCooldown || GunItem.remainingAmmo(stack) >= this.magazineSize && this.reloadCycles <= 1)) {
             nbtCompound.putBoolean("isReloading", false);
         }
         if (nbtCompound.getBoolean("isReloading")) {
             this.doReloadTick(world, nbtCompound, (PlayerEntity) entity, stack);
         } else {
-            if (nbtCompound.getInt("reloadTick") > this.reloadStage3 && nbtCompound.getInt("reloadTick") <= this.reloadCooldown) {
+            if (nbtCompound.getInt("reloadTick") > this.reloadSoundStages[2] && nbtCompound.getInt("reloadTick") <= this.reloadCooldown) {
                 this.finishReload((PlayerEntity) entity, stack);
             }
             nbtCompound.putInt("reloadTick", 0);
         }
     }
 
-    private void doReloadTick(World world, NbtCompound nbtCompound, PlayerEntity player, ItemStack stack) {
-        int rTick = nbtCompound.getInt("reloadTick");
+    protected void doReloadTick(World world, NbtCompound nbtCompound, PlayerEntity player, ItemStack stack) {
+        int reloadTick = nbtCompound.getInt("reloadTick");
         nbtCompound.putInt("reloadTick", nbtCompound.getInt("reloadTick") + 1);
         if (!world.isClient()) {
-            if (rTick == this.reloadStage1) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), this.reload1, SoundCategory.MASTER, 1.0f, 1.0f);
-            } else if (rTick == this.reloadStage2) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), this.reload2, SoundCategory.MASTER, 1.0f, 1.0f);
-            } else if (rTick == this.reloadStage3 + 1) {
-                world.playSound(null, player.getX(), player.getY(), player.getZ(), this.reload3, SoundCategory.MASTER, 1.0f, 1.0f);
+            if (reloadTick == this.reloadSoundStages[0]) {
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), this.reloadSounds[0], SoundCategory.MASTER, 1.0f, 1.0f);
+            } else if (reloadTick == this.reloadSoundStages[1]) {
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), this.reloadSounds[1], SoundCategory.MASTER, 1.0f, 1.0f);
+            } else if (reloadTick == this.reloadSoundStages[2]) {
+                world.playSound(null, player.getX(), player.getY(), player.getZ(), this.reloadSounds[2], SoundCategory.MASTER, 1.0f, 1.0f);
             }
         }
         switch (this.loadingType) {
-            case 1 -> {
-                if (rTick < this.reloadCooldown || GunItem.reserveAmmoCount(player, this.ammoType) <= 0) break;
+            case CLIP -> {
+                if (reloadTick < this.reloadCooldown || GunItem.reserveAmmoCount(player, this.ammunition) <= 0) break;
                 nbtCompound.putInt("currentCycle", 1);
                 this.finishReload(player, stack);
                 nbtCompound.putInt("reloadTick", 0);
             }
-            case 2 -> {
-                if (rTick < this.reloadStage3 || nbtCompound.getInt("currentCycle") >= this.reloadCycles || GunItem.reserveAmmoCount(player, this.ammoType) <= 0)
+            case INDIVIDUAL -> {
+                if (reloadTick < this.reloadSoundStages[2] || nbtCompound.getInt("currentCycle") >= this.reloadCycles || GunItem.reserveAmmoCount(player, this.ammunition) <= 0)
                     break;
                 nbtCompound.putInt("Clip", nbtCompound.getInt("Clip") + 1);
-                InventoryUtil.removeItemFromInventory(player, this.ammoType, 1);
-                if (GunItem.remainingAmmo(stack) < this.magSize && GunItem.reserveAmmoCount(player, this.ammoType) > 0) {
-                    nbtCompound.putInt("reloadTick", this.reloadStage2);
+                InventoryUtil.removeItemFromInventory(player, this.ammunition, 1);
+                if (GunItem.remainingAmmo(stack) < this.magazineSize && GunItem.reserveAmmoCount(player, this.ammunition) > 0) {
+                    nbtCompound.putInt("reloadTick", this.reloadSoundStages[1]);
                 }
                 nbtCompound.putInt("currentCycle", nbtCompound.getInt("Clip"));
             }
         }
     }
 
-    public TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity user, @NotNull Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        if (!client.options.attackKey.isPressed()) {
-            return TypedActionResult.fail(itemStack);
-        }
-        if (hand == Hand.MAIN_HAND && !user.isSprinting() && GunItem.isLoaded(itemStack)) {
-            this.shoot(world, user, itemStack);
-            if (this.reloadCycles > 1) {
-                itemStack.getOrCreateNbt().putInt("currentCycle", itemStack.getOrCreateNbt().getInt("Clip"));
+    protected void handleHit(HitResult result, ServerWorld world, ServerPlayerEntity damageSource) {
+        if (result instanceof EntityHitResult entityHitResult) {
+            entityHitResult.getEntity().damage(DamageSource.player(damageSource), this.damage);
+
+//            PixelGuns.LOGGER.info(damageSource.distanceTo(entityHitResult.getEntity()) + " " + damage + " " + entityHitResult.getEntity().getType().getUntranslatedName());
+        } else if (result instanceof BlockHitResult blockHitResult) {
+            if (blockHitResult.getType() == HitResult.Type.MISS) {
+                return;
             }
-            itemStack.getOrCreateNbt().putInt("reloadTick", 0);
-            itemStack.getOrCreateNbt().putBoolean("isReloading", false);
+            ParticleEffect particleEffect = new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(blockHitResult.getBlockPos()));
+            world.spawnParticles(particleEffect, blockHitResult.getPos().x, blockHitResult.getPos().y, blockHitResult.getPos().z, 1, 0, 0, 0, 1);
         }
-        return TypedActionResult.fail(itemStack);
     }
 
-    public HitResult getHitResult(World world, PlayerEntity player, Vec3d origin, Vec3d direction, double maxDistance) {
-        Vec3d destination = origin.add(direction.multiply(maxDistance));
-        HitResult hitResult = world.raycast(new RaycastContext(origin, destination, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, player));
-        if (hitResult.getType() != HitResult.Type.MISS) {
-            destination = hitResult.getPos();
+
+
+    public void shoot(ServerPlayerEntity player, ItemStack stack) {
+        ServerWorld world = player.getWorld();
+        float kick = player.getPitch() - this.getRecoil();
+        player.getItemCooldownManager().set(this, this.fireCooldown);
+        for (int i = 0; i < this.pelletCount; ++i) {
+            // TODO bullet spread
+            this.handleHit(GunHitscanHelper.getEntityCollision(player, this.range), world, player);
         }
-        EntityHitResult entityHitResult = ProjectileUtil.getEntityCollision(world, player, origin, destination, player.getBoundingBox().stretch(direction.multiply(maxDistance)).expand(1.0), (entity) -> true);
-        if (entityHitResult != null) {
-            hitResult = entityHitResult;
-        }
-        return hitResult;
-    }
 
-    public void shoot(World world, PlayerEntity user, ItemStack stack) {
-        float kick = user.getPitch() - this.getRecoil();
-        user.getItemCooldownManager().set(this, this.rateOfFire);
-        if (!world.isClient()) {
-            for (int i = 0; i < this.pelletCount; ++i) {
-                int maxDistance;
-                if (this == ModItems.CLASSIC_SNIPER_RIFLE) maxDistance = 500;
-                else maxDistance = 250;
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeFloat(kick);
+        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
 
-                Random r = new Random();
-                Vec3d bulletVector = user.getRotationVector().add(new Vec3d(r.nextGaussian(), r.nextGaussian(), r.nextGaussian()).multiply(this.bulletSpread / 10));
-
-                HitResult result = getHitResult(world, user, user.getEyePos(), bulletVector, maxDistance);
-                if (this instanceof InfinityGunItem infinityGunItem) {
-                    infinityGunItem.hit(result, world, user, stack);
-                }
-
-                if (result instanceof EntityHitResult entityHitResult) {
-                    float damage = this.gunDamage;
-                    entityHitResult.getEntity().damage(DamageSource.player(user), damage);
-                
-                    PixelGuns.LOGGER.info(user.distanceTo(entityHitResult.getEntity()) + " " + damage + " " + entityHitResult.getEntity().getType().getUntranslatedName());
-                } else {
-                    BlockHitResult blockHitResult = (BlockHitResult) result;
-                    ((ServerWorld) world).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(blockHitResult.getBlockPos())), blockHitResult.getPos().x, blockHitResult.getPos().y, blockHitResult.getPos().z, 1, 0, 0, 0, 1);
-                }
-            }
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeFloat(kick);
-            ServerPlayNetworking.send((ServerPlayerEntity) user, PixelGuns.RECOIL_PACKET_ID, buf);
-//            user.setXRot(kick);
-        }
-        if (!user.getAbilities().creativeMode) {
+        if (!player.getAbilities().creativeMode) {
             this.useAmmo(stack);
-            stack.damage(10, (LivingEntity) user, e -> e.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
         }
-        playShootSound(world, user, stack);
+        this.playFireAudio(world, player);
     }
 
-    public void playShootSound(World world, PlayerEntity user, ItemStack stack) {
-        world.playSound(null, user.getX(), user.getY(), user.getZ(), this.shootSound, SoundCategory.MASTER, 1.0f, 1.0f);
+    public void playFireAudio(World world, PlayerEntity user) {
+        world.playSound(null, user.getX(), user.getY(), user.getZ(), this.fireAudio, SoundCategory.MASTER, 1.0f, 1.0f);
     }
 
-    private float getRecoil() {
-        return client.options.useKey.isPressed() ? this.gunRecoil / 2.0f : this.gunRecoil;
+    protected float getRecoil() {
+        return this.recoil;
     }
 
-    private void useAmmo(ItemStack stack) {
+    protected void useAmmo(ItemStack stack) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         nbtCompound.putInt("Clip", nbtCompound.getInt("Clip") - 1);
     }
@@ -260,33 +211,38 @@ public abstract class GunItem extends Item {
     public void finishReload(PlayerEntity player, ItemStack stack) {
         NbtCompound nbtCompound = stack.getOrCreateNbt();
         if (nbtCompound.getInt("Clip") <= 0) {
-            if (GunItem.reserveAmmoCount(player, this.ammoType) > this.magSize) {
-                nbtCompound.putInt("Clip", this.magSize);
-                InventoryUtil.removeItemFromInventory(player, this.ammoType, this.magSize);
+            if (GunItem.reserveAmmoCount(player, this.ammunition) > this.magazineSize) {
+                nbtCompound.putInt("Clip", this.magazineSize);
+                InventoryUtil.removeItemFromInventory(player, this.ammunition, this.magazineSize);
             } else {
-                nbtCompound.putInt("Clip", GunItem.reserveAmmoCount(player, this.ammoType));
-                InventoryUtil.removeItemFromInventory(player, this.ammoType, GunItem.reserveAmmoCount(player, this.ammoType));
+                nbtCompound.putInt("Clip", GunItem.reserveAmmoCount(player, this.ammunition));
+                InventoryUtil.removeItemFromInventory(player, this.ammunition, GunItem.reserveAmmoCount(player, this.ammunition));
             }
         } else {
-            int ammoToLoad = this.magSize - nbtCompound.getInt("Clip");
-            if (GunItem.reserveAmmoCount(player, this.ammoType) >= ammoToLoad) {
+            int ammoToLoad = this.magazineSize - nbtCompound.getInt("Clip");
+            if (GunItem.reserveAmmoCount(player, this.ammunition) >= ammoToLoad) {
                 nbtCompound.putInt("Clip", nbtCompound.getInt("Clip") + ammoToLoad);
-                InventoryUtil.removeItemFromInventory(player, this.ammoType, ammoToLoad);
+                InventoryUtil.removeItemFromInventory(player, this.ammunition, ammoToLoad);
             } else {
-                nbtCompound.putInt("Clip", nbtCompound.getInt("Clip") + GunItem.reserveAmmoCount(player, this.ammoType));
-                InventoryUtil.removeItemFromInventory(player, this.ammoType, GunItem.reserveAmmoCount(player, this.ammoType));
+                nbtCompound.putInt("Clip", nbtCompound.getInt("Clip") + GunItem.reserveAmmoCount(player, this.ammunition));
+                InventoryUtil.removeItemFromInventory(player, this.ammunition, GunItem.reserveAmmoCount(player, this.ammunition));
             }
         }
     }
 
+    @Override
     public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
         return false;
     }
 
     public enum AmmoLoadingType {
         SEMI_AUTOMATIC,
-        BURST,
-        AUTOMATIC;
+        AUTOMATIC
+    }
+
+    public enum LoadingType {
+        INDIVIDUAL,
+        CLIP
     }
 }
 

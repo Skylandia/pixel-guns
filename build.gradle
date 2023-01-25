@@ -50,6 +50,15 @@ repositories {
 
 loom {
     accessWidenerPath = file("src/main/resources/pixel_guns.accesswidener")
+
+    runs {
+        client {
+            vmArgs "-Dgeckolib.disable_examples=true"
+        }
+        server {
+            vmArgs "-Dgeckolib.disable_examples=true"
+        }
+    }
 }
 
 dependencies {
@@ -149,16 +158,5 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
-    }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDirs += ["src/multipart/java"]
-        }
-        resources {
-            srcDirs += ["src/multipart/resources"]
-        }
     }
 }

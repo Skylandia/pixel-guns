@@ -1,7 +1,6 @@
 package com.ultreon.mods.pixelguns.item;
 
 import com.ultreon.mods.pixelguns.armor.HazardArmor;
-import com.ultreon.mods.pixelguns.armor.ModArmorMaterials;
 import com.ultreon.mods.pixelguns.entity.GasEntity;
 
 import net.minecraft.entity.Entity;
@@ -9,11 +8,12 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
+import software.bernie.geckolib3.core.IAnimatable;
 
-public class GasMaskItem extends HazardArmor {
+public class GasMaskItem extends HazardArmor implements IAnimatable {
 
-    public GasMaskItem(Settings builder) {
-        super(ModArmorMaterials.HAZARD, EquipmentSlot.HEAD, builder);
+    public GasMaskItem() {
+        super(EquipmentSlot.HEAD);
     }
     
     @Override

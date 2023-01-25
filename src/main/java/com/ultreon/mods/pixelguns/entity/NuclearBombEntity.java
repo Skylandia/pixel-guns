@@ -9,6 +9,7 @@ import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.EllipsoidRegion;
 import com.ultreon.mods.pixelguns.PixelGuns;
 
+import com.ultreon.mods.pixelguns.registry.EntityRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -31,7 +32,7 @@ public class NuclearBombEntity extends Entity implements IAnimatable {
 
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
-    protected NuclearBombEntity(EntityType<? extends Entity> entityType, World world) {
+    public NuclearBombEntity(EntityType<? extends Entity> entityType, World world) {
         super(entityType, world);
         this.setVelocity(0, -1.5, 0);
     }
@@ -51,7 +52,7 @@ public class NuclearBombEntity extends Entity implements IAnimatable {
     }
 
     private void spawnExplosion() {
-        NuclearExplosionEntity explosionEntity = ModEntities.NUCLEAR_EXPLOSION.create(this.world);
+        NuclearExplosionEntity explosionEntity = EntityRegistry.NUCLEAR_EXPLOSION.create(this.world);
         if (explosionEntity == null) return;
         explosionEntity.refreshPositionAndAngles(this.getX(), this.getY(), this.getZ(), this.getYaw(), 0.0f);
         this.world.spawnEntity(explosionEntity);

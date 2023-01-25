@@ -1,0 +1,29 @@
+package com.ultreon.mods.pixelguns.item.gun.variant;
+
+import com.ultreon.mods.pixelguns.registry.ItemRegistry;
+import com.ultreon.mods.pixelguns.item.gun.GunItem;
+import com.ultreon.mods.pixelguns.registry.SoundRegistry;
+import net.minecraft.sound.SoundEvent;
+
+public class PumpShotgunItem extends GunItem {
+    public PumpShotgunItem() {
+        super(
+            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            18.0f,
+            128,
+            5,
+            5,
+            ItemRegistry.SHOTGUN_SHELL,
+            20,
+            0.25f,
+            0.0f,
+            5,
+            LoadingType.INDIVIDUAL,
+            new SoundEvent[] {SoundRegistry.RELOAD_COMBAT_SHOTGUN_P1, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P2, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P3},
+            SoundRegistry.SHOTGUN_COMBAT,
+            5,
+            false,
+            new int[] {1, 4, 13}
+        );
+    }
+}

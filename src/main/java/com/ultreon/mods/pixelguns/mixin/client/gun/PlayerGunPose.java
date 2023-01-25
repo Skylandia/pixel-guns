@@ -26,12 +26,13 @@ import net.minecraft.util.math.Quaternion;
 public class PlayerGunPose {
     @Inject(method = "getArmPose", at = @At("TAIL"), cancellable = true)
     private static void gunPose(AbstractClientPlayerEntity player, Hand hand, CallbackInfoReturnable<BipedEntityModel.ArmPose> ci) {
-        if (player.getStackInHand(hand).getItem() instanceof GunItem && GunItem.isLoaded(player.getStackInHand(hand)) && player.getStackInHand(hand).getOrCreateNbt().getInt("reloadTick") <= 0) {
-            ci.setReturnValue(BipedEntityModel.ArmPose.BOW_AND_ARROW);
-            return;
-        }
-        if (player.getStackInHand(hand).getItem() instanceof GunItem && player.getStackInHand(hand).getOrCreateNbt().getInt("reloadTick") > 0) {
-            ci.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_CHARGE);
+        if (player.getStackInHand(hand).getItem() instanceof GunItem) {
+            if (player.getStackInHand(hand).getOrCreateNbt().getInt("reloadTick") > 0) {
+                ci.setReturnValue(BipedEntityModel.ArmPose.CROSSBOW_CHARGE);
+            }
+            else if (GunItem.isLoaded(player.getStackInHand(hand))) {
+                ci.setReturnValue(BipedEntityModel.ArmPose.BOW_AND_ARROW);
+            }
             return;
         }
         ci.setReturnValue(BipedEntityModel.ArmPose.ITEM);
@@ -40,7 +41,7 @@ public class PlayerGunPose {
     private void render(AbstractClientPlayerEntity player, float f, float g, MatrixStack poseStack, VertexConsumerProvider multiBufferSource, int i, CallbackInfo ci) {
         ItemStack itemInHand = player.getStackInHand(Hand.MAIN_HAND);
         if (itemInHand.getItem() instanceof InfinityGunItem) {
-            boolean isShooting = itemInHand.getOrCreateSubNbt(NbtNames.INFINITY_GUN).getBoolean(NbtNames.IS_SHOOTING);
+            boolean isShooting = InfinityGunItem.isShooting(itemInHand);
             if (isShooting) {
                 itemInHand.getOrCreateSubNbt(NbtNames.INFINITY_GUN).getInt(NbtNames.SHOOT_TICKS);
                 int tickCount = player.age;

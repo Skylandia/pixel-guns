@@ -18,7 +18,7 @@ public class Config {
         USE_CUSTOM_CONFIG_GUI = CLIENT_BUILDER.comment("Use Ultreon's Standard Config GUI").define("use_custom_config_gui", true);
     }
 
-    public static void init() {
+    public static void registerConfig() {
         config = ModLoadingContext.registerConfig(PixelGuns.MOD_ID, ModConfig.Type.CLIENT, CLIENT_BUILDER.build());
     }
 
