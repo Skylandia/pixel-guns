@@ -40,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class GunItem extends Item {
 
-    private final AmmoLoadingType ammoLoadingType;
+    public final AmmoLoadingType ammoLoadingType;
     protected final float damage;
     protected final int range;
     public final int fireCooldown;

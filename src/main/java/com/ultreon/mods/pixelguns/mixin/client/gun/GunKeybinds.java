@@ -30,6 +30,9 @@ public abstract class GunKeybinds {
     public void handleGunShoot(CallbackInfo info) {
         if (this.player.getMainHandStack().getItem() instanceof GunItem gunItem) {
             if (MinecraftClient.getInstance().options.attackKey.isPressed() && this.itemUseCooldown == 0) {
+                if (gunItem.ammoLoadingType.equals(GunItem.AmmoLoadingType.SEMI_AUTOMATIC)) {
+                    MinecraftClient.getInstance().options.attackKey.setPressed(false);
+                }
                 this.itemUseCooldown = gunItem.fireCooldown;
                 ClientPlayNetworking.send(PacketRegistry.GUN_SHOOT, PacketByteBufs.create());
             }
