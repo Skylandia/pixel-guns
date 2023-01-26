@@ -4,7 +4,9 @@ import com.ultreon.mods.pixelguns.NbtNames;
 import com.ultreon.mods.pixelguns.entity.damagesource.EnergyOrbDamageSource;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
+
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
+
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -71,10 +74,13 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
     }
 
     @Override
-    public void shoot(ServerPlayerEntity user, ItemStack stack) {
-        NbtCompound infinityGun = stack.getOrCreateSubNbt(NbtNames.INFINITY_GUN);
-        infinityGun.putBoolean(NbtNames.IS_SHOOTING, true);
-        super.shoot(user, stack);
+    public void shoot(PlayerEntity player, ItemStack stack) {
+        if (!player.world.isClient) {
+            NbtCompound infinityGun = stack.getOrCreateSubNbt(NbtNames.INFINITY_GUN);
+            infinityGun.putBoolean(NbtNames.IS_SHOOTING, true);
+        }
+
+        super.shoot(player, stack);
     }
 
     @Override

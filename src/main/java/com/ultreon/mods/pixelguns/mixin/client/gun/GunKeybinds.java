@@ -34,7 +34,11 @@ public abstract class GunKeybinds {
                     MinecraftClient.getInstance().options.attackKey.setPressed(false);
                 }
                 this.itemUseCooldown = gunItem.fireCooldown;
-                ClientPlayNetworking.send(PacketRegistry.GUN_SHOOT, PacketByteBufs.create());
+                if (!this.player.isSprinting() && GunItem.isLoaded(this.player.getMainHandStack())) {
+                    gunItem.shoot(this.player, this.player.getMainHandStack());
+                    ClientPlayNetworking.send(PacketRegistry.GUN_SHOOT, PacketByteBufs.create());
+                }
+
             }
         }
     }

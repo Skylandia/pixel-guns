@@ -1,16 +1,14 @@
 package com.ultreon.mods.pixelguns.item.gun;
 
+import com.ultreon.mods.pixelguns.client.handler.RecoilHandler;
 import com.ultreon.mods.pixelguns.item.ModCreativeTab;
 import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
-import com.ultreon.mods.pixelguns.registry.PacketRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import io.netty.buffer.Unpooled;
 import com.ultreon.mods.pixelguns.util.InventoryUtil;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -176,15 +174,20 @@ public abstract class GunItem extends Item {
 
 
 
-    public void shoot(ServerPlayerEntity player, ItemStack stack) {
-        ServerWorld world = player.getWorld();
+    public void shoot(PlayerEntity player, ItemStack stack) {
+
+        if (player.world.isClient) {
+            this.handleRecoil();
+            return;
+        }
+
+        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+        ServerWorld world = serverPlayer.getWorld();
         player.getItemCooldownManager().set(this, this.fireCooldown);
         for (int i = 0; i < this.pelletCount; ++i) {
             // TODO bullet spread
-            this.handleHit(GunHitscanHelper.getEntityCollision(player, this.range), world, player);
+            this.handleHit(GunHitscanHelper.getEntityCollision(player, this.range), world, serverPlayer);
         }
-
-        this.handleRecoil(player);
 
         if (!player.getAbilities().creativeMode) {
             this.useAmmo(stack);
@@ -192,11 +195,8 @@ public abstract class GunItem extends Item {
         this.playFireAudio(world, player);
     }
 
-    protected void handleRecoil(ServerPlayerEntity player) {
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(player.getPitch() - this.getRecoil());
-        buf.writeUuid(player.getUuid());
-        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
+    protected void handleRecoil() {
+        RecoilHandler.get().onGunFire();
     }
 
     public void playFireAudio(World world, PlayerEntity user) {
