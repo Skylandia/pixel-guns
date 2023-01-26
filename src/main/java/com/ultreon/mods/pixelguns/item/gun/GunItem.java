@@ -184,15 +184,19 @@ public abstract class GunItem extends Item {
             this.handleHit(GunHitscanHelper.getEntityCollision(player, this.range), world, player);
         }
 
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(player.getPitch() - this.getRecoil());
-        buf.writeUuid(player.getUuid());
-        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
+        this.handleRecoil(player);
 
         if (!player.getAbilities().creativeMode) {
             this.useAmmo(stack);
         }
         this.playFireAudio(world, player);
+    }
+
+    protected void handleRecoil(ServerPlayerEntity player) {
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeFloat(player.getPitch() - this.getRecoil());
+        buf.writeUuid(player.getUuid());
+        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
     }
 
     public void playFireAudio(World world, PlayerEntity user) {
