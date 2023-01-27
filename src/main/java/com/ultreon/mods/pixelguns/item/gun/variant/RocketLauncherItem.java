@@ -1,22 +1,22 @@
 package com.ultreon.mods.pixelguns.item.gun.variant;
 
 import com.ultreon.mods.pixelguns.entity.projectile.RocketEntity;
+import com.ultreon.mods.pixelguns.event.GunFireEvent;
+import com.ultreon.mods.pixelguns.event.forge.Event;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
-import com.ultreon.mods.pixelguns.registry.PacketRegistry;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
+
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -44,7 +44,7 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
             ItemRegistry.ROCKET,
             30,
             0,
-            0,
+            25.0f,
             1,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_GENERIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
@@ -57,12 +57,17 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
     }
 
     @Override
-    public void shoot(ServerPlayerEntity player, ItemStack stack) {
-        ServerWorld world = player.getWorld();
+    public void shoot(PlayerEntity player, ItemStack stack) {
+        Event.call(new GunFireEvent.Pre(player, stack));
+        if (player.world.isClient) {
+            Event.call(new GunFireEvent.Post(player, stack));
+            return;
+        }
+        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+        ServerWorld world = serverPlayer.getWorld();
 
         this.sendAnimationPacket(ANIM_FIRE, world, player, stack);
 
-        float kick = player.getPitch() - this.getRecoil();
         player.getItemCooldownManager().set(this, this.fireCooldown);
 
         RocketEntity rocket = new RocketEntity(world, player);
@@ -72,16 +77,13 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
         rocket.setVelocity(player.getRotationVector().normalize().multiply(1.5));
         world.spawnEntity(rocket);
 
-
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(kick);
-        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
-
         if (!player.getAbilities().creativeMode) {
             this.useAmmo(stack);
         }
 
         this.playFireAudio(world, player);
+
+        Event.call(new GunFireEvent.Post(player, stack));
     }
 
     @Override

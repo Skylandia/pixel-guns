@@ -16,7 +16,7 @@ public class MagnumRevolverItem extends GunItem {
             ItemRegistry.HEAVY_HANDGUN_BULLET,
             40,
             0.125f,
-            6.5f,
+            10.0f,
             1,
             LoadingType.CLIP,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_REVOLVER_P1, SoundRegistry.RELOAD_GENERIC_REVOLVER_P2, SoundRegistry.RELOAD_GENERIC_REVOLVER_P3},

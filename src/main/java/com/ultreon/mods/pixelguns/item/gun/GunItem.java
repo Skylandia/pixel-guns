@@ -1,16 +1,15 @@
 package com.ultreon.mods.pixelguns.item.gun;
 
+import com.ultreon.mods.pixelguns.event.GunFireEvent;
+import com.ultreon.mods.pixelguns.event.forge.Event;
 import com.ultreon.mods.pixelguns.item.ModCreativeTab;
 import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
-import com.ultreon.mods.pixelguns.registry.PacketRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import io.netty.buffer.Unpooled;
 import com.ultreon.mods.pixelguns.util.InventoryUtil;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -176,30 +175,36 @@ public abstract class GunItem extends Item {
 
 
 
-    public void shoot(ServerPlayerEntity player, ItemStack stack) {
-        ServerWorld world = player.getWorld();
-        float kick = player.getPitch() - this.getRecoil();
+    public void shoot(PlayerEntity player, ItemStack stack) {
+
+        Event.call(new GunFireEvent.Pre(player, stack));
+
+        if (player.world.isClient) {
+            Event.call(new GunFireEvent.Post(player, stack));
+            return;
+        }
+
+        ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+        ServerWorld world = serverPlayer.getWorld();
         player.getItemCooldownManager().set(this, this.fireCooldown);
         for (int i = 0; i < this.pelletCount; ++i) {
             // TODO bullet spread
-            this.handleHit(GunHitscanHelper.getEntityCollision(player, this.range), world, player);
+            this.handleHit(GunHitscanHelper.getEntityCollision(player, this.range), world, serverPlayer);
         }
-
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeFloat(kick);
-        ServerPlayNetworking.send(player, PacketRegistry.GUN_RECOIL, buf);
 
         if (!player.getAbilities().creativeMode) {
             this.useAmmo(stack);
         }
         this.playFireAudio(world, player);
+
+        Event.call(new GunFireEvent.Post(player, stack));
     }
 
     public void playFireAudio(World world, PlayerEntity user) {
         world.playSound(null, user.getX(), user.getY(), user.getZ(), this.fireAudio, SoundCategory.MASTER, 1.0f, 1.0f);
     }
 
-    protected float getRecoil() {
+    public float getRecoil() {
         return this.recoil;
     }
 

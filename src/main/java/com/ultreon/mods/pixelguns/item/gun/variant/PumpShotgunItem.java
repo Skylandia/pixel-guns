@@ -16,7 +16,7 @@ public class PumpShotgunItem extends GunItem {
             ItemRegistry.SHOTGUN_SHELL,
             20,
             0.25f,
-            0.0f,
+            30.0f,
             5,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_COMBAT_SHOTGUN_P1, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P2, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P3},
