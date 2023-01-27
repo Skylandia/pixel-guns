@@ -203,7 +203,7 @@ public abstract class GunItem extends Item {
         world.playSound(null, user.getX(), user.getY(), user.getZ(), this.fireAudio, SoundCategory.MASTER, 1.0f, 1.0f);
     }
 
-    protected float getRecoil() {
+    public float getRecoil() {
         return this.recoil;
     }
 
