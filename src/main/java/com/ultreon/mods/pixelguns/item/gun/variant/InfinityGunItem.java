@@ -50,7 +50,7 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
             ItemRegistry.ENERGY_BATTERY,
             40,
             0,
-            20,
+            25.0f,
             1,
             LoadingType.CLIP,
             new SoundEvent[] {SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_DOOR_OPEN},

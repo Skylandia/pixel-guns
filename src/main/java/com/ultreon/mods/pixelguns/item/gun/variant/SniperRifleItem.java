@@ -16,7 +16,7 @@ public class SniperRifleItem extends GunItem {
             ItemRegistry.HEAVY_RIFLE_BULLET,
             26,
             0.01f,
-            8.25f,
+            25.0f,
             1,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_CLASSIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},

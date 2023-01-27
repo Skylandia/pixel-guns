@@ -16,7 +16,7 @@ public class AssaultRifleItem extends GunItem {
             ItemRegistry.STANDARD_RIFLE_BULLET,
             44,
             0.15f,
-            1.625f,
+            3.0f,
             1,
             LoadingType.CLIP,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_AR_P1, SoundRegistry.RELOAD_GENERIC_AR_P2, SoundRegistry.RELOAD_GENERIC_AR_P3},

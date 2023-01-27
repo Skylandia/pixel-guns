@@ -16,7 +16,7 @@ public class LightPistolItem extends GunItem {
             ItemRegistry.STANDARD_HANDGUN_BULLET,
             26,
             0.25f,
-            2.5f,
+            10.0f,
             1,
             LoadingType.CLIP,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_PISTOL_P1, SoundRegistry.RELOAD_GENERIC_PISTOL_P2, SoundRegistry.RELOAD_GENERIC_PISTOL_P3},

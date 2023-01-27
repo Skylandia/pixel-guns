@@ -44,7 +44,7 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
             ItemRegistry.ROCKET,
             30,
             0,
-            0,
+            25.0f,
             1,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_GENERIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
