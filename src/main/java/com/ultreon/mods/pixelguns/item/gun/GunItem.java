@@ -1,6 +1,7 @@
 package com.ultreon.mods.pixelguns.item.gun;
 
-import com.ultreon.mods.pixelguns.client.handler.RecoilHandler;
+import com.ultreon.mods.pixelguns.event.GunFireEvent;
+import com.ultreon.mods.pixelguns.event.forge.Event;
 import com.ultreon.mods.pixelguns.item.ModCreativeTab;
 import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
@@ -176,8 +177,10 @@ public abstract class GunItem extends Item {
 
     public void shoot(PlayerEntity player, ItemStack stack) {
 
+        Event.call(new GunFireEvent.Pre(player, stack));
+
         if (player.world.isClient) {
-            this.handleRecoil();
+            Event.call(new GunFireEvent.Post(player, stack));
             return;
         }
 
@@ -193,10 +196,8 @@ public abstract class GunItem extends Item {
             this.useAmmo(stack);
         }
         this.playFireAudio(world, player);
-    }
 
-    protected void handleRecoil() {
-        RecoilHandler.get().onGunFire();
+        Event.call(new GunFireEvent.Post(player, stack));
     }
 
     public void playFireAudio(World world, PlayerEntity user) {

@@ -1,6 +1,8 @@
 package com.ultreon.mods.pixelguns.item.gun.variant;
 
 import com.ultreon.mods.pixelguns.entity.projectile.RocketEntity;
+import com.ultreon.mods.pixelguns.event.GunFireEvent;
+import com.ultreon.mods.pixelguns.event.forge.Event;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
@@ -56,8 +58,9 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
 
     @Override
     public void shoot(PlayerEntity player, ItemStack stack) {
+        Event.call(new GunFireEvent.Pre(player, stack));
         if (player.world.isClient) {
-            this.handleRecoil();
+            Event.call(new GunFireEvent.Post(player, stack));
             return;
         }
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
@@ -79,6 +82,8 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
         }
 
         this.playFireAudio(world, player);
+
+        Event.call(new GunFireEvent.Post(player, stack));
     }
 
     @Override
