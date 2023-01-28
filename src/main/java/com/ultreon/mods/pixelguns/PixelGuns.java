@@ -1,5 +1,6 @@
 package com.ultreon.mods.pixelguns;
 
+import com.ultreon.mods.pixelguns.particle.ModParticles;
 import com.ultreon.mods.pixelguns.registry.*;
 
 import net.fabricmc.api.ModInitializer;
@@ -19,6 +20,8 @@ public class PixelGuns implements ModInitializer {
 
         EventHandlerRegistry.registerEventHandlers();
         PacketRegistry.SERVER.registerPackets();
+
+        ModParticles.registerParticles();
 
         Config.registerConfig();
     }
