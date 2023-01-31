@@ -19,9 +19,6 @@ import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 public class ItemRegistry {
 
     // Gun Crafting
-    public static final Item HARDENED_IRON_INGOT = ItemRegistry.register("hardened_iron_ingot", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item HARDENED_IRON_NUGGET = ItemRegistry.register("hardened_iron_nugget", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item PLASTIC = ItemRegistry.register("plastic", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
     public static final Item PISTOL_GRIP = ItemRegistry.register("pistol_grip", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
     public static final Item GUN_SCOPE = ItemRegistry.register("gun_scope", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
     public static final Item LONG_BARREL = ItemRegistry.register("long_barrel", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
@@ -30,17 +27,6 @@ public class ItemRegistry {
     public static final Item MODERN_STOCK = ItemRegistry.register("modern_stock", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
     public static final Item WOODEN_HANDGUARD = ItemRegistry.register("wooden_handguard", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
     public static final Item MODERN_HANDGUARD = ItemRegistry.register("modern_handguard", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-
-    // Blueprints
-    public static final Item BLUEPRINT_BUNDLE = ItemRegistry.register("blueprint_bundle", new BlueprintBundleItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(1)));
-    public static final Item PISTOL_BLUEPRINT = ItemRegistry.register("blueprint_pistol_light", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item HEAVY_PISTOL_BLUEPRINT = ItemRegistry.register("blueprint_pistol_heavy", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item MAGNUM_REVOLVER_BLUEPRINT = ItemRegistry.register("blueprint_revolver_magnum", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item MACHINE_PISTOL_BLUEPRINT = ItemRegistry.register("blueprint_smg_machinepistol", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item LIGHT_ASSAULT_RIFLE_BLUEPRINT = ItemRegistry.register("blueprint_assaultrifle_light", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item HEAVY_ASSAULT_RIFLE_BLUEPRINT = ItemRegistry.register("blueprint_assaultrifle_heavy", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item COMBAT_SHOTGUN_BLUEPRINT = ItemRegistry.register("blueprint_shotgun_combat", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item CLASSIC_SNIPER_RIFLE_BLUEPRINT = ItemRegistry.register("blueprint_sniper_classic", new BlueprintItem(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
 
     // Ammunition
     public static final Item STANDARD_HANDGUN_BULLET = ItemRegistry.register("standard_handgun_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
