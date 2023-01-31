@@ -1,6 +1,6 @@
 package com.ultreon.mods.pixelguns.block;
 
-import com.ultreon.mods.pixelguns.screen.WorkshopScreenHandler;
+import com.ultreon.mods.pixelguns.client.screen.WorkshopScreenHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;

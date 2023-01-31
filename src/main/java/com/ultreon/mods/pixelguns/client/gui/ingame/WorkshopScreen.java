@@ -1,7 +1,7 @@
 package com.ultreon.mods.pixelguns.client.gui.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.ultreon.mods.pixelguns.screen.WorkshopScreenHandler;
+import com.ultreon.mods.pixelguns.client.screen.WorkshopScreenHandler;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
