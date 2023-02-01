@@ -15,8 +15,8 @@ public class ScopedCrosshairRemover {
     @Inject(method = "renderCrosshair", at = @At("HEAD"), cancellable = true)
     public void removeCrosshair(MatrixStack stack, CallbackInfo info) {
         PlayerEntity player = MinecraftClient.getInstance().player;
-        if (player.getMainHandStack().getItem() instanceof GunItem gunItem) {
-            if (gunItem.isScoped && GunItem.isLoaded(player.getMainHandStack()) && MinecraftClient.getInstance().options.useKey.isPressed()) {
+        if (player.getMainHandStack().getItem() instanceof GunItem) {
+            if (GunItem.isLoaded(player.getMainHandStack()) && MinecraftClient.getInstance().options.useKey.isPressed()) {
                 info.cancel();
             }
         }
