@@ -5,7 +5,7 @@ import com.ultreon.mods.lib.client.gui.screen.GenericMenuScreen;
 import com.ultreon.mods.pixelguns.Config;
 import com.ultreon.mods.pixelguns.PixelGuns;
 import com.ultreon.mods.pixelguns.api.ConfigScreenPreferencesHook;
-import com.ultreon.mods.pixelguns.client.gui.ConfigScreen;
+import com.ultreon.mods.pixelguns.client.screen.ConfigScreen;
 import net.minecraft.client.gui.screen.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

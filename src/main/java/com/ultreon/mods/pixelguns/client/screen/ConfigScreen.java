@@ -1,4 +1,4 @@
-package com.ultreon.mods.pixelguns.client.gui;
+package com.ultreon.mods.pixelguns.client.screen;
 
 import com.ultreon.mods.lib.client.gui.screen.GenericMenuScreen;
 import com.ultreon.mods.pixelguns.Config;
