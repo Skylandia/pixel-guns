@@ -1,4 +1,4 @@
-package com.ultreon.mods.pixelguns.client.screen;
+package com.ultreon.mods.pixelguns.client.screen.handler;
 
 import com.ultreon.mods.pixelguns.registry.ScreenHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
