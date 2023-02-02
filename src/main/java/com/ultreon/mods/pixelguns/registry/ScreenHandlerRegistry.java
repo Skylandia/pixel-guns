@@ -1,6 +1,6 @@
 package com.ultreon.mods.pixelguns.registry;
 
-import com.ultreon.mods.pixelguns.client.gui.ingame.WorkshopScreen;
+import com.ultreon.mods.pixelguns.client.screen.WorkshopScreen;
 import com.ultreon.mods.pixelguns.client.screen.WorkshopScreenHandler;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
