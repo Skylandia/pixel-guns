@@ -99,9 +99,9 @@ public abstract class GunItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        String ammoType = Formatting.WHITE + "Ammo Type: " + Formatting.GRAY + this.ammunition.getName().getString();
-        String gunDamage = Formatting.WHITE + "Damage: " + Formatting.GRAY + this.damage;
-        String gunMagazine = Formatting.WHITE + "Ammo: " + Formatting.GRAY + GunItem.remainingAmmo(stack) + "/" + this.magazineSize;
+        String ammoType = Formatting.GRAY + "Ammo Type: " + Formatting.WHITE + this.ammunition.getName().getString();
+        String gunDamage = Formatting.GRAY + "Damage: " + Formatting.WHITE + this.damage;
+        String gunMagazine = Formatting.GRAY + "Ammo: " + Formatting.WHITE + GunItem.remainingAmmo(stack) + "/" + this.magazineSize;
 
         tooltip.add(Text.literal(ammoType));
         tooltip.add(Text.literal(gunDamage));
