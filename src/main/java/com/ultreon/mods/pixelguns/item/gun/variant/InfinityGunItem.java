@@ -1,6 +1,5 @@
 package com.ultreon.mods.pixelguns.item.gun.variant;
 
-import com.ultreon.mods.pixelguns.NbtNames;
 import com.ultreon.mods.pixelguns.entity.damagesource.EnergyOrbDamageSource;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
@@ -28,16 +27,9 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import software.bernie.geckolib3.util.GeckoLibUtil;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class InfinityGunItem extends GunItem implements IAnimatable {
-
-    //TODO use for something
-    public static final List<InfinityGunItem> BLUEPRINT_ITEM_LIST = new ArrayList<>();
-
-
     private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
 
     public InfinityGunItem() {
@@ -128,5 +120,11 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
             Vec3d lerpedLocation = userPos.add(normalizedHitPosition.multiply(i));
             world.spawnParticles(ParticleTypes.SONIC_BOOM, lerpedLocation.x, lerpedLocation.y, lerpedLocation.z, 1, 0, 0, 0, 0);
         }
+    }
+
+    public static class NbtNames {
+        public static final String INFINITY_GUN = "PixelGunsInfinityGun";
+        public static final String SHOOT_TICKS = "shootTicks";
+        public static final String IS_SHOOTING = "isShooting";
     }
 }

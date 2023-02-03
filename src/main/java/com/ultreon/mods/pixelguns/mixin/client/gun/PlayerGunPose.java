@@ -1,6 +1,5 @@
 package com.ultreon.mods.pixelguns.mixin.client.gun;
 
-import com.ultreon.mods.pixelguns.NbtNames;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.item.gun.variant.InfinityGunItem;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,7 +42,7 @@ public class PlayerGunPose {
         if (itemInHand.getItem() instanceof InfinityGunItem) {
             boolean isShooting = InfinityGunItem.isShooting(itemInHand);
             if (isShooting) {
-                itemInHand.getOrCreateSubNbt(NbtNames.INFINITY_GUN).getInt(NbtNames.SHOOT_TICKS);
+                itemInHand.getOrCreateSubNbt(InfinityGunItem.NbtNames.INFINITY_GUN).getInt(InfinityGunItem.NbtNames.SHOOT_TICKS);
                 int tickCount = player.age;
                 List<BeaconBlockEntity.BeamSegment> list = new ArrayList<>();
                 list.add(new BeaconBlockEntity.BeamSegment(new float[]{1, 1, 1}));
