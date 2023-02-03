@@ -8,7 +8,6 @@
   "client": [
     "client.ClientPlayerInteractionMixin",
     "client.CustomSwordSounds",
-    "client.ModMenuMixin",
     "client.gun.ads.AdsSensitivityPersistency",
     "client.gun.ads.AdsSensitivityModifier",
     "client.gun.ads.AdsSensitivityOption",
