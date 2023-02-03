@@ -28,8 +28,16 @@ public class WorkshopScreenHandler extends ScreenHandler {
         //some inventories do custom logic when a player opens it.
         inventory.onOpen(playerInventory.player);
 
+        //This will place the slot in the correct locations for a 3x3 Grid. The slots exist on both server and client!
+        //This will not render the background of the slots however, this is the Screens job
         int m;
         int l;
+        //Our inventory
+        for (m = 0; m < 3; ++m) {
+            for (l = 0; l < 3; ++l) {
+                this.addSlot(new Slot(inventory, l + m * 3, 62 + l * 18, 17 + m * 18));
+            }
+        }
         //The player inventory
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
