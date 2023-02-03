@@ -1,6 +1,6 @@
 package com.ultreon.mods.pixelguns.network.packet.s2c.play;
 
-import com.ultreon.mods.pixelguns.Config;
+import com.ultreon.mods.pixelguns.registry.ConfigRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
@@ -15,7 +15,7 @@ public class GunRecoilS2CPacket implements ClientPlayNetworking.PlayChannelHandl
         assert client.world != null;
         PlayerEntity player =  client.world.getPlayerByUuid(buf.readUuid());
         client.execute(() -> {
-            if (Config.DO_RECOIL.get()) {
+            if (ConfigRegistry.DO_RECOIL.get()) {
                 assert player != null;
                 player.setPitch(kick);
             }

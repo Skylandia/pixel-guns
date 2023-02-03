@@ -1,14 +1,15 @@
-package com.ultreon.mods.pixelguns;
+package com.ultreon.mods.pixelguns.registry;
 
+import com.ultreon.mods.pixelguns.PixelGuns;
 import net.minecraftforge.api.ModLoadingContext;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
-public class Config {
+public class ConfigRegistry {
+    private static ModConfig config;
+
     private static final ForgeConfigSpec.Builder CLIENT_BUILDER;
     public static final ForgeConfigSpec.BooleanValue DO_RECOIL;
-
-    private static ModConfig config;
 
     static {
         CLIENT_BUILDER = new ForgeConfigSpec.Builder();
