@@ -54,12 +54,6 @@ public class EntityRegistry {
                     .dimensions(EntityDimensions.fixed(15.0f, 100.0f))
     );
 
-    public static final EntityType<GasEntity> GAS = EntityRegistry.register(
-        "gas",
-        FabricEntityTypeBuilder.create(SpawnGroup.MISC, GasEntity::new)
-            .dimensions(EntityDimensions.fixed(1, 1))
-    );
-
 
     private static <T extends Entity> EntityType<T> register(String name, FabricEntityTypeBuilder<T> type) {
         return Registry.register(
@@ -76,7 +70,6 @@ public class EntityRegistry {
             EntityRegistry.RENDERER.registerEntityRenderer(ROCKET);
             EntityRegistry.RENDERER.registerEntityRenderer(NUCLEAR_BOMB);
             EntityRegistry.RENDERER.registerEntityRenderer(NUCLEAR_EXPLOSION);
-//        EntityRegistry.RENDERER.registerEntityRenderer(GAS);
         }
 
         private static void registerEntityRenderer(EntityType<? extends IAnimatable> entityType) {
