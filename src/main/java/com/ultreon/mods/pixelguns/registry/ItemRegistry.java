@@ -39,12 +39,7 @@ public class ItemRegistry {
     public static final Item STANDARD_RIFLE_BULLET = ItemRegistry.register("standard_rifle_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
     public static final Item HEAVY_RIFLE_BULLET = ItemRegistry.register("heavy_rifle_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
     public static final Item ROCKET = ItemRegistry.register("rocket", new RocketItem());
-    public static final Item ENERGY_BATTERY = ItemRegistry.register("energy_battery", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(12)){
-        @Override
-        public boolean hasGlint(ItemStack itemStack) {
-            return true;
-        }
-    });
+    public static final Item ENERGY_BATTERY = ItemRegistry.register("energy_battery", new EnergyBatteryItem());
 
     // Guns
     public static final Item PISTOL = ItemRegistry.register("pistol_light", new LightPistolItem());
@@ -72,6 +67,22 @@ public class ItemRegistry {
     // Block Items
     public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ModCreativeTab.MISC);
 
+    private static Item register(Block block, ItemGroup itemGroup) {
+        BlockItem blockItem = new BlockItem(block, new Item.Settings().group(itemGroup));
+        return ItemRegistry.register(Registry.BLOCK.getId(blockItem.getBlock()), blockItem);
+    }
+
+    private static Item register(String name, Item item) {
+        return ItemRegistry.register(ResourcePath.get(name), item);
+    }
+
+    private static Item register(Identifier identifier, Item item) {
+        if (item instanceof BlockItem) {
+            ((BlockItem)item).appendBlocks(Item.BLOCK_ITEMS, item);
+        }
+        return Registry.register(Registry.ITEM, identifier, item);
+    }
+
     @Environment(value = EnvType.CLIENT)
     public static class RENDERER {
         public static void registerItemRenderers() {
@@ -90,40 +101,5 @@ public class ItemRegistry {
         private static void registerGunRenderer(Item item) {
             GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item, "gun/")));
         }
-    }
-
-    /*
-     * REGISTER METHODS
-     */
-
-    // Renderer registry
-
-
-    // Item registry
-    private static Item register(Block block) {
-        return ItemRegistry.register(new BlockItem(block, new Item.Settings()));
-    }
-
-    private static Item register(Block block, ItemGroup itemGroup) {
-        return ItemRegistry.register(new BlockItem(block, new Item.Settings().group(itemGroup)));
-    }
-
-    private static Item register(BlockItem blockItem) {
-        return ItemRegistry.register(blockItem.getBlock(), blockItem);
-    }
-
-    protected static Item register(Block block, Item item) {
-        return ItemRegistry.register(Registry.BLOCK.getId(block), item);
-    }
-
-    private static Item register(String name, Item item) {
-        return ItemRegistry.register(ResourcePath.get(name), item);
-    }
-
-    private static Item register(Identifier identifier, Item item) {
-        if (item instanceof BlockItem) {
-            ((BlockItem)item).appendBlocks(Item.BLOCK_ITEMS, item);
-        }
-        return Registry.register(Registry.ITEM, identifier, item);
     }
 }
