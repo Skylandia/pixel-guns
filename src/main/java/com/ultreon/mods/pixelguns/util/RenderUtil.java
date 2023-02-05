@@ -1,4 +1,4 @@
-package com.ultreon.mods.pixelguns.client.util;
+package com.ultreon.mods.pixelguns.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 

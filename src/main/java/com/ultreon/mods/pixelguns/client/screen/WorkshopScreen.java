@@ -3,7 +3,7 @@ package com.ultreon.mods.pixelguns.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import com.ultreon.mods.pixelguns.client.screen.handler.WorkshopScreenHandler;
-import com.ultreon.mods.pixelguns.client.util.RenderUtil;
+import com.ultreon.mods.pixelguns.util.RenderUtil;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
