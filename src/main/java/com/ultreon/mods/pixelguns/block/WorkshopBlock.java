@@ -1,14 +1,17 @@
 package com.ultreon.mods.pixelguns.block;
 
 import com.ultreon.mods.pixelguns.client.screen.handler.WorkshopScreenHandler;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -28,8 +31,8 @@ public class WorkshopBlock extends EasyBlock {
     private static final Text TITLE = Text.of("Weapon Table");
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 15.0, 16.0);
 
-    public WorkshopBlock(Settings settings) {
-        super(settings);
+    public WorkshopBlock() {
+        super(FabricBlockSettings.of(Material.WOOD).strength(2.5f).sounds(BlockSoundGroup.WOOD).nonOpaque());
         setDefaultState(
                 getDefaultState()
                 .with(WATERLOGGED, false)

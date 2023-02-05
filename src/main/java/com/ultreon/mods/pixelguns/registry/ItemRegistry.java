@@ -5,14 +5,18 @@ import com.ultreon.mods.pixelguns.client.GeoModelGenerator;
 import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.item.*;
 import com.ultreon.mods.pixelguns.item.gun.variant.*;
-
 import com.ultreon.mods.pixelguns.util.ResourcePath;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
 import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 @SuppressWarnings("unused")
@@ -68,16 +72,24 @@ public class ItemRegistry {
     // Block Items
     public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ModCreativeTab.MISC);
 
-    // Register renderer
-    public static void registerItemRenderers() {
-//        ItemRegistry.registerGunRenderer(INFINITY_GUN);
-        ItemRegistry.registerGunRenderer(ROCKET_LAUNCHER);
-        ItemRegistry.registerItemRenderer(GAS_MASK);
-        // ItemRegistry.registerItemRenderer(ARMORED_VEST);
-        ItemRegistry.registerItemRenderer(ROCKET);
-        ItemRegistry.registerItemRenderer(KATANA);
-        ItemRegistry.registerItemRenderer(CROWBAR);
-        ItemRegistry.registerItemRenderer(GRENADE);
+    @Environment(value = EnvType.CLIENT)
+    public static class RENDERER {
+        public static void registerItemRenderers() {
+//        RENDERER.registerGunRenderer(INFINITY_GUN);
+            RENDERER.registerGunRenderer(ROCKET_LAUNCHER);
+            RENDERER.registerItemRenderer(GAS_MASK);
+//        RENDERER.registerItemRenderer(ARMORED_VEST);
+            RENDERER.registerItemRenderer(ROCKET);
+            RENDERER.registerItemRenderer(KATANA);
+            RENDERER.registerItemRenderer(CROWBAR);
+            RENDERER.registerItemRenderer(GRENADE);
+        }
+        private static void registerItemRenderer(Item item) {
+            GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item)));
+        }
+        private static void registerGunRenderer(Item item) {
+            GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item, "gun/")));
+        }
     }
 
     /*
@@ -85,12 +97,7 @@ public class ItemRegistry {
      */
 
     // Renderer registry
-    public static void registerItemRenderer(Item item) {
-        GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item)));
-    }
-    public static void registerGunRenderer(Item item) {
-        GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item, "gun/")));
-    }
+
 
     // Item registry
     private static Item register(Block block) {

@@ -66,10 +66,10 @@ public class EntityRegistry {
     @Environment(value = EnvType.CLIENT)
     public static class RENDERER {
         public static void registerEntityRenderers() {
-            EntityRegistry.RENDERER.registerEntityRenderer(GRENADE);
-            EntityRegistry.RENDERER.registerEntityRenderer(ROCKET);
-            EntityRegistry.RENDERER.registerEntityRenderer(NUCLEAR_BOMB);
-            EntityRegistry.RENDERER.registerEntityRenderer(NUCLEAR_EXPLOSION);
+            RENDERER.registerEntityRenderer(GRENADE);
+            RENDERER.registerEntityRenderer(ROCKET);
+            RENDERER.registerEntityRenderer(NUCLEAR_BOMB);
+            RENDERER.registerEntityRenderer(NUCLEAR_EXPLOSION);
         }
 
         private static void registerEntityRenderer(EntityType<? extends IAnimatable> entityType) {
