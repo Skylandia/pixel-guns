@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "pixel_guns:standard_handgun_cartridge",
+    "pixel_guns:shotgun_shell",
+    "pixel_guns:heavy_handgun_cartridge",
+    "pixel_guns:standard_rifle_cartridge",
+    "pixel_guns:heavy_rifle_cartridge",
+    "pixel_guns:rocket",
+    "pixel_guns:energy_battery"
+  ]
+}
