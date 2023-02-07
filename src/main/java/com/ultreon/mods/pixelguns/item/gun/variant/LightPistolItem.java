@@ -3,6 +3,8 @@ package com.ultreon.mods.pixelguns.item.gun.variant;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 
 public class LightPistolItem extends GunItem {
@@ -23,7 +25,10 @@ public class LightPistolItem extends GunItem {
             SoundRegistry.PISTOL_LIGHT,
             1,
             false,
-            new int[] {6, 16, 20}
+            new int[] {6, 16, 20},
+            new ItemStack[] {
+                new ItemStack(Items.IRON_INGOT, 14)
+            }
         );
     }
 }

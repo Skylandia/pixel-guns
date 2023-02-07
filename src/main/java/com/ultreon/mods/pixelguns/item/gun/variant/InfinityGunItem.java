@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -49,7 +50,10 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
             SoundEvents.BLOCK_BEACON_DEACTIVATE,
             1,
             false,
-            new int[] {5, -1, -1}
+            new int[] {5, -1, -1},
+            new ItemStack[] {
+                new ItemStack(Items.IRON_INGOT, 48)
+            }
         );
     }
 

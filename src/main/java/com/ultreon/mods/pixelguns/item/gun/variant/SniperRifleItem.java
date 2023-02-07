@@ -3,6 +3,8 @@ package com.ultreon.mods.pixelguns.item.gun.variant;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 
 public class SniperRifleItem extends GunItem {
@@ -23,7 +25,10 @@ public class SniperRifleItem extends GunItem {
             SoundRegistry.SNIPER_CLASSIC,
             5,
             true,
-            new int[] {1, 8, 17}
+            new int[] {1, 8, 17},
+            new ItemStack[] {
+                new ItemStack(Items.IRON_INGOT, 36)
+            }
         );
     }
 }

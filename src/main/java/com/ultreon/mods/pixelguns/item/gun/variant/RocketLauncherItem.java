@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -51,7 +52,10 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
             SoundRegistry.SNIPER_CLASSIC,
             1,
             false,
-            new int[] {1, 8, 17}
+            new int[] {1, 8, 17},
+            new ItemStack[] {
+                new ItemStack(Items.IRON_INGOT, 32)
+            }
         );
         GeckoLibNetwork.registerSyncable(this);
     }

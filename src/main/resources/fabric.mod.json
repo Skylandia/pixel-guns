@@ -24,6 +24,9 @@
     ],
     "client": [
       "com.ultreon.mods.pixelguns.PixelGunsClient"
+    ],
+    "fabric-datagen": [
+      "com.ultreon.mods.pixelguns.data.DataGeneration"
     ]
   },
   "mixins": [

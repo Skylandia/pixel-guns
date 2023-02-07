@@ -33,5 +33,4 @@ public class ScreenHandlerRegistry {
             HandledScreens.register(screenHandlerType, provider);
         }
     }
-
 }
