@@ -62,7 +62,7 @@ public class ItemRegistry {
     public static final Item KATANA = ItemRegistry.register("katana", new KatanaItem());
     public static final Item CROWBAR = ItemRegistry.register("crowbar", new CrowbarItem());
     public static final Item GRENADE = ItemRegistry.register("grenade", new GrenadeItem());
-    public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new ShieldItem(new FabricItemSettings().maxDamage(500).group(ModCreativeTab.MISC)));
+//    public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new ShieldItem(new FabricItemSettings().maxDamage(500).group(ModCreativeTab.MISC)));
 
     // Block Items
     public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ModCreativeTab.MISC);
