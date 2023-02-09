@@ -4,6 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import com.ultreon.mods.pixelguns.client.screen.handler.WorkshopScreenHandler;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
+import com.ultreon.mods.pixelguns.network.packet.c2s.play.WorkshopCraftC2SPacket;
+import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.registry.TagRegistry;
 import com.ultreon.mods.pixelguns.util.InventoryUtil;
 import com.ultreon.mods.pixelguns.util.RenderUtil;
@@ -17,10 +19,12 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3f;
@@ -37,8 +41,8 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
     private static final Identifier TEXTURE = ResourcePath.get("textures/gui/container/workshop.png");
 
-//    private Tab currentTab;
-//    private List<Tab> tabs = new ArrayList<>();
+    private Tab currentTab;
+    private List<Tab> tabs = new ArrayList<>();
     private List<ItemStack> materials;
 //    private List<MaterialItem> filteredMaterials;
     private PlayerInventory playerInventory;
@@ -46,7 +50,9 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     private ButtonWidget btnCraft;
     private CheckBox checkBoxMaterials;
     private ItemStack displayStack;
-    private ArrayList<ItemStack> items;
+    private List<ItemStack> guns = new ArrayList<>();
+    private List<ItemStack> ammo = new ArrayList<>();
+    private List<ItemStack> attachments = new ArrayList<>();
 
     public WorkshopScreen(WorkshopScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);
@@ -59,12 +65,24 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         this.playerInventoryTitleX = this.x + 8;
         this.playerInventoryTitleY = this.y + 91;
 
-        items = new ArrayList<>();
+        // Populate tabs
+        tabs.add(new Tab(new ItemStack(ItemRegistry.HEAVY_ASSAULT_RIFLE)));
+        tabs.add(new Tab(new ItemStack(ItemRegistry.STANDARD_RIFLE_BULLET)));
+        tabs.add(new Tab(new ItemStack(ItemRegistry.GUN_SCOPE)));
+
+        currentTab = tabs.get(0);
+
+        // Populate guns
         for (RegistryEntry<Item> gun : Registry.ITEM.iterateEntries(TagRegistry.GUNS)) {
-            items.add(gun.comp_349().getDefaultStack());
+            guns.add(gun.comp_349().getDefaultStack());
         }
 
-        displayStack = items.get(0);
+        // Populate ammo
+        for (RegistryEntry<Item> bullet : Registry.ITEM.iterateEntries(TagRegistry.AMMUNITION)) {
+            ammo.add(bullet.comp_349().getDefaultStack());
+        }
+
+        displayStack = guns.get(0);
         this.materials = List.of(((GunItem) displayStack.getItem()).getIngredients());
     }
 
@@ -74,29 +92,27 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
         // Left Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 9, this.y + 18, 15, 20, Text.literal("<"), button -> {
-            int nextIndex = items.indexOf(displayStack) - 1;
-            if (nextIndex < 0) nextIndex = items.size() - 1;
-            displayStack = items.get(nextIndex);
+            int nextIndex = guns.indexOf(displayStack) - 1;
+            if (nextIndex < 0) nextIndex = guns.size() - 1;
+            displayStack = guns.get(nextIndex);
             this.materials = List.of(((GunItem) displayStack.getItem()).getIngredients());
         }));
 
         // Right Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 153, this.y + 18, 15, 20, Text.literal(">"), button -> {
-            int nextIndex = items.indexOf(displayStack) + 1;
-            if (nextIndex >= items.size()) nextIndex = 0;
-            displayStack = items.get(nextIndex);
+            int nextIndex = guns.indexOf(displayStack) + 1;
+            if (nextIndex >= guns.size()) nextIndex = 0;
+            displayStack = guns.get(nextIndex);
             this.materials = List.of(((GunItem) displayStack.getItem()).getIngredients());
         }));
 
         // Assemble Button
         this.btnCraft = this.addDrawableChild(new ButtonWidget(this.x + 195, this.y + 16, 74, 20, Text.literal("Assemble"), button -> {
             GunItem currentGun = (GunItem) displayStack.getItem();
-            for (ItemStack ingredient : currentGun.getIngredients()) {
-                InventoryUtil.removeItemFromInventory(playerInventory.player, ingredient.getItem(), ingredient.getCount());
-            }
-            this.playerInventory.insertStack(displayStack.copy());
+            WorkshopCraftC2SPacket.send(currentGun.getIngredients(), displayStack);
         }));
 
+        // Disable the Assemble Button
         this.btnCraft.active = false;
     }
 
@@ -119,6 +135,22 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     }
 
     @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        boolean result = super.mouseClicked(mouseX, mouseY, mouseButton);
+
+        for (int i = 0; i < this.tabs.size(); i++) {
+            if (RenderUtil.isMouseWithin((int) mouseX, (int) mouseY, this.x + 28 * i, this.y - 28, 28, 28)) {
+                this.currentTab = this.tabs.get(i);
+//                this.loadItem(this.currentTab.getCurrentIndex());
+                this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
+        }
+
+        return result;
+    }
+
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
@@ -135,12 +167,44 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     protected void drawBackground(MatrixStack matrices, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.enableBlend();
 
+        renderUnselectedTabs(matrices);
         renderBackgroundTexture(matrices);
+        renderSelectedTab(matrices);
 
         renderCurrentGun(matrices);
         renderGunName(matrices);
 
         renderIngredients(matrices);
+    }
+
+    private void renderSelectedTab(MatrixStack matrices) {
+        if (this.currentTab != null)
+        {
+            int i = this.tabs.indexOf(this.currentTab);
+            int u = i == 0 ? 80 : 108;
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, TEXTURE);
+            this.drawTexture(matrices, this.x + 28 * i, this.y - 28, u, 214, 28, 32);
+            MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(this.currentTab.icon(), this.x + 28 * i + 6, this.y - 28 + 8);
+            MinecraftClient.getInstance().getItemRenderer().renderGuiItemOverlay(this.textRenderer, this.currentTab.icon(), this.x + 28 * i + 6, this.y - 28 + 8, null);
+        }
+    }
+
+    private void renderUnselectedTabs(MatrixStack matrices) {
+        for(int i = 0; i < this.tabs.size(); i++)
+        {
+            Tab tab = this.tabs.get(i);
+            if(tab != this.currentTab)
+            {
+                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                RenderSystem.setShaderTexture(0, TEXTURE);
+                this.drawTexture(matrices, this.x + 28 * i, this.y - 28, 80, 184, 28, 32);
+                MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(tab.icon(), this.x + 28 * i + 6, this.y - 28 + 8);
+                MinecraftClient.getInstance().getItemRenderer().renderGuiItemOverlay(this.textRenderer, tab.icon(), this.x + 28 * i + 6, this.y - 28 + 8, null);
+            }
+        }
     }
 
     private void renderIngredients(MatrixStack matrices) {
@@ -217,4 +281,6 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         this.drawTexture(matrices, x + 251, y, 174, 0, 24, 184);
         this.drawTexture(matrices, x + 172, y + 16, 198, 0, 20, 20);
     }
+
+    private record Tab(ItemStack icon) {}
 }

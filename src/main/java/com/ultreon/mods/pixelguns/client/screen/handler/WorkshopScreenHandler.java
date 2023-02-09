@@ -34,44 +34,32 @@ public class WorkshopScreenHandler extends ScreenHandler {
         ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 
-        if(slot.hasStack())
-        {
+        if(slot.hasStack()) {
             ItemStack slotStack = slot.getStack();
             stack = slotStack.copy();
 
-            if(index == 0)
-            {
-                if(!this.insertItem(slotStack, 1, 36, true))
-                {
+            if (index == 0) {
+                if (!this.insertItem(slotStack, 1, 36, true)) {
                     return ItemStack.EMPTY;
                 }
-            }
-            else
-            {
-                if(index < 28)
-                {
+            } else {
+                if (index < 28) {
                     if(!this.insertItem(slotStack, 28, 36, false))
                     {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if(index <= 36 && !this.insertItem(slotStack, 1, 28, false))
-                {
+                } else if (index <= 36 && !this.insertItem(slotStack, 1, 28, false)) {
                     return ItemStack.EMPTY;
                 }
             }
 
-            if(slotStack.isEmpty())
-            {
+            if (slotStack.isEmpty()) {
                 slot.setStack(ItemStack.EMPTY);
-            }
-            else
-            {
+            } else {
                 slot.markDirty();
             }
 
-            if(slotStack.getCount() == stack.getCount())
-            {
+            if (slotStack.getCount() == stack.getCount()) {
                 return ItemStack.EMPTY;
             }
 
