@@ -3,7 +3,6 @@ package com.ultreon.mods.pixelguns.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import com.ultreon.mods.pixelguns.client.screen.handler.WorkshopScreenHandler;
-import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.network.packet.c2s.play.WorkshopCraftC2SPacket;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.registry.TagRegistry;
@@ -11,13 +10,11 @@ import com.ultreon.mods.pixelguns.util.InventoryUtil;
 import com.ultreon.mods.pixelguns.util.RenderUtil;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
+import com.ultreon.mods.pixelguns.util.WorkshopCraftable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
@@ -35,7 +32,9 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
@@ -48,11 +47,9 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     private PlayerInventory playerInventory;
     // private WorkbenchBlockEntity workbench;
     private ButtonWidget btnCraft;
-    private CheckBox checkBoxMaterials;
+//    private CheckBox checkBoxMaterials;
     private ItemStack displayStack;
-    private List<ItemStack> guns = new ArrayList<>();
-    private List<ItemStack> ammo = new ArrayList<>();
-    private List<ItemStack> attachments = new ArrayList<>();
+    private Map<Tab, List<ItemStack>> recipes = new HashMap<>();
 
     public WorkshopScreen(WorkshopScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);
@@ -68,22 +65,24 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         // Populate tabs
         tabs.add(new Tab(new ItemStack(ItemRegistry.ASSAULT_RIFLE)));
         tabs.add(new Tab(new ItemStack(ItemRegistry.MEDIUM_BULLETS)));
-        tabs.add(new Tab(new ItemStack(ItemRegistry.GUN_SCOPE)));
+//        tabs.add(new Tab(new ItemStack(ItemRegistry.GUN_SCOPE)));
 
         currentTab = tabs.get(0);
 
         // Populate guns
+        recipes.put(tabs.get(0), new ArrayList<>());
         for (RegistryEntry<Item> gun : Registry.ITEM.iterateEntries(TagRegistry.GUNS)) {
-            guns.add(gun.comp_349().getDefaultStack());
+            recipes.get(tabs.get(0)).add(gun.comp_349().getDefaultStack());
         }
 
         // Populate ammo
+        recipes.put(tabs.get(1), new ArrayList<>());
         for (RegistryEntry<Item> bullet : Registry.ITEM.iterateEntries(TagRegistry.AMMUNITION)) {
-            ammo.add(bullet.comp_349().getDefaultStack());
+            recipes.get(tabs.get(1)).add(bullet.comp_349().getDefaultStack());
         }
 
-        displayStack = guns.get(0);
-        this.materials = List.of(((GunItem) displayStack.getItem()).getIngredients());
+        displayStack = recipes.get(currentTab).get(0);
+        this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
     }
 
     @Override
@@ -92,24 +91,24 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
         // Left Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 9, this.y + 18, 15, 20, Text.literal("<"), button -> {
-            int nextIndex = guns.indexOf(displayStack) - 1;
-            if (nextIndex < 0) nextIndex = guns.size() - 1;
-            displayStack = guns.get(nextIndex);
-            this.materials = List.of(((GunItem) displayStack.getItem()).getIngredients());
+            int nextIndex = recipes.get(currentTab).indexOf(displayStack) - 1;
+            if (nextIndex < 0) nextIndex = recipes.get(currentTab).size() - 1;
+            displayStack = recipes.get(currentTab).get(nextIndex);
+            this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
         }));
 
         // Right Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 153, this.y + 18, 15, 20, Text.literal(">"), button -> {
-            int nextIndex = guns.indexOf(displayStack) + 1;
-            if (nextIndex >= guns.size()) nextIndex = 0;
-            displayStack = guns.get(nextIndex);
-            this.materials = List.of(((GunItem) displayStack.getItem()).getIngredients());
+            int nextIndex = recipes.get(currentTab).indexOf(displayStack) + 1;
+            if (nextIndex >= recipes.get(currentTab).size()) nextIndex = 0;
+            displayStack = recipes.get(currentTab).get(nextIndex);
+            this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
         }));
 
         // Assemble Button
         this.btnCraft = this.addDrawableChild(new ButtonWidget(this.x + 195, this.y + 16, 74, 20, Text.literal("Assemble"), button -> {
-            GunItem currentGun = (GunItem) displayStack.getItem();
-            WorkshopCraftC2SPacket.send(currentGun.getIngredients(), displayStack);
+            WorkshopCraftable currentItem = (WorkshopCraftable) displayStack.getItem();
+            WorkshopCraftC2SPacket.send(currentItem.getIngredients(), displayStack);
         }));
 
         // Disable the Assemble Button
@@ -122,9 +121,9 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
         boolean canAssemble = true;
 
-        GunItem gunItem = (GunItem) this.displayStack.getItem();
+        WorkshopCraftable workshopItem = (WorkshopCraftable) this.displayStack.getItem();
 
-        for (ItemStack stack : gunItem.getIngredients()) {
+        for (ItemStack stack : workshopItem.getIngredients()) {
             if (InventoryUtil.itemCountInInventory(playerInventory.player, stack.getItem()) < stack.getCount()) {
                 canAssemble = false;
                 break;
@@ -141,6 +140,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         for (int i = 0; i < this.tabs.size(); i++) {
             if (RenderUtil.isMouseWithin((int) mouseX, (int) mouseY, this.x + 28 * i, this.y - 28, 28, 28)) {
                 this.currentTab = this.tabs.get(i);
+                this.displayStack = this.recipes.get(this.currentTab).get(0);
 //                this.loadItem(this.currentTab.getCurrentIndex());
                 this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
@@ -171,8 +171,8 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         renderBackgroundTexture(matrices);
         renderSelectedTab(matrices);
 
-        renderCurrentGun(matrices);
-        renderGunName(matrices);
+        renderCurrentItem(matrices);
+        renderItemName(matrices);
 
         renderIngredients(matrices);
     }
@@ -241,12 +241,12 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         }
     }
 
-    private void renderGunName(MatrixStack matrices) {
+    private void renderItemName(MatrixStack matrices) {
         this.client.textRenderer.draw(matrices, displayStack.getName(), this.x + 90 - this.client.textRenderer.getWidth(displayStack.getName())/2, this.y + 25, 0xFFFFFF);
     }
 
 
-    private void renderCurrentGun(MatrixStack matrices) {
+    private void renderCurrentItem(MatrixStack matrices) {
         float partialTicks = MinecraftClient.getInstance().getTickDelta();
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -256,12 +256,12 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         modelViewStack.push();
 
         modelViewStack.translate(x + 88, y + 60, 100);
-        modelViewStack.scale(100F, -100F, 100F);
-        modelViewStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MinecraftClient.getInstance().player.age + partialTicks));
+        modelViewStack.scale(75F, -75F, 75F);
+        modelViewStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MinecraftClient.getInstance().gameRenderer.ticks + partialTicks));
         modelViewStack.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(30F));
         RenderSystem.applyModelViewMatrix();
         VertexConsumerProvider.Immediate buffer = this.client.getBufferBuilders().getEntityVertexConsumers();
-        MinecraftClient.getInstance().getItemRenderer().renderItem(this.displayStack, ModelTransformation.Mode.FIXED, false, matrices, buffer, 15728880, OverlayTexture.DEFAULT_UV, RenderUtil.getModel(this.displayStack));
+        MinecraftClient.getInstance().getItemRenderer().renderItem(this.displayStack, ModelTransformation.Mode.FIXED, false, matrices, buffer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, RenderUtil.getModel(this.displayStack));
         buffer.draw();
 
         modelViewStack.pop();

@@ -4,6 +4,8 @@ import com.ultreon.mods.pixelguns.armor.ArmoredArmor;
 import com.ultreon.mods.pixelguns.client.GeoModelGenerator;
 import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.item.*;
+import com.ultreon.mods.pixelguns.item.ammo.variant.RocketItem;
+import com.ultreon.mods.pixelguns.item.ammo.variant.*;
 import com.ultreon.mods.pixelguns.item.gun.variant.*;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
@@ -33,10 +35,10 @@ public class ItemRegistry {
     public static final Item MODERN_HANDGUARD = ItemRegistry.register("modern_handguard", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
 
     // Ammunition
-    public static final Item SHOTGUN_SHELL = ItemRegistry.register("shotgun_shell", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
-    public static final Item LIGHT_BULLETS = ItemRegistry.register("light_bullets", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
-    public static final Item MEDIUM_BULLETS = ItemRegistry.register("medium_bullets", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
-    public static final Item HEAVY_BULLETS = ItemRegistry.register("heavy_bullets", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
+    public static final Item SHOTGUN_SHELL = ItemRegistry.register("shotgun_shell", new ShotgunShellItem());
+    public static final Item LIGHT_BULLETS = ItemRegistry.register("light_bullets", new LightBulletsItem());
+    public static final Item MEDIUM_BULLETS = ItemRegistry.register("medium_bullets", new MediumBulletsItem());
+    public static final Item HEAVY_BULLETS = ItemRegistry.register("heavy_bullets", new HeavyBulletsItem());
     public static final Item ROCKET = ItemRegistry.register("rocket", new RocketItem());
     public static final Item ENERGY_BATTERY = ItemRegistry.register("energy_battery", new EnergyBatteryItem());
 

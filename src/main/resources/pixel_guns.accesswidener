@@ -11,3 +11,4 @@ accessible method net/minecraft/recipe/Ingredient <init> (Ljava/util/stream/Stre
 accessible method net/minecraft/recipe/Ingredient$StackEntry <init> (Lnet/minecraft/item/ItemStack;)V
 accessible method net/minecraft/recipe/Ingredient$TagEntry <init> (Lnet/minecraft/tag/TagKey;)V
 accessible method net/minecraft/recipe/Ingredient entryFromJson (Lcom/google/gson/JsonObject;)Lnet/minecraft/recipe/Ingredient$Entry;
+accessible field net/minecraft/client/render/GameRenderer ticks I
