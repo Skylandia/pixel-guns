@@ -11,12 +11,12 @@ public class ModelPredicateRegistry {
     public static void registerModelPredicates() {
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.PISTOL);
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.HEAVY_PISTOL);
-        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.MAGNUM_REVOLVER);
-        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.MACHINE_PISTOL);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.REVOLVER);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.SUBMACHINE_GUN);
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.LIGHT_ASSAULT_RIFLE);
-        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.HEAVY_ASSAULT_RIFLE);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.ASSAULT_RIFLE);
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.COMBAT_SHOTGUN);
-        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.CLASSIC_SNIPER_RIFLE);
+        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.SNIPER_RIFLE);
 
         ModelPredicateProviderRegistry.register(ItemRegistry.ROCKET_LAUNCHER, ResourcePath.get("aiming"), (stack, world, entity, seed) -> entity != null && MinecraftClient.getInstance().options.useKey.isPressed() && GunItem.isLoaded(stack) ? 1.0f : 0.0f);
     }

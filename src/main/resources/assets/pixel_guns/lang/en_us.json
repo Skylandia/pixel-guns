@@ -5,10 +5,6 @@
 	"itemGroup.pixel_guns.misc" : "PG - Miscellaneous",
 	"itemGroup.pixel_guns.guns" : "PG - Weapons",
 
-	"item.pixel_guns.hardened_iron_ingot" : "Hardened Iron Ingot",
-	"item.pixel_guns.hardened_iron_nugget" : "Hardened Iron Nugget",
-	"item.pixel_guns.plastic" : "Plastic",
-
 	"item.pixel_guns.gun_scope" : "Gun Scope",
 	"item.pixel_guns.pistol_grip" : "Pistol Grip",
 	"item.pixel_guns.long_barrel" : "Long Barrel",
@@ -17,16 +13,6 @@
 	"item.pixel_guns.modern_stock" : "Modern Stock",
 	"item.pixel_guns.wooden_handguard" : "Wooden Handguard",
 	"item.pixel_guns.modern_handguard" : "Modern Handguard",
-
-	"item.pixel_guns.blueprint_bundle" : "Blueprint Bundle",
-	"item.pixel_guns.blueprint_pistol_light" : "Pistol Blueprint",
-	"item.pixel_guns.blueprint_pistol_heavy" : "Heavy Pistol Blueprint",
-	"item.pixel_guns.blueprint_revolver_magnum" : "Magnum Revolver Blueprint",
-	"item.pixel_guns.blueprint_smg_machinepistol" : "Machine Pistol Blueprint",
-	"item.pixel_guns.blueprint_assaultrifle_light" : "Assault Rifle Blueprint",
-	"item.pixel_guns.blueprint_assaultrifle_heavy" : "Heavy Assault Rifle Blueprint",
-	"item.pixel_guns.blueprint_shotgun_combat" : "Combat Shotgun Blueprint",
-	"item.pixel_guns.blueprint_sniper_classic" : "Hunting Rifle Blueprint",
 
 	"item.pixel_guns.standard_handgun_cartridge" : "Light Bullets",
 	"item.pixel_guns.heavy_handgun_cartridge" : "Light Bullets-H",
@@ -38,14 +24,15 @@
 
 
 
-	"item.pixel_guns.pistol_light" : "Pistol",
-	"item.pixel_guns.pistol_heavy" : "Heavy Pistol",
-	"item.pixel_guns.revolver_magnum" : "Revolver",
-	"item.pixel_guns.smg_machinepistol" : "Machine Pistol",
-	"item.pixel_guns.assaultrifle_light" : "Assault Rifle",
-	"item.pixel_guns.assaultrifle_heavy" : "Heavy Assault Rifle",
-	"item.pixel_guns.shotgun_combat" : "Combat Shotgun",
-	"item.pixel_guns.sniper_classic" : "Hunting Rifle",
+	"item.pixel_guns.pistol" : "Pistol",
+	"item.pixel_guns.heavy_pistol" : "Heavy Pistol",
+	"item.pixel_guns.revolver" : "Revolver",
+	"item.pixel_guns.submachine_gun" : "SMG",
+	"item.pixel_guns.light_assault_rifle" : "Light Assault Rifle",
+	"item.pixel_guns.assault_rifle" : "Assault Rifle",
+	"item.pixel_guns.combat_shotgun" : "Combat Shotgun",
+	"item.pixel_guns.pump_shotgun" : "Pump Shotgun",
+	"item.pixel_guns.sniper_rifle" : "Sniper Rifle",
 	"item.pixel_guns.rocket_launcher" : "Rocket Launcher",
 	"item.pixel_guns.infinity_gun" : "Infinity Gun",
 
@@ -56,7 +43,6 @@
 	"item.pixel_guns.katana" : "Katana",
 	"item.pixel_guns.gas_mask" : "Gas Mask",
 
-	"block.pixel_guns.ufo_interior" : "UFO Interior",
 	"block.pixel_guns.workshop" : "Workshop",
 
 	"attack.pixel_guns.energy_orb": "%1$s got obliterated from an Energy Orb",

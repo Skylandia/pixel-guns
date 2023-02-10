@@ -66,7 +66,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         this.playerInventoryTitleY = this.y + 91;
 
         // Populate tabs
-        tabs.add(new Tab(new ItemStack(ItemRegistry.HEAVY_ASSAULT_RIFLE)));
+        tabs.add(new Tab(new ItemStack(ItemRegistry.ASSAULT_RIFLE)));
         tabs.add(new Tab(new ItemStack(ItemRegistry.STANDARD_RIFLE_BULLET)));
         tabs.add(new Tab(new ItemStack(ItemRegistry.GUN_SCOPE)));
 
@@ -276,10 +276,10 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - backgroundWidth) / 2;
         int y = (height - backgroundHeight) / 2;
-        this.drawTexture(matrices, x, y, 0, 0, 173, 184);
-        this.drawTexture(matrices, x + 173, y, 78, 184, 173, 0, 1, 184, 256, 256);
-        this.drawTexture(matrices, x + 251, y, 174, 0, 24, 184);
-        this.drawTexture(matrices, x + 172, y + 16, 198, 0, 20, 20);
+        drawTexture(matrices, x, y, 0, 0, 173, 184);
+        drawTexture(matrices, x + 173, y, 78, 184, 173, 0, 1, 184, 256, 256);
+        drawTexture(matrices, x + 251, y, 174, 0, 24, 184);
+        drawTexture(matrices, x + 172, y + 16, 198, 0, 20, 20);
     }
 
     private record Tab(ItemStack icon) {}

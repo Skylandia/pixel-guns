@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 
-public class MagnumRevolverItem extends GunItem {
-    public MagnumRevolverItem() {
+public class RevolverItem extends GunItem {
+    public RevolverItem() {
         super(
             GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
             11.0f,

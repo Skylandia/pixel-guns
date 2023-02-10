@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 
-public class LightPistolItem extends GunItem {
-    public LightPistolItem() {
+public class PistolItem extends GunItem {
+    public PistolItem() {
         super(
             AmmoLoadingType.SEMI_AUTOMATIC,
             5.5f,
