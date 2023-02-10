@@ -67,7 +67,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
         // Populate tabs
         tabs.add(new Tab(new ItemStack(ItemRegistry.ASSAULT_RIFLE)));
-        tabs.add(new Tab(new ItemStack(ItemRegistry.STANDARD_RIFLE_BULLET)));
+        tabs.add(new Tab(new ItemStack(ItemRegistry.MEDIUM_BULLETS)));
         tabs.add(new Tab(new ItemStack(ItemRegistry.GUN_SCOPE)));
 
         currentTab = tabs.get(0);

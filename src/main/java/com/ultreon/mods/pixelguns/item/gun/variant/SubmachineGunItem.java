@@ -15,7 +15,7 @@ public class SubmachineGunItem extends GunItem {
             128,
             2,
             30,
-            ItemRegistry.STANDARD_HANDGUN_BULLET,
+            ItemRegistry.LIGHT_BULLETS,
             44,
             0.0f,
             10.0f,

@@ -10,7 +10,6 @@ import net.minecraft.util.Hand;
 public class ModelPredicateRegistry {
     public static void registerModelPredicates() {
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.PISTOL);
-        ModelPredicateRegistry.registerGunPredicate(ItemRegistry.HEAVY_PISTOL);
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.REVOLVER);
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.SUBMACHINE_GUN);
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.LIGHT_ASSAULT_RIFLE);

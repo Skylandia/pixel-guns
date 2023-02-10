@@ -33,17 +33,15 @@ public class ItemRegistry {
     public static final Item MODERN_HANDGUARD = ItemRegistry.register("modern_handguard", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
 
     // Ammunition
-    public static final Item STANDARD_HANDGUN_BULLET = ItemRegistry.register("standard_handgun_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
     public static final Item SHOTGUN_SHELL = ItemRegistry.register("shotgun_shell", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
-    public static final Item HEAVY_HANDGUN_BULLET = ItemRegistry.register("heavy_handgun_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
-    public static final Item STANDARD_RIFLE_BULLET = ItemRegistry.register("standard_rifle_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
-    public static final Item HEAVY_RIFLE_BULLET = ItemRegistry.register("heavy_rifle_cartridge", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
+    public static final Item LIGHT_BULLETS = ItemRegistry.register("light_bullets", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
+    public static final Item MEDIUM_BULLETS = ItemRegistry.register("medium_bullets", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
+    public static final Item HEAVY_BULLETS = ItemRegistry.register("heavy_bullets", new Item(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(64)));
     public static final Item ROCKET = ItemRegistry.register("rocket", new RocketItem());
     public static final Item ENERGY_BATTERY = ItemRegistry.register("energy_battery", new EnergyBatteryItem());
 
     // Guns
     public static final Item PISTOL = ItemRegistry.register("pistol", new PistolItem());
-    public static final Item HEAVY_PISTOL = ItemRegistry.register("heavy_pistol", new HeavyPistolItem());
     public static final Item REVOLVER = ItemRegistry.register("revolver", new RevolverItem());
     public static final Item PUMP_SHOTGUN = ItemRegistry.register("pump_shotgun", new PumpShotgunItem());
     public static final Item COMBAT_SHOTGUN = ItemRegistry.register("combat_shotgun", new CombatShotgunItem());

@@ -15,7 +15,7 @@ public class PistolItem extends GunItem {
             128,
             4,
             12,
-            ItemRegistry.STANDARD_HANDGUN_BULLET,
+            ItemRegistry.LIGHT_BULLETS,
             26,
             0.25f,
             10.0f,

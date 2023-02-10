@@ -15,7 +15,7 @@ public class SniperRifleItem extends GunItem {
             128,
             20,
             5,
-            ItemRegistry.HEAVY_RIFLE_BULLET,
+            ItemRegistry.HEAVY_BULLETS,
             26,
             0.01f,
             25.0f,

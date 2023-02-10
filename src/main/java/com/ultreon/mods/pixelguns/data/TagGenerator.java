@@ -16,7 +16,6 @@ public class TagGenerator extends FabricTagProvider<Item> {
 	protected void generateTags() {
 		getOrCreateTagBuilder(TagRegistry.GUNS)
 			.add(ItemRegistry.PISTOL)
-			.add(ItemRegistry.HEAVY_PISTOL)
 			.add(ItemRegistry.REVOLVER)
 			.add(ItemRegistry.PUMP_SHOTGUN)
 			.add(ItemRegistry.COMBAT_SHOTGUN)
@@ -29,11 +28,10 @@ public class TagGenerator extends FabricTagProvider<Item> {
 		;
 
 		getOrCreateTagBuilder(TagRegistry.AMMUNITION)
-			.add(ItemRegistry.STANDARD_HANDGUN_BULLET)
 			.add(ItemRegistry.SHOTGUN_SHELL)
-			.add(ItemRegistry.HEAVY_HANDGUN_BULLET)
-			.add(ItemRegistry.STANDARD_RIFLE_BULLET)
-			.add(ItemRegistry.HEAVY_RIFLE_BULLET)
+			.add(ItemRegistry.LIGHT_BULLETS)
+			.add(ItemRegistry.MEDIUM_BULLETS)
+			.add(ItemRegistry.HEAVY_BULLETS)
 			.add(ItemRegistry.ROCKET)
 			.add(ItemRegistry.ENERGY_BATTERY);
 	}

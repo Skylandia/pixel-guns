@@ -16,7 +16,7 @@ public class HeavyAssaultRifleItem extends GunItem {
             128,
             3,
             50,
-            ItemRegistry.STANDARD_RIFLE_BULLET,
+            ItemRegistry.MEDIUM_BULLETS,
             48,
             0.125f,
             3.0f,
