@@ -1,10 +1,9 @@
 package com.ultreon.mods.pixelguns.registry;
 
-import com.ultreon.mods.pixelguns.client.GeoModelGenerator;
 import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.*;
-import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
-import com.ultreon.mods.pixelguns.entity.projectile.RocketEntity;
+import com.ultreon.mods.pixelguns.entity.projectile.thrown.*;
+import com.ultreon.mods.pixelguns.entity.projectile.*;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
 import net.fabricmc.api.EnvType;
@@ -16,9 +15,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.registry.Registry;
 
-import software.bernie.geckolib3.core.IAnimatable;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import software.bernie.geckolib.animatable.GeoEntity;
 
 public class EntityRegistry {
 
@@ -57,7 +57,7 @@ public class EntityRegistry {
 
     private static <T extends Entity> EntityType<T> register(String name, FabricEntityTypeBuilder<T> type) {
         return Registry.register(
-            Registry.ENTITY_TYPE,
+            Registries.ENTITY_TYPE,
             ResourcePath.get(name),
             type.build()
         );
@@ -72,8 +72,8 @@ public class EntityRegistry {
             RENDERER.registerEntityRenderer(NUCLEAR_EXPLOSION);
         }
 
-        private static void registerEntityRenderer(EntityType<? extends IAnimatable> entityType) {
-            EntityRendererRegistry.register(entityType, (ctx) -> GeoRendererGenerator.generateEntityRenderer(ctx, GeoModelGenerator.generateEntityModel(entityType)));
+        private static <T extends Entity & GeoEntity> void registerEntityRenderer(EntityType<T> entityType) {
+            EntityRendererRegistry.register(entityType, (ctx) -> GeoRendererGenerator.entity(entityType, ctx));
         }
     }
 }

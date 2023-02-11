@@ -1,10 +1,13 @@
 package com.ultreon.mods.pixelguns.item.gun.variant;
 
+import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.damagesource.EnergyOrbDamageSource;
+import com.ultreon.mods.pixelguns.item.KatanaItem;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
@@ -20,18 +23,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.RenderProvider;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-public class InfinityGunItem extends GunItem implements IAnimatable {
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public class InfinityGunItem extends GunItem implements GeoItem {
 
     public InfinityGunItem() {
         super(
@@ -59,14 +66,6 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
 
     public static boolean isShooting(ItemStack infinityGun) {
         return infinityGun.getOrCreateSubNbt(NbtNames.INFINITY_GUN).getBoolean(NbtNames.IS_SHOOTING);
-    }
-
-    @Override
-    public void registerControllers(AnimationData data) {}
-
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
     }
 
     @Override
@@ -111,7 +110,7 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
                 public Optional<Float> getBlastResistance(Explosion explosion, BlockView blockGetter, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
                     return Optional.of(0f);
                 }
-            }, curPos.x, curPos.y, curPos.z, 7f, true, Explosion.DestructionType.DESTROY);
+            }, curPos.x, curPos.y, curPos.z, 7f, true, World.ExplosionSourceType.NONE);
 
             curPos = curPos.add(iter);
         }
@@ -130,5 +129,42 @@ public class InfinityGunItem extends GunItem implements IAnimatable {
         public static final String INFINITY_GUN = "PixelGunsInfinityGun";
         public static final String SHOOT_TICKS = "shootTicks";
         public static final String IS_SHOOTING = "isShooting";
+    }
+
+    /*
+     * Animation Side
+     */
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+
+    @Override
+    public void createRenderer(Consumer<Object> consumer) {
+        consumer.accept(new RenderProvider() {
+            private GeoItemRenderer<InfinityGunItem> renderer;
+
+            @Override
+            public BuiltinModelItemRenderer getCustomRenderer() {
+                if (this.renderer == null)
+                    this.renderer = GeoRendererGenerator.item(InfinityGunItem.this);
+
+                return this.renderer;
+            }
+        });
+    }
+
+    @Override
+    public Supplier<Object> getRenderProvider() {
+        return this.renderProvider;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

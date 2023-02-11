@@ -1,17 +1,18 @@
 package com.ultreon.mods.pixelguns.mixin.client.gun.ads;
 
 import com.mojang.authlib.GameProfile;
+
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
+
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,8 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractClientPlayerEntity.class)
 public abstract class AdsZoom extends PlayerEntity {
-    public AdsZoom(World level, BlockPos blockPos, float f, GameProfile gameProfile, @Nullable PlayerPublicKey profilePublicKey) {
-        super(level, blockPos, f, gameProfile, profilePublicKey);
+
+    public AdsZoom(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
+        super(world, blockPos, f, gameProfile);
     }
 
     // Apply camera zoom on ADS

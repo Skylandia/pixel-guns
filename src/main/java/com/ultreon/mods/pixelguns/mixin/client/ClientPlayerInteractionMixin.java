@@ -22,7 +22,7 @@ public class ClientPlayerInteractionMixin {
         assert player != null;
         if (player.getMainHandStack().getItem() == ItemRegistry.KATANA || player.getMainHandStack().getItem() == ItemRegistry.CROWBAR) {
             assert world != null;
-            world.playSound(player.getBlockPos(), SoundRegistry.KATANA_HIT, SoundCategory.PLAYERS, 1, 1, false);
+            world.playSound(player.getX(), player.getY(), player.getZ(), SoundRegistry.KATANA_HIT, SoundCategory.PLAYERS, 1, 1, false);
         }
     }
 }

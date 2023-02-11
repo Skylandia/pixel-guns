@@ -30,7 +30,7 @@ public class WorkshopScreenHandler extends ScreenHandler {
 
     // Shift + Player Inv Slot
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int index) {
+    public ItemStack quickMove(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
 

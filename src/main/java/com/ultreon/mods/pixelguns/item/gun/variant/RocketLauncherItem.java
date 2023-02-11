@@ -1,5 +1,6 @@
 package com.ultreon.mods.pixelguns.item.gun.variant;
 
+import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.projectile.RocketEntity;
 import com.ultreon.mods.pixelguns.event.GunFireEvent;
 import com.ultreon.mods.pixelguns.event.forge.Event;
@@ -7,9 +8,8 @@ import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -18,22 +18,24 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 
-import software.bernie.geckolib3.core.AnimationState;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.builder.ILoopType;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.network.GeckoLibNetwork;
-import software.bernie.geckolib3.network.ISyncable;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
+import software.bernie.geckolib.animatable.client.RenderProvider;
+import software.bernie.geckolib.constant.DefaultAnimations;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncable {
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public class RocketLauncherItem extends GunItem implements GeoItem {
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     public RocketLauncherItem() {
         super(
@@ -57,7 +59,7 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
                 new ItemStack(Items.IRON_INGOT, 32)
             }
         );
-        GeckoLibNetwork.registerSyncable(this);
+        SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
     @Override
@@ -70,7 +72,7 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         ServerWorld world = serverPlayer.getWorld();
 
-        this.sendAnimationPacket(ANIM_FIRE, world, player, stack);
+        triggerAnim(player, GeoItem.getOrAssignId(player.getMainHandStack(), world), "shoot_controller", "shoot");
 
         player.getItemCooldownManager().set(this, this.fireCooldown);
 
@@ -94,7 +96,7 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
     protected void doReloadTick(World world, NbtCompound nbtCompound, PlayerEntity player, ItemStack stack) {
         int reloadTick = nbtCompound.getInt("reloadTick");
         if (reloadTick == 0 && (world instanceof ServerWorld serverWorld)) {
-            sendAnimationPacket(ANIM_RELOAD, serverWorld, player, stack);
+            triggerAnim(player, GeoItem.getOrAssignId(player.getMainHandStack(), serverWorld), "reload_controller", "reload");
         }
         super.doReloadTick(world, nbtCompound, player, stack);
     }
@@ -103,47 +105,33 @@ public class RocketLauncherItem extends GunItem implements IAnimatable, ISyncabl
      * ANIMATION SIDE
      */
 
-    protected void sendAnimationPacket(int animation, ServerWorld world, PlayerEntity player, ItemStack stack) {
-        final int id = GeckoLibUtil.guaranteeIDForStack(stack, world);
-        GeckoLibNetwork.syncAnimation(player, this, id, animation);
-        for (ServerPlayerEntity otherPlayer : PlayerLookup.tracking(player)) {
-            GeckoLibNetwork.syncAnimation(otherPlayer, this, id, animation);
-        }
-    }
-
-    public <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
-        return PlayState.CONTINUE;
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "reload_controller", 1, state -> PlayState.CONTINUE)
+            .triggerableAnim("reload", DefaultAnimations.ATTACK_BITE));
+        controllers.add(new AnimationController<>(this, "shoot_controller", 1, state -> PlayState.CONTINUE)
+            .triggerableAnim("shoot", DefaultAnimations.ATTACK_BITE));
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 1, this::predicate));
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 
     @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
-    }
+    public void createRenderer(Consumer<Object> consumer) {
+        consumer.accept(new RenderProvider() {
+            private final GeoItemRenderer<RocketLauncherItem> renderer = GeoRendererGenerator.item(RocketLauncherItem.this);
 
-    public static final int ANIM_RELOAD = 0;
-    public static final int ANIM_FIRE = 1;
-    @Override
-    public void onAnimationSync(int id, int state) {
-        switch (state) {
-            case ANIM_RELOAD -> {
-                final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, "controller");
-                if (controller.getAnimationState() == AnimationState.Stopped) {
-                    controller.markNeedsReload();
-                    controller.setAnimation(new AnimationBuilder().addAnimation("reload", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-                }
+            @Override
+            public BuiltinModelItemRenderer getCustomRenderer() {
+                return renderer;
             }
-            case ANIM_FIRE -> {
-                final AnimationController<?> controller = GeckoLibUtil.getControllerForID(this.factory, id, "controller");
-                if (controller.getAnimationState() == AnimationState.Stopped) {
-                    controller.markNeedsReload();
-                    controller.setAnimation(new AnimationBuilder().addAnimation("fire", ILoopType.EDefaultLoopTypes.PLAY_ONCE));
-                }
-            }
-        }
+        });
+    }
+
+    @Override
+    public Supplier<Object> getRenderProvider() {
+        return this.renderProvider;
     }
 }

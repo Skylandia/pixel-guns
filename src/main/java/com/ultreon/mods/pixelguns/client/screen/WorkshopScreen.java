@@ -12,6 +12,7 @@ import com.ultreon.mods.pixelguns.util.ResourcePath;
 
 import com.ultreon.mods.pixelguns.util.WorkshopCraftable;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.GameModeSelectionScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.*;
@@ -21,13 +22,15 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3f;
 
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.util.math.MathHelper;
+import org.joml.AxisAngle4f;
+import org.joml.Quaternionf;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -71,13 +74,13 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
         // Populate guns
         recipes.put(tabs.get(0), new ArrayList<>());
-        for (RegistryEntry<Item> gun : Registry.ITEM.iterateEntries(TagRegistry.GUNS)) {
+        for (RegistryEntry<Item> gun : Registries.ITEM.iterateEntries(TagRegistry.GUNS)) {
             recipes.get(tabs.get(0)).add(gun.comp_349().getDefaultStack());
         }
 
         // Populate ammo
         recipes.put(tabs.get(1), new ArrayList<>());
-        for (RegistryEntry<Item> bullet : Registry.ITEM.iterateEntries(TagRegistry.AMMUNITION)) {
+        for (RegistryEntry<Item> bullet : Registries.ITEM.iterateEntries(TagRegistry.AMMUNITION)) {
             recipes.get(tabs.get(1)).add(bullet.comp_349().getDefaultStack());
         }
 
@@ -88,14 +91,13 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     @Override
     protected void init() {
         super.init();
-
         // Left Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 9, this.y + 18, 15, 20, Text.literal("<"), button -> {
             int nextIndex = recipes.get(currentTab).indexOf(displayStack) - 1;
             if (nextIndex < 0) nextIndex = recipes.get(currentTab).size() - 1;
             displayStack = recipes.get(currentTab).get(nextIndex);
             this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
-        }));
+        }, a -> Text.literal("previous item")));
 
         // Right Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 153, this.y + 18, 15, 20, Text.literal(">"), button -> {
@@ -103,13 +105,13 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
             if (nextIndex >= recipes.get(currentTab).size()) nextIndex = 0;
             displayStack = recipes.get(currentTab).get(nextIndex);
             this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
-        }));
+        }, a -> Text.literal("next item")));
 
         // Assemble Button
         this.btnCraft = this.addDrawableChild(new ButtonWidget(this.x + 195, this.y + 16, 74, 20, Text.literal("Assemble"), button -> {
             WorkshopCraftable currentItem = (WorkshopCraftable) displayStack.getItem();
             WorkshopCraftC2SPacket.send(currentItem.getIngredients(), displayStack);
-        }));
+        }, a -> Text.literal("assemble item")));
 
         // Disable the Assemble Button
         this.btnCraft.active = false;
@@ -182,7 +184,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         {
             int i = this.tabs.indexOf(this.currentTab);
             int u = i == 0 ? 80 : 108;
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShader(GameRenderer::getPositionTexProgram);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, TEXTURE);
             this.drawTexture(matrices, this.x + 28 * i, this.y - 28, u, 214, 28, 32);
@@ -197,7 +199,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
             Tab tab = this.tabs.get(i);
             if(tab != this.currentTab)
             {
-                RenderSystem.setShader(GameRenderer::getPositionTexShader);
+                RenderSystem.setShader(GameRenderer::getPositionTexProgram);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.setShaderTexture(0, TEXTURE);
                 this.drawTexture(matrices, this.x + 28 * i, this.y - 28, 80, 184, 28, 32);
@@ -257,8 +259,8 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
         modelViewStack.translate(x + 88, y + 60, 100);
         modelViewStack.scale(75F, -75F, 75F);
-        modelViewStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(MinecraftClient.getInstance().gameRenderer.ticks + partialTicks));
-        modelViewStack.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(30F));
+        modelViewStack.multiply(new Quaternionf(new AxisAngle4f(MathHelper.RADIANS_PER_DEGREE * (MinecraftClient.getInstance().gameRenderer.ticks + partialTicks), 0.0F, 1.0F, 0.0F)));
+        modelViewStack.multiply(new Quaternionf(new AxisAngle4f(MathHelper.RADIANS_PER_DEGREE * 30F, 0.0F, 0.0F, -1.0F)));
         RenderSystem.applyModelViewMatrix();
         VertexConsumerProvider.Immediate buffer = this.client.getBufferBuilders().getEntityVertexConsumers();
         MinecraftClient.getInstance().getItemRenderer().renderItem(this.displayStack, ModelTransformation.Mode.FIXED, false, matrices, buffer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, RenderUtil.getModel(this.displayStack));
@@ -271,7 +273,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     }
 
     private void renderBackgroundTexture(MatrixStack matrices) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = (width - backgroundWidth) / 2;

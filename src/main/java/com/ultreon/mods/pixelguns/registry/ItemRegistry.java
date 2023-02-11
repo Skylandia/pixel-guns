@@ -1,38 +1,33 @@
 package com.ultreon.mods.pixelguns.registry;
 
 import com.ultreon.mods.pixelguns.armor.ArmoredArmor;
-import com.ultreon.mods.pixelguns.client.GeoModelGenerator;
-import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.item.*;
 import com.ultreon.mods.pixelguns.item.ammo.variant.RocketItem;
 import com.ultreon.mods.pixelguns.item.ammo.variant.*;
 import com.ultreon.mods.pixelguns.item.gun.variant.*;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
-import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
 
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class ItemRegistry {
 
     // Gun Crafting
-    public static final Item PISTOL_GRIP = ItemRegistry.register("pistol_grip", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item GUN_SCOPE = ItemRegistry.register("gun_scope", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item LONG_BARREL = ItemRegistry.register("long_barrel", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item SHORT_BARREL = ItemRegistry.register("short_barrel", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item WOODEN_STOCK = ItemRegistry.register("wooden_stock", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item MODERN_STOCK = ItemRegistry.register("modern_stock", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item WOODEN_HANDGUARD = ItemRegistry.register("wooden_handguard", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
-    public static final Item MODERN_HANDGUARD = ItemRegistry.register("modern_handguard", new Item(new FabricItemSettings().group(ModCreativeTab.MISC).maxCount(64)));
+    public static final Item PISTOL_GRIP = ItemRegistry.register("pistol_grip", new Item(new FabricItemSettings().maxCount(64)));
+    public static final Item GUN_SCOPE = ItemRegistry.register("gun_scope", new Item(new FabricItemSettings().maxCount(64)));
+    public static final Item LONG_BARREL = ItemRegistry.register("long_barrel", new Item(new FabricItemSettings().maxCount(64)));
+    public static final Item SHORT_BARREL = ItemRegistry.register("short_barrel", new Item(new FabricItemSettings().maxCount(64)));
+    public static final Item WOODEN_STOCK = ItemRegistry.register("wooden_stock", new Item(new FabricItemSettings().maxCount(64)));
+    public static final Item MODERN_STOCK = ItemRegistry.register("modern_stock", new Item(new FabricItemSettings().maxCount(64)));
+    public static final Item WOODEN_HANDGUARD = ItemRegistry.register("wooden_handguard", new Item(new FabricItemSettings().maxCount(64)));
+    public static final Item MODERN_HANDGUARD = ItemRegistry.register("modern_handguard", new Item(new FabricItemSettings().maxCount(64)));
 
     // Ammunition
     public static final Item SHOTGUN_SHELL = ItemRegistry.register("shotgun_shell", new ShotgunShellItem());
@@ -65,11 +60,11 @@ public class ItemRegistry {
 //    public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new ShieldItem(new FabricItemSettings().maxDamage(500).group(ModCreativeTab.MISC)));
 
     // Block Items
-    public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ModCreativeTab.MISC);
+    public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ItemGroupRegistry.MISC);
 
     private static Item register(Block block, ItemGroup itemGroup) {
-        BlockItem blockItem = new BlockItem(block, new Item.Settings().group(itemGroup));
-        return ItemRegistry.register(Registry.BLOCK.getId(blockItem.getBlock()), blockItem);
+        BlockItem blockItem = new BlockItem(block, new Item.Settings());
+        return ItemRegistry.register(Registries.BLOCK.getId(blockItem.getBlock()), blockItem);
     }
 
     private static Item register(String name, Item item) {
@@ -80,26 +75,6 @@ public class ItemRegistry {
         if (item instanceof BlockItem) {
             ((BlockItem)item).appendBlocks(Item.BLOCK_ITEMS, item);
         }
-        return Registry.register(Registry.ITEM, identifier, item);
-    }
-
-    @Environment(value = EnvType.CLIENT)
-    public static class RENDERER {
-        public static void registerItemRenderers() {
-//        RENDERER.registerGunRenderer(INFINITY_GUN);
-            RENDERER.registerGunRenderer(ROCKET_LAUNCHER);
-            RENDERER.registerItemRenderer(GAS_MASK);
-//        RENDERER.registerItemRenderer(ARMORED_VEST);
-            RENDERER.registerItemRenderer(ROCKET);
-            RENDERER.registerItemRenderer(KATANA);
-            RENDERER.registerItemRenderer(CROWBAR);
-            RENDERER.registerItemRenderer(GRENADE);
-        }
-        private static void registerItemRenderer(Item item) {
-            GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item)));
-        }
-        private static void registerGunRenderer(Item item) {
-            GeoItemRenderer.registerItemRenderer(item, GeoRendererGenerator.generateItemRenderer(GeoModelGenerator.generateItemModel(item, "gun/")));
-        }
+        return Registry.register(Registries.ITEM, identifier, item);
     }
 }

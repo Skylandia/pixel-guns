@@ -27,7 +27,7 @@ public class CustomSwordSounds {
         assert player != null;
         if (player.getMainHandStack().getItem() == ItemRegistry.KATANA || player.getMainHandStack().getItem() == ItemRegistry.CROWBAR) {
             assert world != null;
-            world.playSound(this.player.getBlockPos(), SoundRegistry.KATANA_SWING, SoundCategory.PLAYERS, 1, 1, false);
+            world.playSound(this.player.getX(), this.player.getY(), this.player.getZ(), SoundRegistry.KATANA_SWING, SoundCategory.PLAYERS, 1, 1, false);
         }
     }
 }

@@ -13,20 +13,13 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion.DestructionType;
 
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class GrenadeEntity extends ThrownItemEntity implements IAnimatable {
-
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+public class GrenadeEntity extends ThrownItemEntity implements GeoEntity {
 
     public GrenadeEntity(EntityType<? extends GrenadeEntity> entityType, World world) {
         super(entityType, world);
@@ -45,7 +38,7 @@ public class GrenadeEntity extends ThrownItemEntity implements IAnimatable {
     private void explode() {
         if (this.world.isClient) return;
 
-        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, DestructionType.DESTROY);
+        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, World.ExplosionSourceType.NONE);
         this.discard();
     }
 
@@ -61,17 +54,19 @@ public class GrenadeEntity extends ThrownItemEntity implements IAnimatable {
         return ItemRegistry.GRENADE;
     }
 
-    private PlayState predicate(AnimationEvent<GrenadeEntity> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("grenade.entity"));
-        return PlayState.CONTINUE;
-    }
+
+
+    /*
+     * Animation Side
+     */
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

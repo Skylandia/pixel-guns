@@ -2,7 +2,7 @@ package com.ultreon.mods.pixelguns.item.gun;
 
 import com.ultreon.mods.pixelguns.event.GunFireEvent;
 import com.ultreon.mods.pixelguns.event.forge.Event;
-import com.ultreon.mods.pixelguns.item.ModCreativeTab;
+import com.ultreon.mods.pixelguns.registry.ItemGroupRegistry;
 import com.ultreon.mods.pixelguns.util.WorkshopCraftable;
 import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
@@ -59,7 +59,7 @@ public abstract class GunItem extends Item implements WorkshopCraftable {
     private final ItemStack[] craftingRequirements;
 
     public GunItem(AmmoLoadingType ammoLoadingType, float damage, int range, int fireCooldown, int magazineSize, Item ammunition, int reloadCooldown, float bulletSpread, float recoil, int pelletCount, LoadingType loadingType, SoundEvent[] reloadSounds, SoundEvent fireAudio, int reloadCycles, boolean isScoped, int[] reloadStages, ItemStack[] craftingRequirements) {
-        super(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(1));
+        super(new FabricItemSettings().maxCount(1));
         this.ammoLoadingType = ammoLoadingType;
         this.damage = damage;
         this.range = range;

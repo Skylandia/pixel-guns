@@ -1,7 +1,7 @@
 package com.ultreon.mods.pixelguns.registry;
 
 import com.ultreon.mods.pixelguns.PixelGuns;
-import net.minecraftforge.api.ModLoadingContext;
+import fuzs.forgeconfigapiport.api.config.v2.ForgeConfigRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 
@@ -18,7 +18,7 @@ public class ConfigRegistry {
     }
 
     public static void registerConfig() {
-        config = ModLoadingContext.registerConfig(PixelGuns.MOD_ID, ModConfig.Type.CLIENT, CLIENT_BUILDER.build());
+        config = ForgeConfigRegistry.INSTANCE.register(PixelGuns.MOD_ID, ModConfig.Type.CLIENT, CLIENT_BUILDER.build());
     }
 
     public static void save() {

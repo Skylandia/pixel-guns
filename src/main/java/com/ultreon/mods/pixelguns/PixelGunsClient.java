@@ -14,8 +14,6 @@ public class PixelGunsClient implements ClientModInitializer {
 
         EntityRegistry.RENDERER.registerEntityRenderers();
         BlockRegistry.RENDERER.registerBlockRenderers();
-        ItemRegistry.RENDERER.registerItemRenderers();
-        ArmorRegistry.RENDERER.registerArmorRenderers();
         ScreenHandlerRegistry.RENDERER.registerScreenRenderers();
 
         PacketRegistry.CLIENT.registerPackets();

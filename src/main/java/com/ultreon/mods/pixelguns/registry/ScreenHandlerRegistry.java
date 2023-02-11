@@ -8,9 +8,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.registry.Registry;
 
 public class ScreenHandlerRegistry {
     public static final ScreenHandlerType<WorkshopScreenHandler> WORKSHOP_SCREEN_HANDLER;
@@ -20,7 +21,7 @@ public class ScreenHandlerRegistry {
     }
 
     private static <T extends ScreenHandler> ScreenHandlerType<T> register(String name, ScreenHandlerType.Factory<T> factory) {
-        return Registry.register(Registry.SCREEN_HANDLER, ResourcePath.get(name), new ScreenHandlerType<>(factory));
+        return Registry.register(Registries.SCREEN_HANDLER, ResourcePath.get(name), new ScreenHandlerType<>(factory));
     }
 
     @Environment(value = EnvType.CLIENT)

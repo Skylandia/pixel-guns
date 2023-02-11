@@ -1,42 +1,33 @@
 package com.ultreon.mods.pixelguns.client;
 
+import com.ultreon.mods.pixelguns.PixelGuns;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoItemRenderer;
-import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
+import net.minecraft.registry.Registries;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.core.animatable.GeoAnimatable;
+import software.bernie.geckolib.model.DefaultedEntityGeoModel;
+import software.bernie.geckolib.model.DefaultedItemGeoModel;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class GeoRendererGenerator {
-    public static <T extends Item & IAnimatable> GeoItemRenderer<T> generateItemRenderer(AnimatedGeoModel<T> modelProvider) {
-        return new GeoItemRenderer<>(modelProvider);
-    }
+	public static <T extends Item & GeoAnimatable> GeoItemRenderer<T> item(T item) {
+		PixelGuns.LOGGER.info(Registries.ITEM.getId(item).getPath());
+		PixelGuns.LOGGER.info(new DefaultedItemGeoModel<>(Registries.ITEM.getId(item)).buildFormattedTexturePath(Registries.ITEM.getId(item)).getPath());
+		return new GeoItemRenderer<T>(new DefaultedItemGeoModel<>(Registries.ITEM.getId(item)));
+	}
 
-    public static <T extends LivingEntity & IAnimatable> GeoEntityRenderer<T> generateLivingEntityRenderer(EntityRendererFactory.Context renderManager, AnimatedGeoModel<T> modelProvider) {
-        return new GeoEntityRenderer<>(renderManager, modelProvider) {};
-    }
+	public static <T extends Entity & GeoEntity> GeoEntityRenderer<T> entity(EntityType<T> entityType, EntityRendererFactory.Context renderManager) {
+		return new GeoEntityRenderer<T>(renderManager, new DefaultedEntityGeoModel<>(Registries.ENTITY_TYPE.getId(entityType)));
+	}
 
-    public static <T extends Entity & IAnimatable> GeoProjectilesRenderer<T> generateEntityRenderer(EntityRendererFactory.Context renderManager, AnimatedGeoModel<T> modelProvider) {
-        return new GeoProjectilesRenderer<>(renderManager, modelProvider) {};
-    }
-
-    public static <T extends ArmorItem & IAnimatable> GeoArmorRenderer<T> generateArmorRenderer(AnimatedGeoModel<T> modelProvider) {
-        return new GeoArmorRenderer<>(modelProvider) {
-            {
-                this.headBone = "armorHead";
-                this.bodyBone = "armorBody";
-                this.rightArmBone = "armorRightArm";
-                this.leftArmBone = "armorLeftArm";
-                this.rightLegBone = "armorRightLeg";
-                this.leftLegBone = "armorLeftLeg";
-                this.rightBootBone = "armorRightBoot";
-                this.leftBootBone = "armorLeftBoot";
-            }
-        };
-    }
+	public static <T extends ArmorItem & GeoItem> GeoArmorRenderer<T> armor(T armor) {
+		return new GeoArmorRenderer<T>(new DefaultedItemGeoModel<>(Registries.ITEM.getId(armor)));
+	}
 }

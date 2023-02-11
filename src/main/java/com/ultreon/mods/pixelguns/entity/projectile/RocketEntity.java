@@ -12,13 +12,12 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
-import net.minecraft.world.explosion.Explosion;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RocketEntity extends ThrownItemEntity implements IAnimatable {
+public class RocketEntity extends ThrownItemEntity implements GeoEntity {
 
     public RocketEntity(EntityType<? extends RocketEntity> entityType, World world) {
         super(entityType, world);
@@ -37,7 +36,7 @@ public class RocketEntity extends ThrownItemEntity implements IAnimatable {
     private void explode() {
         if (this.world.isClient) return;
 
-        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0f, false, Explosion.DestructionType.DESTROY);
+        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0f, false, World.ExplosionSourceType.NONE);
         this.discard();
     }
 
@@ -62,13 +61,18 @@ public class RocketEntity extends ThrownItemEntity implements IAnimatable {
 
     }
 
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+    /*
+     * Animation Side
+     */
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     @Override
-    public void registerControllers(AnimationData animationData) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+    }
 
     @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

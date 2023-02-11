@@ -13,6 +13,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CheckBox extends ClickableWidget
 {
+	// TODO update
 	private static final Identifier GUI = new Identifier("cgm:textures/gui/Texts.png");
 
 	private boolean toggled = false;
@@ -37,12 +38,12 @@ public class CheckBox extends ClickableWidget
 	{
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, GUI);
-		this.drawTexture(poseStack, this.x, this.y, 0, 0, 8, 8);
+		this.drawTexture(poseStack, this.getX(), this.getY(), 0, 0, 8, 8);
 		if(this.toggled)
 		{
-			this.drawTexture(poseStack, this.x, this.y - 1, 8, 0, 9, 8);
+			this.drawTexture(poseStack, this.getX(), this.getY() - 1, 8, 0, 9, 8);
 		}
-		drawTextWithShadow(poseStack, MinecraftClient.getInstance().textRenderer, this.getMessage(), this.x + 12, this.y, 0xFFFFFF);
+		drawTextWithShadow(poseStack, MinecraftClient.getInstance().textRenderer, this.getMessage(), this.getX() + 12, this.getY(), 0xFFFFFF);
 	}
 
 	@Override
@@ -52,7 +53,7 @@ public class CheckBox extends ClickableWidget
 	}
 
 	@Override
-	public void appendNarrations(NarrationMessageBuilder narrationMessageBuilder) {
+	protected void appendClickableNarrations(NarrationMessageBuilder narrationMessageBuilder) {
 		this.appendDefaultNarrations(narrationMessageBuilder);
 	}
 }

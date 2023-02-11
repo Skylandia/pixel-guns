@@ -27,17 +27,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
 import org.jetbrains.annotations.Nullable;
 
+import org.joml.*;
 import org.lwjgl.opengl.GL11;
 
+import java.lang.Math;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -63,7 +63,8 @@ public class RenderUtil
 	public static void rotateZ(MatrixStack MatrixStack, float xOffset, float yOffset, float rotation)
 	{
 		MatrixStack.translate(xOffset, yOffset, 0);
-		MatrixStack.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(rotation));
+		MatrixStack.multiply(new Quaternionf(new AxisAngle4f(rotation, new Vector3f(0.0F, 0.0F, -1.0F))));
+//		MatrixStack.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(rotation));
 		MatrixStack.translate(-xOffset, -yOffset, 0);
 	}
 
@@ -112,7 +113,7 @@ public class RenderUtil
 			boolean flag = transformType == ModelTransformation.Mode.GUI || transformType == ModelTransformation.Mode.GROUND || transformType == ModelTransformation.Mode.FIXED;
 			if(stack.getItem() == Items.TRIDENT && flag)
 			{
-				model = MinecraftClient.getInstance().getBakedModelManager().getModel(new ModelIdentifier("MinecraftClient:trident#inventory"));
+				model = MinecraftClient.getInstance().getBakedModelManager().getModel(new ModelIdentifier(new Identifier("minecraft:trident"), "inventory"));
 			}
 
 			// model = net.MinecraftClientforge.client.ForgeHooksClient.handleCameraTransforms(MatrixStack, model, transformType, false);
@@ -134,11 +135,11 @@ public class RenderUtil
 					MatrixStack.Entry entry = MatrixStack.peek();
 					if(transformType == ModelTransformation.Mode.GUI)
 					{
-						entry.getPositionMatrix().multiply(0.5F);
+						entry.getPositionMatrix().scale(0.5F);
 					}
 					else if(transformType.isFirstPerson())
 					{
-						entry.getPositionMatrix().multiply(0.75F);
+						entry.getPositionMatrix().scale(0.75F);
 					}
 
 					if(entity)
@@ -274,10 +275,10 @@ public class RenderUtil
 		/* Flips the model and normals if left handed. */
 		if(leftHanded)
 		{
-			Matrix4f scale = Matrix4f.scale(-1, 1, 1);
+			Matrix4f scale = new Matrix4f().scale(-1, 1, 1);
 			Matrix3f normal = new Matrix3f(scale);
-			MatrixStack.peek().getPositionMatrix().multiply(scale);
-			MatrixStack.peek().getNormalMatrix().multiply(normal);
+			MatrixStack.peek().getPositionMatrix().mul(scale);
+			MatrixStack.peek().getNormalMatrix().mul(normal);
 		}
 	}
 

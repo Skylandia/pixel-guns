@@ -1,8 +1,9 @@
 package com.ultreon.mods.pixelguns.registry;
 
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class SoundRegistry {
     public static final SoundEvent RELOAD_GENERIC_PISTOL_P1 = SoundRegistry.register("generic_pistol_p1");
@@ -44,7 +45,7 @@ public class SoundRegistry {
 
     private static SoundEvent register(String name) {
         Identifier id = new Identifier("pixel_guns", name);
-        return Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+        return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 }
 

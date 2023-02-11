@@ -9,7 +9,8 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 public class BlockRegistry {
     public static final Block WORKSHOP;
@@ -19,7 +20,7 @@ public class BlockRegistry {
     }
 
     private static Block register(String name, Block block) {
-        return Registry.register(Registry.BLOCK, ResourcePath.get(name), block);
+        return Registry.register(Registries.BLOCK, ResourcePath.get(name), block);
     }
 
     @Environment(value = EnvType.CLIENT)

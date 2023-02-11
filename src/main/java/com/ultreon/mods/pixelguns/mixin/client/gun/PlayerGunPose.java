@@ -2,6 +2,8 @@ package com.ultreon.mods.pixelguns.mixin.client.gun;
 
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.item.gun.variant.InfinityGunItem;
+import org.joml.AxisAngle4f;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -19,7 +21,6 @@ import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Quaternion;
 
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerGunPose {
@@ -54,7 +55,8 @@ public class PlayerGunPose {
                     BeaconBlockEntityRenderer.renderBeam(poseStack, multiBufferSource, f, tickCount, distance, m == list.size() - 1 ? 1024 : beaconBeamSection.getHeight(), beaconBeamSection.getColor());
                     distance += beaconBeamSection.getHeight();
                 }
-                poseStack.multiply(Quaternion.fromEulerXyz(player.getPitch(), player.getHeadYaw(), 0));
+                // new Quaternionf(new AxisAngle4f(player.getPitch(), player.getHeadYaw(), 0f));
+                // poseStack.multiply(Quaternionf.fromEulerXyz(player.getPitch(), player.getHeadYaw(), 0));
                 poseStack.pop();
             }
         }

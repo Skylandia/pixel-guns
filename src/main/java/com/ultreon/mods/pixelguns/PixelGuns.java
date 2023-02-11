@@ -21,5 +21,6 @@ public class PixelGuns implements ModInitializer {
         EventHandlerRegistry.registerEventHandlers();
         PacketRegistry.SERVER.registerPackets();
         ConfigRegistry.registerConfig();
+        ItemGroupRegistry.registerItemGroups();
     }
 }

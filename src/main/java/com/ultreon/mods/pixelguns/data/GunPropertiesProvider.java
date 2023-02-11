@@ -19,10 +19,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
-public abstract class GunPropertiesProvider implements DataProvider
+public abstract class GunPropertiesProvider /*implements DataProvider*/
 {
-	private static final Logger LOGGER = LogManager.getLogger();
+	/*private static final Logger LOGGER = LogManager.getLogger();
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
 	private final DataGenerator generator;
@@ -41,7 +42,7 @@ public abstract class GunPropertiesProvider implements DataProvider
 	}
 
 	@Override
-	public void run(DataWriter dataWriter)
+	public CompletableFuture<?> run(DataWriter dataWriter)
 	{
 		this.gunMap.clear();
 		this.registerGuns();
@@ -58,11 +59,12 @@ public abstract class GunPropertiesProvider implements DataProvider
 				LOGGER.error("Couldn't save trades to {}", path, e);
 			}
 		});
+		return null;
 	}
 
 	@Override
 	public String getName()
 	{
 		return "Guns: " + PixelGuns.MOD_ID;
-	}
+	}*/
 }

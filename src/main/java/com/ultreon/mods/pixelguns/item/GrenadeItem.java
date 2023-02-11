@@ -1,11 +1,16 @@
 package com.ultreon.mods.pixelguns.item;
 
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
+import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
+import com.ultreon.mods.pixelguns.registry.ItemGroupRegistry;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,15 +20,17 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.RenderProvider;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class GrenadeItem extends RangedWeaponItem implements IAnimatable {
+public class GrenadeItem extends RangedWeaponItem implements GeoItem {
 
     public GrenadeItem() {
-        super(new FabricItemSettings().maxCount(16).group(ModCreativeTab.WEAPONS));
+        super(new FabricItemSettings().maxCount(16));
     }
 
     @Override
@@ -95,13 +102,36 @@ public class GrenadeItem extends RangedWeaponItem implements IAnimatable {
      * Animation Side
      */
 
-	private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+	private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
 	@Override
-	public void registerControllers(AnimationData data) {}
+	public void createRenderer(Consumer<Object> consumer) {
+		consumer.accept(new RenderProvider() {
+			private GeoItemRenderer<GrenadeItem> renderer;
+
+			@Override
+			public BuiltinModelItemRenderer getCustomRenderer() {
+				if (this.renderer == null)
+					this.renderer = GeoRendererGenerator.item(GrenadeItem.this);
+
+				return this.renderer;
+			}
+		});
+	}
 
 	@Override
-	public AnimationFactory getFactory() {
-		return factory;
+	public Supplier<Object> getRenderProvider() {
+		return this.renderProvider;
+	}
+
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+
+	}
+
+	@Override
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return this.cache;
 	}
 }
