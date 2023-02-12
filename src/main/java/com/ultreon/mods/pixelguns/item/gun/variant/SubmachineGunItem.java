@@ -22,7 +22,7 @@ public class SubmachineGunItem extends GunItem {
             1,
             LoadingType.CLIP,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SMG_P1, SoundRegistry.RELOAD_GENERIC_SMG_P2, SoundRegistry.RELOAD_GENERIC_SMG_P3},
-            SoundRegistry.SMG_MACHINEPISTOL,
+            SoundRegistry.submachine_gun,
             1,
             false,
             new int[] {5, 17, 30},

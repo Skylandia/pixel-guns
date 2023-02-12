@@ -22,7 +22,7 @@ public class SniperRifleItem extends GunItem {
             1,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_CLASSIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
-            SoundRegistry.SNIPER_CLASSIC,
+            SoundRegistry.sniper_rifle,
             5,
             true,
             new int[] {1, 8, 17},

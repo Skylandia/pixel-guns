@@ -51,7 +51,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
             1,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_GENERIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
-            SoundRegistry.SNIPER_CLASSIC,
+            SoundRegistry.sniper_rifle,
             1,
             false,
             new int[] {1, 8, 17},
@@ -79,6 +79,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
         RocketEntity rocket = new RocketEntity(world, player);
         rocket.setPosition(player.getEyePos().subtract(0, 0.1, 0));
         rocket.setPitch(player.getPitch());
+        rocket.setYaw(player.getYaw());
 
         rocket.setVelocity(player.getRotationVector().normalize().multiply(1.5));
         world.spawnEntity(rocket);

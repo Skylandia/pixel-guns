@@ -22,7 +22,7 @@ public class RevolverItem extends GunItem {
             1,
             LoadingType.CLIP,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_REVOLVER_P1, SoundRegistry.RELOAD_GENERIC_REVOLVER_P2, SoundRegistry.RELOAD_GENERIC_REVOLVER_P3},
-            SoundRegistry.REVOLVER_MAGNUM,
+            SoundRegistry.revolver,
             1,
             false,
             new int[] {1, 26, 34},

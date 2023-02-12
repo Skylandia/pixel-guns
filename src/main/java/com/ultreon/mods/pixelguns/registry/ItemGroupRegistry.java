@@ -1,6 +1,5 @@
 package com.ultreon.mods.pixelguns.registry;
 
-import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -22,13 +21,6 @@ public class ItemGroupRegistry {
 
     public static void registerItemGroups() {
         ItemGroupEvents.modifyEntriesEvent(WEAPONS).register(entries -> {
-            entries.add(ItemRegistry.SHOTGUN_SHELL);
-            entries.add(ItemRegistry.LIGHT_BULLETS);
-            entries.add(ItemRegistry.MEDIUM_BULLETS);
-            entries.add(ItemRegistry.HEAVY_BULLETS);
-            entries.add(ItemRegistry.ROCKET);
-            entries.add(ItemRegistry.ENERGY_BATTERY);
-
             entries.add(ItemRegistry.PUMP_SHOTGUN);
             entries.add(ItemRegistry.COMBAT_SHOTGUN);
             entries.add(ItemRegistry.PISTOL);
@@ -38,6 +30,17 @@ public class ItemGroupRegistry {
             entries.add(ItemRegistry.ASSAULT_RIFLE);
             entries.add(ItemRegistry.SNIPER_RIFLE);
             entries.add(ItemRegistry.ROCKET_LAUNCHER);
+
+            entries.add(ItemRegistry.SHOTGUN_SHELL);
+            entries.add(ItemRegistry.LIGHT_BULLETS);
+            entries.add(ItemRegistry.MEDIUM_BULLETS);
+            entries.add(ItemRegistry.HEAVY_BULLETS);
+            entries.add(ItemRegistry.ROCKET);
+            entries.add(ItemRegistry.ENERGY_BATTERY);
+
+            entries.add(ItemRegistry.GRENADE);
+            entries.add(ItemRegistry.KATANA);
+            entries.add(ItemRegistry.CROWBAR);
         });
 
         ItemGroupEvents.modifyEntriesEvent(MISC).register(entries -> {
