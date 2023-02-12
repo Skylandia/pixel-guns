@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "pixel_guns:item/gun/pistol_light",
-		"1": "pixel_guns:misc/muzzleflash_01",
-		"2": "pixel_guns:misc/muzzleflash_02",
+		"1": "pixel_guns:item/gun/misc/muzzleflash_01",
+		"2": "pixel_guns:item/gun/misc/muzzleflash_02",
 		"particle": "pixel_guns:item/gun/pistol_light"
 	},
 	"elements": [

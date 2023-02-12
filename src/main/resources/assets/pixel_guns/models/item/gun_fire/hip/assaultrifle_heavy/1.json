@@ -3,8 +3,8 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "pixel_guns:item/gun/assaultrifle_heavy",
-		"1": "pixel_guns:misc/muzzleflash_01",
-		"2": "pixel_guns:misc/muzzleflash_02",
+		"1": "pixel_guns:item/gun/misc/muzzleflash_01",
+		"2": "pixel_guns:item/gun/misc/muzzleflash_02",
 		"particle": "pixel_guns:item/gun/assaultrifle_heavy"
 	},
 	"elements": [

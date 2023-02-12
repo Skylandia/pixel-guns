@@ -51,7 +51,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
             1,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_GENERIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
-            SoundRegistry.sniper_rifle,
+            SoundRegistry.SNIPER_RIFLE,
             1,
             false,
             new int[] {1, 8, 17},
