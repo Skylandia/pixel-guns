@@ -22,9 +22,6 @@ repositories {
     // Geckolib
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 
-    // WorldEdit
-	maven { url 'https://maven.enginehub.org/repo/' }
-
     // Architectury
 	maven { url 'https://maven.architectury.dev/' }
 
@@ -101,9 +98,6 @@ dependencies {
 
     // Forge Config API
     modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${project.forge_config_version}"
-
-    // WorldEdit
-	modImplementation 'com.sk89q.worldedit:worldedit-fabric-mc1.19.3:7.2.13'
 }
 
 processResources {
