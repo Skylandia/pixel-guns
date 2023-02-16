@@ -1,78 +1,75 @@
 package com.ultreon.mods.pixelguns.entity.projectile;
 
 import com.ultreon.mods.pixelguns.registry.EntityRegistry;
-import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
-import net.minecraft.item.Item;
+import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
-
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RocketEntity extends ThrownItemEntity implements GeoEntity {
+public class RocketEntity extends ExplosiveProjectileEntity implements GeoEntity {
+	public RocketEntity(EntityType<? extends RocketEntity> entityType, World world) {
+		super(entityType, world);
+	}
 
-    public RocketEntity(EntityType<? extends RocketEntity> entityType, World world) {
-        super(entityType, world);
-    }
+	public RocketEntity(World world, LivingEntity owner) {
+		super(EntityRegistry.ROCKET, world);
+		this.refreshPositionAndAngles(owner.getX(), owner.getEyeY(), owner.getZ(), owner.getYaw(), owner.getPitch());
+		this.refreshPosition();
+		this.powerX = owner.getRotationVector().x;
+		this.powerY = owner.getRotationVector().y;
+		this.powerZ = owner.getRotationVector().z;
+//		this.setVelocity(owner.getRotationVector().normalize().multiply(1.5f));
+	}
 
-    public RocketEntity(World world, LivingEntity owner) {
-        super(EntityRegistry.ROCKET, owner, world);
-    }
+	@Override
+	protected void onEntityHit(EntityHitResult entityHitResult) {
+		super.onEntityHit(entityHitResult);
+		if (!this.world.isClient) {
+			Entity victim = entityHitResult.getEntity();
+			Entity aggressor = this.getOwner();
+			victim.damage(DamageSource.thrownProjectile(victim, aggressor), 8.0F);
+		}
+	}
 
-    @Override
-    protected void onEntityHit(EntityHitResult entityHitResult) {
-        super.onEntityHit(entityHitResult);
-        entityHitResult.getEntity().damage(DamageSource.thrownProjectile(this, this.getOwner()), 0.0f);
-    }
+	@Override
+	protected void onCollision(HitResult hitResult) {
+		super.onCollision(hitResult);
+		if (!this.world.isClient) {
+			this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0F, false, World.ExplosionSourceType.MOB);
+			this.discard();
+		}
+	}
 
-    private void explode() {
-        if (this.world.isClient) return;
+	@Override
+	public boolean isOnFire() {
+		return false;
+	}
 
-        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0f, false, World.ExplosionSourceType.NONE);
-        this.discard();
-    }
+	@Override
+	protected boolean canHit(Entity entity) {
+		return false;
+	}
 
-    @Override
-    protected void onCollision(HitResult hitResult) {
-        super.onCollision(hitResult);
-        this.explode();
-    }
+	/*
+	 * Animation Side
+	 */
 
-    @Override
-    public boolean hasNoGravity() {
-        return true;
-    }
+	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    @Override
-    protected Item getDefaultItem() {
-        return ItemRegistry.ROCKET;
-    }
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
 
-    @Override
-    protected void initDataTracker() {
-
-    }
-
-    /*
-     * Animation Side
-     */
-
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-    }
-
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.cache;
-    }
+	@Override
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return cache;
+	}
 }

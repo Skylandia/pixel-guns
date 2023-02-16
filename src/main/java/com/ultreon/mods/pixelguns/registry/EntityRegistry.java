@@ -33,27 +33,14 @@ public class EntityRegistry {
     );
 
     public static final EntityType<RocketEntity> ROCKET = EntityRegistry.register(
-            "rocket",
-            FabricEntityTypeBuilder.<RocketEntity>create(
-                            SpawnGroup.MISC,
-                            RocketEntity::new
-                    )
-                    .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
-                    .trackRangeBlocks(4).trackedUpdateRate(20)
+        "rocket",
+        FabricEntityTypeBuilder.<RocketEntity>create(
+            SpawnGroup.MISC,
+            RocketEntity::new
+        )
+        .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
+        .trackRangeBlocks(128).trackedUpdateRate(10)
     );
-
-    public static final EntityType<NuclearBombEntity> NUCLEAR_BOMB = EntityRegistry.register(
-        "nuclear_bomb",
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, NuclearBombEntity::new)
-                    .dimensions(EntityDimensions.fixed(1.0f, 0.5f))
-    );
-
-    public static final EntityType<NuclearExplosionEntity> NUCLEAR_EXPLOSION = EntityRegistry.register(
-            "nuclear_explosion",
-            FabricEntityTypeBuilder.create(SpawnGroup.MISC, NuclearExplosionEntity::new)
-                    .dimensions(EntityDimensions.fixed(15.0f, 100.0f))
-    );
-
 
     private static <T extends Entity> EntityType<T> register(String name, FabricEntityTypeBuilder<T> type) {
         return Registry.register(
@@ -68,8 +55,6 @@ public class EntityRegistry {
         public static void registerEntityRenderers() {
             RENDERER.registerEntityRenderer(GRENADE);
             RENDERER.registerEntityRenderer(ROCKET);
-            RENDERER.registerEntityRenderer(NUCLEAR_BOMB);
-            RENDERER.registerEntityRenderer(NUCLEAR_EXPLOSION);
         }
 
         private static <T extends Entity & GeoEntity> void registerEntityRenderer(EntityType<T> entityType) {

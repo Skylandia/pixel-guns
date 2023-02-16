@@ -38,7 +38,7 @@ public class GrenadeEntity extends ThrownItemEntity implements GeoEntity {
     private void explode() {
         if (this.world.isClient) return;
 
-        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, World.ExplosionSourceType.NONE);
+        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, World.ExplosionSourceType.TNT);
         this.discard();
     }
 

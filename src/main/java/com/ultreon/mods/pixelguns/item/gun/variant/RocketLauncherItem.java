@@ -76,12 +76,8 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
 
         player.getItemCooldownManager().set(this, this.fireCooldown);
 
+        // Spawn Rocket
         RocketEntity rocket = new RocketEntity(world, player);
-        rocket.setPosition(player.getEyePos().subtract(0, 0.1, 0));
-        rocket.setPitch(player.getPitch());
-        rocket.setYaw(player.getYaw());
-
-        rocket.setVelocity(player.getRotationVector().normalize().multiply(1.5));
         world.spawnEntity(rocket);
 
         if (!player.getAbilities().creativeMode) {
@@ -122,7 +118,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
-            private final GeoItemRenderer<RocketLauncherItem> renderer = GeoRendererGenerator.item(RocketLauncherItem.this);
+            private final GeoItemRenderer<RocketLauncherItem> renderer = GeoRendererGenerator.gun(RocketLauncherItem.this);
 
             @Override
             public BuiltinModelItemRenderer getCustomRenderer() {
