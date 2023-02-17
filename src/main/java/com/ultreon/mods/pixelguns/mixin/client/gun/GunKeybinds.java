@@ -25,7 +25,6 @@ public abstract class GunKeybinds {
     @Shadow private int itemUseCooldown;
 
     // Allows the GunItem.use() to be called when holding a GunItem and using the attack keybind instead of the use keybind
-
     @Inject(method = "handleInputEvents", at = @At("TAIL"))
     public void handleGunShoot(CallbackInfo info) {
         if (this.player.getMainHandStack().getItem() instanceof GunItem gunItem) {
@@ -56,7 +55,6 @@ public abstract class GunKeybinds {
     }
 
     // Prevents default item use cooldown when firing gun
-
     @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     public void preventGunUseCooldown(CallbackInfo ci) {
         if (this.player == null) {
