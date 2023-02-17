@@ -64,9 +64,9 @@
 	"combat_shotgun_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun_p1" ] },
 	"combat_shotgun_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun_p2" ] },
 	"combat_shotgun_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun_p3" ] },
-	"shotgun_combat": {
+	"combat_shotgun": {
 		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/shotgun_combat_1"
+			"pixel_guns:gun/fire/combat_shotgun_1"
 		]
 	},
 

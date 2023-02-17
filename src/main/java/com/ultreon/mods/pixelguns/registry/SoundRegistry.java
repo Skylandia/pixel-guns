@@ -10,26 +10,32 @@ public class SoundRegistry {
     public static final SoundEvent RELOAD_GENERIC_PISTOL_P2 = SoundRegistry.register("generic_pistol_p2");
     public static final SoundEvent RELOAD_GENERIC_PISTOL_P3 = SoundRegistry.register("generic_pistol_p3");
     public static final SoundEvent PISTOL_LIGHT = SoundRegistry.register("pistol_light");
+
     public static final SoundEvent RELOAD_GENERIC_REVOLVER_P1 = SoundRegistry.register("generic_revolver_p1");
     public static final SoundEvent RELOAD_GENERIC_REVOLVER_P2 = SoundRegistry.register("generic_revolver_p2");
     public static final SoundEvent RELOAD_GENERIC_REVOLVER_P3 = SoundRegistry.register("generic_revolver_p3");
     public static final SoundEvent REVOLVER = SoundRegistry.register("revolver");
+
     public static final SoundEvent RELOAD_GENERIC_SMG_P1 = SoundRegistry.register("generic_smg_p1");
     public static final SoundEvent RELOAD_GENERIC_SMG_P2 = SoundRegistry.register("generic_smg_p2");
     public static final SoundEvent RELOAD_GENERIC_SMG_P3 = SoundRegistry.register("generic_smg_p3");
     public static final SoundEvent SUBMACHINE_GUN = SoundRegistry.register("submachine_gun");
+
     public static final SoundEvent RELOAD_GENERIC_AR_P1 = SoundRegistry.register("generic_ar_p1");
     public static final SoundEvent RELOAD_GENERIC_AR_P2 = SoundRegistry.register("generic_ar_p2");
     public static final SoundEvent RELOAD_GENERIC_AR_P3 = SoundRegistry.register("generic_ar_p3");
     public static final SoundEvent ASSAULTRIFLE_LIGHT = SoundRegistry.register("assaultrifle_light");
+
     public static final SoundEvent RELOAD_HEAVY_AR_P1 = SoundRegistry.register("heavy_ar_p1");
     public static final SoundEvent RELOAD_HEAVY_AR_P2 = SoundRegistry.register("heavy_ar_p2");
     public static final SoundEvent RELOAD_HEAVY_AR_P3 = SoundRegistry.register("heavy_ar_p3");
     public static final SoundEvent ASSAULTRIFLE_HEAVY = SoundRegistry.register("assaultrifle_heavy");
+
     public static final SoundEvent RELOAD_COMBAT_SHOTGUN_P1 = SoundRegistry.register("combat_shotgun_p1");
     public static final SoundEvent RELOAD_COMBAT_SHOTGUN_P2 = SoundRegistry.register("combat_shotgun_p2");
     public static final SoundEvent RELOAD_COMBAT_SHOTGUN_P3 = SoundRegistry.register("combat_shotgun_p3");
-    public static final SoundEvent SHOTGUN_COMBAT = SoundRegistry.register("shotgun_combat");
+    public static final SoundEvent COMBAT_SHOTGUN = SoundRegistry.register("combat_shotgun");
+
     public static final SoundEvent RELOAD_GENERIC_SNIPER_P1 = SoundRegistry.register("generic_sniper_p1");
     public static final SoundEvent RELOAD_GENERIC_SNIPER_P2 = SoundRegistry.register("generic_sniper_p2");
     public static final SoundEvent RELOAD_GENERIC_SNIPER_P3 = SoundRegistry.register("generic_sniper_p3");

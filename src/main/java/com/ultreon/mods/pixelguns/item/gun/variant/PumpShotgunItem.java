@@ -22,7 +22,7 @@ public class PumpShotgunItem extends GunItem {
             5,
             LoadingType.INDIVIDUAL,
             new SoundEvent[] {SoundRegistry.RELOAD_COMBAT_SHOTGUN_P1, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P2, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P3},
-            SoundRegistry.SHOTGUN_COMBAT,
+            SoundRegistry.COMBAT_SHOTGUN,
             5,
             false,
             new int[] {1, 4, 13},
