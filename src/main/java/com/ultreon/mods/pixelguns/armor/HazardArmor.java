@@ -23,6 +23,7 @@ public class HazardArmor extends ArmorItem implements GeoItem {
 	public HazardArmor(EquipmentSlot slot) {
 		super(ArmorRegistry.HAZARD, slot, new FabricItemSettings());
 	}
+
 	/*
 	 * Animation Side
 	 */
