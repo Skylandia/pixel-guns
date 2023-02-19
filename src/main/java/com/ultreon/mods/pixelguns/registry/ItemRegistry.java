@@ -40,11 +40,10 @@ public class ItemRegistry {
     // Guns
     public static final Item PISTOL = ItemRegistry.register("pistol", new PistolItem());
     public static final Item REVOLVER = ItemRegistry.register("revolver", new RevolverItem());
-    public static final Item PUMP_SHOTGUN = ItemRegistry.register("pump_shotgun", new PumpShotgunItem());
     public static final Item COMBAT_SHOTGUN = ItemRegistry.register("combat_shotgun", new CombatShotgunItem());
     public static final Item SUBMACHINE_GUN = ItemRegistry.register("submachine_gun", new SubmachineGunItem());
-    public static final Item LIGHT_ASSAULT_RIFLE = ItemRegistry.register("light_assault_rifle", new AssaultRifleItem());
-    public static final Item ASSAULT_RIFLE = ItemRegistry.register("assault_rifle", new HeavyAssaultRifleItem());
+    public static final Item LIGHT_ASSAULT_RIFLE = ItemRegistry.register("light_assault_rifle", new LightAssaultRifleItem());
+    public static final Item ASSAULT_RIFLE = ItemRegistry.register("assault_rifle", new AssaultRifleItem());
     public static final Item SNIPER_RIFLE = ItemRegistry.register("sniper_rifle", new SniperRifleItem());
 //    public static final Item INFINITY_GUN = ItemRegistry.register("infinity_gun", new InfinityGunItem());
     public static final Item ROCKET_LAUNCHER = ItemRegistry.register("rocket_launcher", new RocketLauncherItem());

@@ -5,30 +5,28 @@ import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundEvent;
 
-public class HeavyAssaultRifleItem extends GunItem {
-
-    public HeavyAssaultRifleItem() {
+public class LightAssaultRifleItem extends GunItem {
+    public LightAssaultRifleItem() {
         super(
-            GunItem.AmmoLoadingType.AUTOMATIC,
-            8.0f,
+            true,
+            5.5f,
             128,
             3,
-            50,
+            30,
             ItemRegistry.MEDIUM_BULLETS,
-            48,
-            0.125f,
+            44,
+            0.15f,
             3.0f,
             1,
             LoadingType.CLIP,
-            new SoundEvent[] {SoundRegistry.RELOAD_HEAVY_AR_P1, SoundRegistry.RELOAD_HEAVY_AR_P2, SoundRegistry.RELOAD_HEAVY_AR_P3},
-            SoundRegistry.ASSAULTRIFLE_HEAVY,
+            SoundRegistry.LIGHT_ASSAULT_RIFLE_RELOAD,
+            SoundRegistry.LIGHT_ASSAULT_RIFLE_FIRE,
             1,
             false,
-            new int[] {6, 22, 40},
+            new int[] {6, 18, 37},
             new ItemStack[] {
-                new ItemStack(Items.IRON_INGOT, 32)
+                new ItemStack(Items.IRON_INGOT, 28)
             }
         );
     }

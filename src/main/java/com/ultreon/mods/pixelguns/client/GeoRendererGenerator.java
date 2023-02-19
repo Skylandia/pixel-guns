@@ -11,7 +11,6 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 
-import net.minecraft.util.math.RotationAxis;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
@@ -32,13 +31,10 @@ public class GeoRendererGenerator {
 	public static <T extends Entity & GeoEntity> GeoEntityRenderer<T> entity(EntityType<T> entityType, EntityRendererFactory.Context renderManager) {
 		return new GeoEntityRenderer<>(renderManager, new DefaultedEntityGeoModel<>(Registries.ENTITY_TYPE.getId(entityType))) {
 			@Override
-			public void render(T entity, float entityYaw, float partialTick, MatrixStack poseStack, VertexConsumerProvider bufferSource, int packedLight) {
-				poseStack.push();
-				poseStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(entity.getYaw()));
-				poseStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(entity.getPitch()));
-
-				super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
-				poseStack.pop();
+			public void render(T entity, float entityYaw, float partialTick, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int packedLight) {
+				matrixStack.push();
+				super.render(entity, entityYaw, partialTick, matrixStack, vertexConsumerProvider, packedLight);
+				matrixStack.pop();
 			}
 		};
 	}

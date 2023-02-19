@@ -1,83 +1,51 @@
 {
-	"generic_pistol_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_pistol_p1" ] },
-	"generic_pistol_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_pistol_p2" ] },
-	"generic_pistol_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_pistol_p3" ] },
-	"pistol_light": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/pistol_light_1"
-		]
-	},
-	"pistol_heavy": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/pistol_heavy_1",
-			"pixel_guns:gun/fire/pistol_heavy_2"
-		]
-	},
+	"combat_shotgun_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/combat_shotgun" ] },
+	"pistol_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/pistol" ] },
+	"revolver_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/revolver" ] },
+	"submachine_gun_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/submachine_gun" ] },
+	"light_assault_rifle_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/light_assault_rifle" ] },
+	"assault_rifle_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/assault_rifle" ] },
+	"rocket_launcher_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/rocket_launcher" ] },
+	"infinity_gun_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/infinity_gun" ] },
+	"sniper_rifle_fire": { "category": "master", "sounds": [ "pixel_guns:gun/fire/sniper_rifle" ] },
 
-	"generic_revolver_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_revolver_p1" ] },
-	"generic_revolver_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_revolver_p2" ] },
-	"generic_revolver_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_revolver_p3" ] },
-	"revolver": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/revolver_1"
-		]
-	},
 
-	"generic_smg_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_smg_p1" ] },
-	"generic_smg_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_smg_p2" ] },
-	"generic_smg_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_smg_p3" ] },
-	"submachine_gun": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/submachine_gun_1",
-			"pixel_guns:gun/fire/submachine_gun_2",
-			"pixel_guns:gun/fire/submachine_gun_3"
-		]
-	},
+	"combat_shotgun_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun/1" ] },
+	"combat_shotgun_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun/2" ] },
+	"combat_shotgun_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun/3" ] },
 
-	"generic_ar_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_ar_p1" ] },
-	"generic_ar_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_ar_p2" ] },
-	"generic_ar_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_ar_p3" ] },
-	"assaultrifle_light": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/assaultrifle_light_1",
-			"pixel_guns:gun/fire/assaultrifle_light_2",
-			"pixel_guns:gun/fire/assaultrifle_light_3",
-			"pixel_guns:gun/fire/assaultrifle_light_4"
-		]
-	},
+	"pistol_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/pistol/1" ] },
+	"pistol_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/pistol/2" ] },
+	"pistol_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/pistol/3" ] },
 
-	"heavy_ar_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/heavy_ar_p1" ] },
-	"heavy_ar_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/heavy_ar_p2" ] },
-	"heavy_ar_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/heavy_ar_p3" ] },
-	"assaultrifle_heavy": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/assaultrifle_heavy_1",
-			"pixel_guns:gun/fire/assaultrifle_heavy_2",
-			"pixel_guns:gun/fire/assaultrifle_heavy_3"
-		]
-	},
-	"assaultrifle_heavy_eg": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/assaultrifle_heavy_eg"
-		]
-	},
-	"combat_shotgun_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun_p1" ] },
-	"combat_shotgun_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun_p2" ] },
-	"combat_shotgun_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/combat_shotgun_p3" ] },
-	"combat_shotgun": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/combat_shotgun_1"
-		]
-	},
+	"revolver_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/revolver/1" ] },
+	"revolver_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/revolver/2" ] },
+	"revolver_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/revolver/3" ] },
 
-	"generic_sniper_p1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_sniper_p1" ] },
-	"generic_sniper_p2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_sniper_p2" ] },
-	"generic_sniper_p3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/generic_sniper_p3" ] },
-	"sniper_rifle": {
-		"category": "master", "sounds": [
-			"pixel_guns:gun/fire/sniper_rifle_1"
-		]
-	},
+	"submachine_gun_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/submachine_gun/1" ] },
+	"submachine_gun_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/submachine_gun/2" ] },
+	"submachine_gun_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/submachine_gun/3" ] },
+
+	"light_assault_rifle_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/light_assault_rifle/1" ] },
+	"light_assault_rifle_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/light_assault_rifle/2" ] },
+	"light_assault_rifle_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/light_assault_rifle/3" ] },
+
+	"assault_rifle_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/assault_rifle/1" ] },
+	"assault_rifle_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/assault_rifle/2" ] },
+	"assault_rifle_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/assault_rifle/3" ] },
+
+	"rocket_launcher_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/rocket_launcher/1" ] },
+	"rocket_launcher_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/rocket_launcher/2" ] },
+	"rocket_launcher_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/rocket_launcher/3" ] },
+
+	"infinity_gun_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/infinity_gun/1" ] },
+	"infinity_gun_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/infinity_gun/2" ] },
+	"infinity_gun_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/infinity_gun/3" ] },
+
+	"sniper_rifle_reload_1": { "category": "master", "sounds": [ "pixel_guns:gun/reload/sniper_rifle/1" ] },
+	"sniper_rifle_reload_2": { "category": "master", "sounds": [ "pixel_guns:gun/reload/sniper_rifle/2" ] },
+	"sniper_rifle_reload_3": { "category": "master", "sounds": [ "pixel_guns:gun/reload/sniper_rifle/3" ] },
+
 
 	"katana_swoop": {
 		"category": "master", "sounds": [

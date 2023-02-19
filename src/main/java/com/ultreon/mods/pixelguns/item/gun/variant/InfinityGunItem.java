@@ -2,10 +2,10 @@ package com.ultreon.mods.pixelguns.item.gun.variant;
 
 import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.damagesource.EnergyOrbDamageSource;
-import com.ultreon.mods.pixelguns.item.KatanaItem;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 
+import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,8 +16,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -42,7 +40,7 @@ public class InfinityGunItem extends GunItem implements GeoItem {
 
     public InfinityGunItem() {
         super(
-            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            false,
             80f,
             128,
             30,
@@ -53,8 +51,8 @@ public class InfinityGunItem extends GunItem implements GeoItem {
             25.0f,
             1,
             LoadingType.CLIP,
-            new SoundEvent[] {SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, SoundEvents.BLOCK_IRON_DOOR_OPEN},
-            SoundEvents.BLOCK_BEACON_DEACTIVATE,
+            SoundRegistry.INFINITY_GUN_RELOAD,
+            SoundRegistry.INFINITY_GUN_FIRE,
             1,
             false,
             new int[] {5, -1, -1},

@@ -5,12 +5,11 @@ import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundEvent;
 
 public class SniperRifleItem extends GunItem {
     public SniperRifleItem() {
         super(
-            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            false,
             22.0f,
             128,
             20,
@@ -21,8 +20,8 @@ public class SniperRifleItem extends GunItem {
             25.0f,
             1,
             LoadingType.INDIVIDUAL,
-            new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_CLASSIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
-            SoundRegistry.SNIPER_RIFLE,
+            SoundRegistry.SNIPER_RIFLE_RELOAD,
+            SoundRegistry.SNIPER_RIFLE_FIRE,
             5,
             true,
             new int[] {1, 8, 17},

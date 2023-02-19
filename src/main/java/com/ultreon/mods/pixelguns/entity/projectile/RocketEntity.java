@@ -2,11 +2,13 @@ package com.ultreon.mods.pixelguns.entity.projectile;
 
 import com.ultreon.mods.pixelguns.registry.EntityRegistry;
 
+import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
@@ -15,7 +17,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RocketEntity extends ExplosiveProjectileEntity implements GeoEntity {
+public class RocketEntity extends PersistentProjectileEntity implements GeoEntity {
 	public RocketEntity(EntityType<? extends RocketEntity> entityType, World world) {
 		super(entityType, world);
 	}
@@ -23,11 +25,8 @@ public class RocketEntity extends ExplosiveProjectileEntity implements GeoEntity
 	public RocketEntity(World world, LivingEntity owner) {
 		super(EntityRegistry.ROCKET, world);
 		this.refreshPositionAndAngles(owner.getX(), owner.getEyeY(), owner.getZ(), owner.getYaw(), owner.getPitch());
-		this.refreshPosition();
-		this.powerX = owner.getRotationVector().x;
-		this.powerY = owner.getRotationVector().y;
-		this.powerZ = owner.getRotationVector().z;
-//		this.setVelocity(owner.getRotationVector().normalize().multiply(1.5f));
+		this.setVelocity(owner.getRotationVector().normalize().multiply(1.5f));
+		this.setOwner(owner);
 	}
 
 	@Override
@@ -57,6 +56,11 @@ public class RocketEntity extends ExplosiveProjectileEntity implements GeoEntity
 	@Override
 	protected boolean canHit(Entity entity) {
 		return false;
+	}
+
+	@Override
+	protected ItemStack asItemStack() {
+		return ItemRegistry.ROCKET.getDefaultStack();
 	}
 
 	/*

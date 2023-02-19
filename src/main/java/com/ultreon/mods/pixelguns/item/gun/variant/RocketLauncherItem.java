@@ -15,7 +15,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 
 import software.bernie.geckolib.animatable.GeoItem;
@@ -39,7 +38,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
 
     public RocketLauncherItem() {
         super(
-            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            false,
             25.0f,
             128,
             30,
@@ -50,8 +49,8 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
             25.0f,
             1,
             LoadingType.INDIVIDUAL,
-            new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SNIPER_P1, SoundRegistry.RELOAD_GENERIC_SNIPER_P2, SoundRegistry.RELOAD_GENERIC_SNIPER_P3},
-            SoundRegistry.SNIPER_RIFLE,
+            SoundRegistry.ROCKET_LAUNCHER_RELOAD,
+            SoundRegistry.ROCKET_LAUNCHER_FIRE,
             1,
             false,
             new int[] {1, 8, 17},

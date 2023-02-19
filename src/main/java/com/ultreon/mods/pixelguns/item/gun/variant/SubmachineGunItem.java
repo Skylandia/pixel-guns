@@ -5,12 +5,11 @@ import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundEvent;
 
 public class SubmachineGunItem extends GunItem {
     public SubmachineGunItem() {
         super(
-            GunItem.AmmoLoadingType.AUTOMATIC,
+            true,
             5.0f,
             128,
             2,
@@ -21,8 +20,8 @@ public class SubmachineGunItem extends GunItem {
             10.0f,
             1,
             LoadingType.CLIP,
-            new SoundEvent[] {SoundRegistry.RELOAD_GENERIC_SMG_P1, SoundRegistry.RELOAD_GENERIC_SMG_P2, SoundRegistry.RELOAD_GENERIC_SMG_P3},
-            SoundRegistry.SUBMACHINE_GUN,
+            SoundRegistry.SUBMACHINE_GUN_RELOAD,
+            SoundRegistry.SUBMACHINE_GUN_FIRE,
             1,
             false,
             new int[] {5, 17, 30},
