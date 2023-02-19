@@ -117,7 +117,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     @Override
     public void createRenderer(Consumer<Object> consumer) {
         consumer.accept(new RenderProvider() {
-            private final GeoItemRenderer<RocketLauncherItem> renderer = GeoRendererGenerator.item(RocketLauncherItem.this);
+            private final GeoItemRenderer<RocketLauncherItem> renderer = GeoRendererGenerator.gun(RocketLauncherItem.this);
 
             @Override
             public BuiltinModelItemRenderer getCustomRenderer() {

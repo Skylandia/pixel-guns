@@ -1,5 +1,6 @@
 package com.ultreon.mods.pixelguns.client;
 
+import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -20,6 +21,9 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 
 public class GeoRendererGenerator {
+	public static <T extends GunItem & GeoAnimatable> GeoItemRenderer<T> gun(T item) {
+		return new GeoItemRenderer<>(new DefaultedGunGeoModel<>(Registries.ITEM.getId(item)));
+	}
 	public static <T extends Item & GeoAnimatable> GeoItemRenderer<T> item(T item) {
 		return new GeoItemRenderer<>(new DefaultedItemGeoModel<>(Registries.ITEM.getId(item)));
 	}
