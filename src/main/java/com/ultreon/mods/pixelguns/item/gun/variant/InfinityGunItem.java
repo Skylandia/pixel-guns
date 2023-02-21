@@ -144,7 +144,7 @@ public class InfinityGunItem extends GunItem implements GeoItem {
             @Override
             public BuiltinModelItemRenderer getCustomRenderer() {
                 if (this.renderer == null)
-                    this.renderer = GeoRendererGenerator.item(InfinityGunItem.this);
+                    this.renderer = GeoRendererGenerator.gun(InfinityGunItem.this);
 
                 return this.renderer;
             }

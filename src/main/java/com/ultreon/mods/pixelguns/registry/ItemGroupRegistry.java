@@ -21,15 +21,16 @@ public class ItemGroupRegistry {
 
     public static void registerItemGroups() {
         ItemGroupEvents.modifyEntriesEvent(WEAPONS).register(entries -> {
-            entries.add(ItemRegistry.COMBAT_SHOTGUN);
+
             entries.add(ItemRegistry.PISTOL);
             entries.add(ItemRegistry.REVOLVER);
+            entries.add(ItemRegistry.COMBAT_SHOTGUN);
             entries.add(ItemRegistry.SUBMACHINE_GUN);
             entries.add(ItemRegistry.LIGHT_ASSAULT_RIFLE);
             entries.add(ItemRegistry.ASSAULT_RIFLE);
             entries.add(ItemRegistry.SNIPER_RIFLE);
             entries.add(ItemRegistry.ROCKET_LAUNCHER);
-//            entries.add(ItemRegistry.INFINITY_GUN);
+            entries.add(ItemRegistry.INFINITY_GUN);
 
             entries.add(ItemRegistry.SHOTGUN_SHELL);
             entries.add(ItemRegistry.LIGHT_BULLETS);
@@ -48,6 +49,8 @@ public class ItemGroupRegistry {
 
             entries.add(ItemRegistry.GAS_MASK);
             entries.add(ItemRegistry.ARMORED_VEST);
+
+            entries.add(ItemRegistry.POLICE_SHIELD);
         });
     }
 }

@@ -12,7 +12,6 @@ import com.ultreon.mods.pixelguns.util.ResourcePath;
 
 import com.ultreon.mods.pixelguns.util.WorkshopCraftable;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.GameModeSelectionScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.*;
@@ -75,13 +74,13 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         // Populate guns
         recipes.put(tabs.get(0), new ArrayList<>());
         for (RegistryEntry<Item> gun : Registries.ITEM.iterateEntries(TagRegistry.GUNS)) {
-            recipes.get(tabs.get(0)).add(gun.comp_349().getDefaultStack());
+            recipes.get(tabs.get(0)).add(gun.value().getDefaultStack());
         }
 
         // Populate ammo
         recipes.put(tabs.get(1), new ArrayList<>());
         for (RegistryEntry<Item> bullet : Registries.ITEM.iterateEntries(TagRegistry.AMMUNITION)) {
-            recipes.get(tabs.get(1)).add(bullet.comp_349().getDefaultStack());
+            recipes.get(tabs.get(1)).add(bullet.value().getDefaultStack());
         }
 
         displayStack = recipes.get(currentTab).get(0);

@@ -45,8 +45,8 @@ public class ItemRegistry {
     public static final Item LIGHT_ASSAULT_RIFLE = ItemRegistry.register("light_assault_rifle", new LightAssaultRifleItem());
     public static final Item ASSAULT_RIFLE = ItemRegistry.register("assault_rifle", new AssaultRifleItem());
     public static final Item SNIPER_RIFLE = ItemRegistry.register("sniper_rifle", new SniperRifleItem());
-//    public static final Item INFINITY_GUN = ItemRegistry.register("infinity_gun", new InfinityGunItem());
     public static final Item ROCKET_LAUNCHER = ItemRegistry.register("rocket_launcher", new RocketLauncherItem());
+    public static final Item INFINITY_GUN = ItemRegistry.register("infinity_gun", new InfinityGunItem());
 
     // Armor
     public static final Item ARMORED_VEST = ItemRegistry.register("armored_vest", new ArmoredArmor(EquipmentSlot.CHEST));
@@ -56,7 +56,7 @@ public class ItemRegistry {
     public static final Item KATANA = ItemRegistry.register("katana", new KatanaItem());
     public static final Item CROWBAR = ItemRegistry.register("crowbar", new CrowbarItem());
     public static final Item GRENADE = ItemRegistry.register("grenade", new GrenadeItem());
-//    public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new ShieldItem(new FabricItemSettings().maxDamage(500).group(ModCreativeTab.MISC)));
+    public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new PoliceShieldItem());
 
     // Block Items
     public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ItemGroupRegistry.MISC);
