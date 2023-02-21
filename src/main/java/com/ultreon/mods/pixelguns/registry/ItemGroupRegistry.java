@@ -45,6 +45,12 @@ public class ItemGroupRegistry {
         });
 
         ItemGroupEvents.modifyEntriesEvent(MISC).register(entries -> {
+            entries.add(ItemRegistry.SPECIALISED_GRIP);
+            entries.add(ItemRegistry.HEAVY_STOCK);
+            entries.add(ItemRegistry.SHORT_SCOPE);
+            entries.add(ItemRegistry.MEDIUM_SCOPE);
+            entries.add(ItemRegistry.LONG_SCOPE);
+
             entries.add(ItemRegistry.WORKSHOP);
 
             entries.add(ItemRegistry.GAS_MASK);

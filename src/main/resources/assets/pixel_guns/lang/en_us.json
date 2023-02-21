@@ -5,14 +5,11 @@
 	"itemGroup.pixel_guns.misc" : "PG - Miscellaneous",
 	"itemGroup.pixel_guns.guns" : "PG - Weapons",
 
-	"item.pixel_guns.gun_scope" : "Gun Scope",
-	"item.pixel_guns.pistol_grip" : "Pistol Grip",
-	"item.pixel_guns.long_barrel" : "Long Barrel",
-	"item.pixel_guns.short_barrel" : "Short Barrel",
-	"item.pixel_guns.wooden_stock" : "Wooden Stock",
-	"item.pixel_guns.modern_stock" : "Modern Stock",
-	"item.pixel_guns.wooden_handguard" : "Wooden Handguard",
-	"item.pixel_guns.modern_handguard" : "Modern Handguard",
+	"item.pixel_guns.specialised_grip" : "Specialised Grip",
+	"item.pixel_guns.heavy_stock" : "Heavy Stock",
+	"item.pixel_guns.short_scope" : "Short Scope",
+	"item.pixel_guns.medium_scope" : "Medium Scope",
+	"item.pixel_guns.long_scope" : "Long Scope",
 
 	"item.pixel_guns.shotgun_shell" : "Shotgun Shell",
 	"item.pixel_guns.light_bullets" : "Light Bullets",
@@ -24,13 +21,11 @@
 
 
 	"item.pixel_guns.pistol" : "Pistol",
-	"item.pixel_guns.heavy_pistol" : "Heavy Pistol",
 	"item.pixel_guns.revolver" : "Revolver",
 	"item.pixel_guns.submachine_gun" : "SMG",
 	"item.pixel_guns.light_assault_rifle" : "Light Assault Rifle",
 	"item.pixel_guns.assault_rifle" : "Assault Rifle",
 	"item.pixel_guns.combat_shotgun" : "Combat Shotgun",
-	"item.pixel_guns.pump_shotgun" : "Pump Shotgun",
 	"item.pixel_guns.sniper_rifle" : "Sniper Rifle",
 	"item.pixel_guns.rocket_launcher" : "Rocket Launcher",
 	"item.pixel_guns.infinity_gun" : "Infinity Gun",

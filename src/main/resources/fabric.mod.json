@@ -27,7 +27,8 @@
     ],
     "fabric-datagen": [
       "com.ultreon.mods.pixelguns.data.DataGeneration"
-    ]
+    ],
+    "modmenu": [ "com.ultreon.mods.pixelguns.config.ConfigScreenPreferencesHook" ]
   },
   "mixins": [
     "pixel_guns.mixins.json"

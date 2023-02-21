@@ -58,6 +58,13 @@ public class ItemRegistry {
     public static final Item GRENADE = ItemRegistry.register("grenade", new GrenadeItem());
     public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new PoliceShieldItem());
 
+    // Attachments
+    public static final Item SHORT_SCOPE = ItemRegistry.register("short_scope", new Item(new FabricItemSettings()));
+    public static final Item MEDIUM_SCOPE = ItemRegistry.register("medium_scope", new Item(new FabricItemSettings()));
+    public static final Item LONG_SCOPE = ItemRegistry.register("long_scope", new Item(new FabricItemSettings()));
+    public static final Item HEAVY_STOCK = ItemRegistry.register("heavy_stock", new Item(new FabricItemSettings()));
+    public static final Item SPECIALISED_GRIP = ItemRegistry.register("specialised_grip", new Item(new FabricItemSettings()));
+
     // Block Items
     public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ItemGroupRegistry.MISC);
 
