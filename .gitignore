@@ -130,5 +130,3 @@ local/
 
 !libs/*.jar
 /src/main/generated/.cache/03e4de26f1265135874f8cdcaebc09d9c08eb42b
-/src/main/generated/data/pixel_guns/tags/items/ammunition.json
-/src/main/generated/data/pixel_guns/tags/items/guns.json
