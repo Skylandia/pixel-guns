@@ -6,6 +6,7 @@ import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
+import com.ultreon.mods.pixelguns.util.WorkshopCraftable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +37,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class InfinityGunItem extends GunItem implements GeoItem {
+public class InfinityGunItem extends GunItem implements GeoItem, WorkshopCraftable {
 
     public InfinityGunItem() {
         super(
@@ -127,6 +128,14 @@ public class InfinityGunItem extends GunItem implements GeoItem {
         public static final String INFINITY_GUN = "PixelGunsInfinityGun";
         public static final String SHOOT_TICKS = "shootTicks";
         public static final String IS_SHOOTING = "isShooting";
+    }
+
+    @Override
+    public ItemStack[] getIngredients() {
+        return new ItemStack[] {
+            new ItemStack(Items.IRON_INGOT, 64),
+            new ItemStack(Items.NETHER_STAR, 1)
+        };
     }
 
     /*
