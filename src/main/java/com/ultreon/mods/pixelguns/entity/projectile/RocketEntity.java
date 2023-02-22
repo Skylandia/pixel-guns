@@ -1,14 +1,12 @@
 package com.ultreon.mods.pixelguns.entity.projectile;
 
 import com.ultreon.mods.pixelguns.registry.EntityRegistry;
-
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
+import net.minecraft.item.Item;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
@@ -17,50 +15,48 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RocketEntity extends PersistentProjectileEntity implements GeoEntity {
+public class RocketEntity extends ThrownItemEntity implements GeoEntity {
+
 	public RocketEntity(EntityType<? extends RocketEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
 	public RocketEntity(World world, LivingEntity owner) {
-		super(EntityRegistry.ROCKET, world);
-		this.refreshPositionAndAngles(owner.getX(), owner.getEyeY(), owner.getZ(), owner.getYaw(), owner.getPitch());
-		this.setVelocity(owner.getRotationVector().normalize().multiply(1.5f));
-		this.setOwner(owner);
+		super(EntityRegistry.ROCKET, owner, world);
 	}
 
 	@Override
 	protected void onEntityHit(EntityHitResult entityHitResult) {
 		super.onEntityHit(entityHitResult);
-		if (!this.world.isClient) {
-			Entity victim = entityHitResult.getEntity();
-			Entity aggressor = this.getOwner();
-			victim.damage(DamageSource.thrownProjectile(victim, aggressor), 8.0F);
-		}
+		entityHitResult.getEntity().damage(DamageSource.thrownProjectile(this, this.getOwner()), 0.0f);
+	}
+
+	private void explode() {
+		if (this.world.isClient) return;
+
+		this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0f, false, World.ExplosionSourceType.MOB);
+		this.discard();
 	}
 
 	@Override
 	protected void onCollision(HitResult hitResult) {
 		super.onCollision(hitResult);
-		if (!this.world.isClient) {
-			this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 2.0F, false, World.ExplosionSourceType.MOB);
-			this.discard();
-		}
+		this.explode();
 	}
 
 	@Override
-	public boolean isOnFire() {
-		return false;
+	public boolean hasNoGravity() {
+		return true;
 	}
 
 	@Override
-	protected boolean canHit(Entity entity) {
-		return false;
+	protected Item getDefaultItem() {
+		return ItemRegistry.ROCKET;
 	}
 
 	@Override
-	protected ItemStack asItemStack() {
-		return ItemRegistry.ROCKET.getDefaultStack();
+	protected void initDataTracker() {
+		super.initDataTracker();
 	}
 
 	/*
@@ -74,6 +70,6 @@ public class RocketEntity extends PersistentProjectileEntity implements GeoEntit
 
 	@Override
 	public AnimatableInstanceCache getAnimatableInstanceCache() {
-		return cache;
+		return this.cache;
 	}
 }

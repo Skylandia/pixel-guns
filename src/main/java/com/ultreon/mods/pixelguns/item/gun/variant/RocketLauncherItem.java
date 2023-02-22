@@ -76,6 +76,11 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
 
         // Spawn Rocket
         RocketEntity rocket = new RocketEntity(world, player);
+        rocket.setPosition(player.getEyePos().subtract(0, 0.1, 0));
+        rocket.setPitch(player.getPitch());
+        rocket.setYaw(player.getYaw());
+
+        rocket.setVelocity(player.getRotationVector().normalize().multiply(1.5));
         world.spawnEntity(rocket);
 
         if (!player.getAbilities().creativeMode) {
