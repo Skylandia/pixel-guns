@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "pixel_guns:short_scope",
+    "pixel_guns:medium_scope",
+    "pixel_guns:long_scope",
+    "pixel_guns:heavy_stock",
+    "pixel_guns:specialised_grip"
+  ]
+}

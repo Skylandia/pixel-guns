@@ -6,11 +6,8 @@ import com.ultreon.mods.pixelguns.client.screen.handler.WorkshopScreenHandler;
 import com.ultreon.mods.pixelguns.network.packet.c2s.play.WorkshopCraftC2SPacket;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.registry.TagRegistry;
-import com.ultreon.mods.pixelguns.util.InventoryUtil;
-import com.ultreon.mods.pixelguns.util.RenderUtil;
-import com.ultreon.mods.pixelguns.util.ResourcePath;
+import com.ultreon.mods.pixelguns.util.*;
 
-import com.ultreon.mods.pixelguns.util.WorkshopCraftable;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -43,15 +40,14 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     private static final Identifier TEXTURE = ResourcePath.get("textures/gui/container/workshop.png");
 
     private Tab currentTab;
-    private List<Tab> tabs = new ArrayList<>();
+    private final List<Tab> tabs = new ArrayList<>();
     private List<ItemStack> materials;
 //    private List<MaterialItem> filteredMaterials;
-    private PlayerInventory playerInventory;
+    private final PlayerInventory playerInventory;
     // private WorkbenchBlockEntity workbench;
     private ButtonWidget btnCraft;
 //    private CheckBox checkBoxMaterials;
-    private ItemStack displayStack;
-    private Map<Tab, List<ItemStack>> recipes = new HashMap<>();
+    private final Map<Tab, CircularLinkedList<ItemStack>> recipes = new HashMap<>();
 
     public WorkshopScreen(WorkshopScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title);
@@ -65,26 +61,30 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         this.playerInventoryTitleY = this.y + 91;
 
         // Populate tabs
-        tabs.add(new Tab(new ItemStack(ItemRegistry.ASSAULT_RIFLE)));
-        tabs.add(new Tab(new ItemStack(ItemRegistry.MEDIUM_BULLETS)));
-//        tabs.add(new Tab(new ItemStack(ItemRegistry.GUN_SCOPE)));
-
-        currentTab = tabs.get(0);
+        tabs.add(Tabs.GUNS);
+        tabs.add(Tabs.AMMUNITION);
+        tabs.add(Tabs.ATTACHMENTS);
 
         // Populate guns
-        recipes.put(tabs.get(0), new ArrayList<>());
+        recipes.put(Tabs.GUNS, new CircularLinkedList<>());
         for (RegistryEntry<Item> gun : Registries.ITEM.iterateEntries(TagRegistry.GUNS)) {
-            recipes.get(tabs.get(0)).add(gun.value().getDefaultStack());
+            recipes.get(Tabs.GUNS).add(gun.value().getDefaultStack());
         }
 
         // Populate ammo
-        recipes.put(tabs.get(1), new ArrayList<>());
+        recipes.put(Tabs.AMMUNITION, new CircularLinkedList<>());
         for (RegistryEntry<Item> bullet : Registries.ITEM.iterateEntries(TagRegistry.AMMUNITION)) {
-            recipes.get(tabs.get(1)).add(bullet.value().getDefaultStack());
+            recipes.get(Tabs.AMMUNITION).add(bullet.value().getDefaultStack());
         }
 
-        displayStack = recipes.get(currentTab).get(0);
-        this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
+        // Populate attachments
+        recipes.put(Tabs.ATTACHMENTS, new CircularLinkedList<>());
+        for (RegistryEntry<Item> bullet : Registries.ITEM.iterateEntries(TagRegistry.ATTACHMENTS)) {
+            recipes.get(Tabs.ATTACHMENTS).add(bullet.value().getDefaultStack());
+        }
+
+        currentTab = Tabs.GUNS;
+        this.materials = List.of(((WorkshopCraftable) recipes.get(currentTab).currentElement().getItem()).getIngredients());
     }
 
     @Override
@@ -92,24 +92,20 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         super.init();
         // Left Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 9, this.y + 18, 15, 20, Text.literal("<"), button -> {
-            int nextIndex = recipes.get(currentTab).indexOf(displayStack) - 1;
-            if (nextIndex < 0) nextIndex = recipes.get(currentTab).size() - 1;
-            displayStack = recipes.get(currentTab).get(nextIndex);
-            this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
+            recipes.get(currentTab).prev();
+            this.materials = List.of(((WorkshopCraftable) this.getDisplayStack().getItem()).getIngredients());
         }, a -> Text.literal("previous item")));
 
         // Right Arrow
         this.addDrawableChild(new ButtonWidget(this.x + 153, this.y + 18, 15, 20, Text.literal(">"), button -> {
-            int nextIndex = recipes.get(currentTab).indexOf(displayStack) + 1;
-            if (nextIndex >= recipes.get(currentTab).size()) nextIndex = 0;
-            displayStack = recipes.get(currentTab).get(nextIndex);
-            this.materials = List.of(((WorkshopCraftable) displayStack.getItem()).getIngredients());
+            recipes.get(currentTab).next();
+            this.materials = List.of(((WorkshopCraftable) this.getDisplayStack().getItem()).getIngredients());
         }, a -> Text.literal("next item")));
 
         // Assemble Button
         this.btnCraft = this.addDrawableChild(new ButtonWidget(this.x + 195, this.y + 16, 74, 20, Text.literal("Assemble"), button -> {
-            WorkshopCraftable currentItem = (WorkshopCraftable) displayStack.getItem();
-            WorkshopCraftC2SPacket.send(currentItem.getIngredients(), displayStack);
+            WorkshopCraftable currentItem = (WorkshopCraftable) this.getDisplayStack().getItem();
+            WorkshopCraftC2SPacket.send(currentItem.getIngredients(), this.getDisplayStack());
         }, a -> Text.literal("assemble item")));
 
         // Disable the Assemble Button
@@ -122,7 +118,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
 
         boolean canAssemble = true;
 
-        WorkshopCraftable workshopItem = (WorkshopCraftable) this.displayStack.getItem();
+        WorkshopCraftable workshopItem = (WorkshopCraftable) this.getDisplayStack().getItem();
 
         for (ItemStack stack : workshopItem.getIngredients()) {
             if (InventoryUtil.itemCountInInventory(playerInventory.player, stack.getItem()) < stack.getCount()) {
@@ -141,8 +137,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         for (int i = 0; i < this.tabs.size(); i++) {
             if (RenderUtil.isMouseWithin((int) mouseX, (int) mouseY, this.x + 28 * i, this.y - 28, 28, 28)) {
                 this.currentTab = this.tabs.get(i);
-                this.displayStack = this.recipes.get(this.currentTab).get(0);
-//                this.loadItem(this.currentTab.getCurrentIndex());
+                this.recipes.get(currentTab).resetIndex(); // TODO see if this is required
                 this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
@@ -193,10 +188,10 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     }
 
     private void renderUnselectedTabs(MatrixStack matrices) {
-        for(int i = 0; i < this.tabs.size(); i++)
+        for (int i = 0; i < this.tabs.size(); i++)
         {
             Tab tab = this.tabs.get(i);
-            if(tab != this.currentTab)
+            if (tab != this.currentTab)
             {
                 RenderSystem.setShader(GameRenderer::getPositionTexProgram);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -243,7 +238,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
     }
 
     private void renderItemName(MatrixStack matrices) {
-        this.client.textRenderer.draw(matrices, displayStack.getName(), this.x + 90 - this.client.textRenderer.getWidth(displayStack.getName())/2, this.y + 25, 0xFFFFFF);
+        this.client.textRenderer.draw(matrices, this.getDisplayStack().getName(), this.x + 90 - this.client.textRenderer.getWidth(this.getDisplayStack().getName())/2, this.y + 25, 0xFFFFFF);
     }
 
 
@@ -262,7 +257,7 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         modelViewStack.multiply(new Quaternionf(new AxisAngle4f(MathHelper.RADIANS_PER_DEGREE * 30F, 0.0F, 0.0F, -1.0F)));
         RenderSystem.applyModelViewMatrix();
         VertexConsumerProvider.Immediate buffer = this.client.getBufferBuilders().getEntityVertexConsumers();
-        MinecraftClient.getInstance().getItemRenderer().renderItem(this.displayStack, ModelTransformation.Mode.FIXED, false, matrices, buffer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, RenderUtil.getModel(this.displayStack));
+        MinecraftClient.getInstance().getItemRenderer().renderItem(this.getDisplayStack(), ModelTransformation.Mode.FIXED, false, matrices, buffer, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, RenderUtil.getModel(this.getDisplayStack()));
         buffer.draw();
 
         modelViewStack.pop();
@@ -283,5 +278,15 @@ public class WorkshopScreen extends HandledScreen<WorkshopScreenHandler> {
         drawTexture(matrices, x + 172, y + 16, 198, 0, 20, 20);
     }
 
+    protected ItemStack getDisplayStack() {
+        return recipes.get(currentTab).currentElement();
+    }
+
     private record Tab(ItemStack icon) {}
+
+    static class Tabs {
+        public static final Tab GUNS = new Tab(new ItemStack(ItemRegistry.ASSAULT_RIFLE));
+        public static final Tab AMMUNITION = new Tab(new ItemStack(ItemRegistry.MEDIUM_BULLETS));
+        public static final Tab ATTACHMENTS = new Tab(new ItemStack(ItemRegistry.LONG_SCOPE));
+    }
 }

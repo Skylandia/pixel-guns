@@ -20,10 +20,10 @@ import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.SingletonGeoAnimatable;
 import software.bernie.geckolib.animatable.client.RenderProvider;
-import software.bernie.geckolib.constant.DefaultAnimations;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -65,13 +65,12 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     public void shoot(PlayerEntity player, ItemStack stack) {
         Event.call(new GunFireEvent.Pre(player, stack));
         if (player.world.isClient) {
+            controller.setAnimation(Animations.FIRE);
             Event.call(new GunFireEvent.Post(player, stack));
             return;
         }
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         ServerWorld world = serverPlayer.getWorld();
-
-        triggerAnim(player, GeoItem.getOrAssignId(player.getMainHandStack(), world), "shoot_controller", "shoot");
 
         player.getItemCooldownManager().set(this, this.fireCooldown);
 
@@ -91,8 +90,8 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     @Override
     protected void doReloadTick(World world, NbtCompound nbtCompound, PlayerEntity player, ItemStack stack) {
         int reloadTick = nbtCompound.getInt("reloadTick");
-        if (reloadTick == 0 && (world instanceof ServerWorld serverWorld)) {
-            triggerAnim(player, GeoItem.getOrAssignId(player.getMainHandStack(), serverWorld), "reload_controller", "reload");
+        if (reloadTick == 0 && world.isClient) {
+            controller.setAnimation(Animations.RELOAD);
         }
         super.doReloadTick(world, nbtCompound, player, stack);
     }
@@ -101,12 +100,12 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
      * ANIMATION SIDE
      */
 
+    private AnimationController<RocketLauncherItem> /*the fat*/ controller;
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, "reload_controller", 1, state -> PlayState.CONTINUE)
-            .triggerableAnim("reload", DefaultAnimations.ATTACK_BITE));
-        controllers.add(new AnimationController<>(this, "shoot_controller", 1, state -> PlayState.CONTINUE)
-            .triggerableAnim("shoot", DefaultAnimations.ATTACK_BITE));
+        controller = new AnimationController<>(this, "controller", 1, state -> PlayState.CONTINUE);
+        controllers.add(controller);
     }
 
     @Override
@@ -129,5 +128,11 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     @Override
     public Supplier<Object> getRenderProvider() {
         return this.renderProvider;
+    }
+
+    protected static class Animations {
+        public static final RawAnimation RELOAD = RawAnimation.begin().thenPlay("reload");
+        public static final RawAnimation FIRE = RawAnimation.begin().thenPlay("fire");
+
     }
 }
