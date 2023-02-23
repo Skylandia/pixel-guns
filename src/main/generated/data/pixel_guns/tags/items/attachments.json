@@ -1,10 +1,11 @@
 {
   "replace": false,
   "values": [
-    "pixel_guns:short_scope",
-    "pixel_guns:medium_scope",
-    "pixel_guns:long_scope",
-    "pixel_guns:heavy_stock",
-    "pixel_guns:specialised_grip"
+    "pixel_guns:shotgun_shell",
+    "pixel_guns:light_bullets",
+    "pixel_guns:medium_bullets",
+    "pixel_guns:heavy_bullets",
+    "pixel_guns:rocket",
+    "pixel_guns:energy_battery"
   ]
 }

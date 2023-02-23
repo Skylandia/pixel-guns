@@ -12,9 +12,9 @@ import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
 
-public class TagGenerator extends FabricTagProvider<Item> {
+public class ItemTagGenerator extends FabricTagProvider<Item> {
 
-	public TagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+	public ItemTagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
 		super(output, RegistryKeys.ITEM, registriesFuture);
 	}
 
@@ -29,7 +29,7 @@ public class TagGenerator extends FabricTagProvider<Item> {
 			.add(ItemRegistry.ASSAULT_RIFLE)
 			.add(ItemRegistry.SNIPER_RIFLE)
 			.add(ItemRegistry.ROCKET_LAUNCHER)
-//			.add(ItemRegistry.INFINITY_GUN)
+			.add(ItemRegistry.INFINITY_GUN)
 		;
 
 		getOrCreateTagBuilder(TagRegistry.AMMUNITION)
@@ -38,6 +38,15 @@ public class TagGenerator extends FabricTagProvider<Item> {
 			.add(ItemRegistry.MEDIUM_BULLETS)
 			.add(ItemRegistry.HEAVY_BULLETS)
 			.add(ItemRegistry.ROCKET)
-			.add(ItemRegistry.ENERGY_BATTERY);
+			.add(ItemRegistry.ENERGY_BATTERY)
+		;
+
+		getOrCreateTagBuilder(TagRegistry.ATTACHMENTS)
+			.add(ItemRegistry.SHORT_SCOPE)
+			.add(ItemRegistry.MEDIUM_SCOPE)
+			.add(ItemRegistry.LONG_SCOPE)
+			.add(ItemRegistry.HEAVY_STOCK)
+			.add(ItemRegistry.SPECIALISED_GRIP)
+		;
 	}
 }
