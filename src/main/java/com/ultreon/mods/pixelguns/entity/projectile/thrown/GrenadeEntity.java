@@ -17,6 +17,9 @@ import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class GrenadeEntity extends ThrownItemEntity implements GeoEntity {
@@ -49,6 +52,8 @@ public class GrenadeEntity extends ThrownItemEntity implements GeoEntity {
         world.playSound(hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z, SoundRegistry.GRENADE_EXPLODE, SoundCategory.MASTER, 0.8f, 0.8f, false);
     }
 
+    
+
     @Override
     protected Item getDefaultItem() {
         return ItemRegistry.GRENADE;
@@ -61,12 +66,20 @@ public class GrenadeEntity extends ThrownItemEntity implements GeoEntity {
      */
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private AnimationController controller;
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {}
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controller = new AnimationController<>(this, "controller", 1, state -> PlayState.CONTINUE);
+        controllerRegistrar.add(controller);
+    }
 
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    static class Animations {
+        public static final RawAnimation PULL_PIN = RawAnimation.begin().thenPlay("pull_pin");
     }
 }

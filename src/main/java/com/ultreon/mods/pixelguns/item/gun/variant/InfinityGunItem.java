@@ -1,7 +1,9 @@
 package com.ultreon.mods.pixelguns.item.gun.variant;
 
+import com.ultreon.mods.pixelguns.PixelGuns;
 import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.damagesource.EnergyOrbDamageSource;
+import com.ultreon.mods.pixelguns.item.gun.GunHitscanHelper;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 
@@ -90,38 +92,30 @@ public class InfinityGunItem extends GunItem implements GeoItem, WorkshopCraftab
 
     @Override
     protected void handleHit(HitResult result, ServerWorld world, ServerPlayerEntity player) {
-        this.hit(result, world, player);
-        super.handleHit(result, world, player);
-    }
-
-    public void hit(HitResult result, ServerWorld world, ServerPlayerEntity player) {
-        Vec3d look = player.getEyePos().relativize(result.getPos()).normalize();
-        Vec3d iter = look.multiply(8);
-        Vec3d curPos = result.getPos();
-        for (int i = 0; i < 3; i++) {
-            world.createExplosion(null, new EnergyOrbDamageSource(), new ExplosionBehavior() {
-                @Override
-                public boolean canDestroyBlock(Explosion explosion, BlockView blockGetter, BlockPos blockPos, BlockState blockState, float f) {
-                    return true;
-                }
-
-                @Override
-                public Optional<Float> getBlastResistance(Explosion explosion, BlockView blockGetter, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
-                    return Optional.of(0f);
-                }
-            }, curPos.x, curPos.y, curPos.z, 7f, true, World.ExplosionSourceType.NONE);
-
-            curPos = curPos.add(iter);
+        // Check for blocks if no entities found
+        if (result == null) {
+            result = GunHitscanHelper.getCollision(player, this.range);
         }
 
+        Vec3d hitLocation = result.getPos();
         Vec3d userPos = player.getEyePos();
-        Vec3d hitPosition = result.getPos().subtract(userPos);
-        Vec3d normalizedHitPosition = hitPosition.normalize();
+        Vec3d beamDelta = hitLocation.subtract(userPos);
+        Vec3d normalizedBeamDelta = beamDelta.normalize();
 
-        for (int i = 1; i < MathHelper.floor(hitPosition.length()); ++i) {
-            Vec3d lerpedLocation = userPos.add(normalizedHitPosition.multiply(i));
+        // Spawn particles
+        for (int i = 1; i < MathHelper.floor(beamDelta.length()); i++) {
+            Vec3d lerpedLocation = userPos.add(normalizedBeamDelta.multiply(i));
             world.spawnParticles(ParticleTypes.SONIC_BOOM, lerpedLocation.x, lerpedLocation.y, lerpedLocation.z, 1, 0, 0, 0, 0);
         }
+
+        // Explode world
+        PixelGuns.LOGGER.info("EXPLODING WORLD");
+        world.createExplosion(null, new EnergyOrbDamageSource(), new ExplosionBehavior() {
+            @Override
+            public Optional<Float> getBlastResistance(Explosion explosion, BlockView world, BlockPos pos, BlockState blockState, FluidState fluidState) {
+                return Optional.of(0.0f);
+            }
+        }, hitLocation, 4.0f, false, World.ExplosionSourceType.MOB);
     }
 
     public static class NbtNames {
