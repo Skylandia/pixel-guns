@@ -48,9 +48,6 @@ dependencies {
 
     modImplementation "maven.modrinth:midnightlib:${project.midnightlib_version}"
     include "maven.modrinth:midnightlib:${project.midnightlib_version}"
-
-    // Forge Config API
-    modImplementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${project.forge_config_api_version}"
 }
 
 loom {
