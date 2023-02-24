@@ -33,9 +33,6 @@ import java.util.function.Supplier;
 
 public class RocketLauncherItem extends GunItem implements GeoItem {
 
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
-
     public RocketLauncherItem() {
         super(
             false,
@@ -58,6 +55,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
                 new ItemStack(Items.IRON_INGOT, 32)
             }
         );
+
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
 
@@ -65,12 +63,16 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     public void shoot(PlayerEntity player, ItemStack stack) {
         Event.call(new GunFireEvent.Pre(player, stack));
         if (player.world.isClient) {
-            controller.setAnimation(Animations.FIRE);
             Event.call(new GunFireEvent.Post(player, stack));
             return;
         }
+
+
+
         ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
         ServerWorld world = serverPlayer.getWorld();
+
+        this.triggerAnim(player, GeoItem.getOrAssignId(stack, world), "controller", "fire");
 
         player.getItemCooldownManager().set(this, this.fireCooldown);
 
@@ -95,8 +97,8 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     @Override
     protected void doReloadTick(World world, NbtCompound nbtCompound, PlayerEntity player, ItemStack stack) {
         int reloadTick = nbtCompound.getInt("reloadTick");
-        if (reloadTick == 0 && world.isClient) {
-            controller.setAnimation(Animations.RELOAD);
+        if (reloadTick == 0 && world instanceof ServerWorld serverWorld) {
+            this.triggerAnim(player, GeoItem.getOrAssignId(player.getMainHandStack(), serverWorld), "controller", "reload");
         }
         super.doReloadTick(world, nbtCompound, player, stack);
     }
@@ -105,12 +107,15 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
      * ANIMATION SIDE
      */
 
-    private AnimationController<RocketLauncherItem> /*the fat*/ controller;
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controller = new AnimationController<>(this, "controller", 1, state -> PlayState.CONTINUE);
-        controllers.add(controller);
+        controllers.add(new AnimationController<>(this, "controller", state -> PlayState.CONTINUE)
+            .triggerableAnim("reload", Animations.RELOAD)
+            .triggerableAnim("fire", Animations.FIRE)
+        );
     }
 
     @Override
