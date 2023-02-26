@@ -1,5 +1,6 @@
 package com.ultreon.mods.pixelguns.mixin.client;
 
+import net.minecraft.item.Item;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,9 +26,15 @@ public class CustomSwordSounds {
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;hasLimitedAttackSpeed()Z", shift = Shift.BEFORE))
     private void onAttackMiss(CallbackInfoReturnable<Boolean> info) {
         assert player != null;
-        if (player.getMainHandStack().getItem() == ItemRegistry.KATANA || player.getMainHandStack().getItem() == ItemRegistry.CROWBAR) {
-            assert world != null;
-            world.playSound(this.player.getBlockPos(), SoundRegistry.KATANA_SWING, SoundCategory.PLAYERS, 1, 1, false);
+        assert world != null;
+
+        Item heldItem = player.getMainHandStack().getItem();
+
+        if (heldItem == ItemRegistry.KATANA) {
+            world.playSound(this.player.getX(), this.player.getY(), this.player.getZ(), SoundRegistry.KATANA_SWING, SoundCategory.PLAYERS, 1, 1, false);
+        }
+        else if (heldItem == ItemRegistry.CROWBAR) {
+            world.playSound(this.player.getX(), this.player.getY(), this.player.getZ(), SoundRegistry.CROWBAR_HIT, SoundCategory.PLAYERS, 1, 1, false);
         }
     }
 }

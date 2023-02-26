@@ -2,7 +2,7 @@ package com.ultreon.mods.pixelguns.item.gun;
 
 import com.ultreon.mods.pixelguns.event.GunFireEvent;
 import com.ultreon.mods.pixelguns.event.forge.Event;
-import com.ultreon.mods.pixelguns.item.ModCreativeTab;
+import com.ultreon.mods.pixelguns.util.WorkshopCraftable;
 import com.ultreon.mods.pixelguns.registry.KeybindRegistry;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 import io.netty.buffer.Unpooled;
@@ -37,9 +37,9 @@ import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 
-public abstract class GunItem extends Item {
+public abstract class GunItem extends Item implements WorkshopCraftable {
 
-    public final AmmoLoadingType ammoLoadingType;
+    public final boolean isAutomatic;
     protected final float damage;
     protected final int range;
     public final int fireCooldown;
@@ -55,10 +55,11 @@ public abstract class GunItem extends Item {
     protected final SoundEvent fireAudio;
     private final int reloadCycles;
     public final boolean isScoped;
+    private final ItemStack[] craftingRequirements;
 
-    public GunItem(AmmoLoadingType ammoLoadingType, float damage, int range, int fireCooldown, int magazineSize, Item ammunition, int reloadCooldown, float bulletSpread, float recoil, int pelletCount, LoadingType loadingType, SoundEvent[] reloadSounds, SoundEvent fireAudio, int reloadCycles, boolean isScoped, int[] reloadStages) {
-        super(new FabricItemSettings().group(ModCreativeTab.WEAPONS).maxCount(1));
-        this.ammoLoadingType = ammoLoadingType;
+    public GunItem(boolean isAutomatic, float damage, int range, int fireCooldown, int magazineSize, Item ammunition, int reloadCooldown, float bulletSpread, float recoil, int pelletCount, LoadingType loadingType, SoundEvent[] reloadSounds, SoundEvent fireAudio, int reloadCycles, boolean isScoped, int[] reloadStages, ItemStack[] craftingRequirements) {
+        super(new FabricItemSettings().maxCount(1));
+        this.isAutomatic = isAutomatic;
         this.damage = damage;
         this.range = range;
         this.fireCooldown = fireCooldown;
@@ -74,6 +75,7 @@ public abstract class GunItem extends Item {
         this.reloadCycles = reloadCycles;
         this.isScoped = isScoped;
         this.reloadSoundStages = reloadStages;
+        this.craftingRequirements = craftingRequirements;
     }
 
     public static boolean isLoaded(ItemStack stack) {
@@ -99,7 +101,13 @@ public abstract class GunItem extends Item {
 
     @Override
     public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext tooltipContext) {
-        tooltip.add(Text.literal(String.format("%s/%s", GunItem.remainingAmmo(stack), this.magazineSize)).formatted(Formatting.GRAY));
+        String ammoType =       Formatting.GRAY + "Ammo Type: " + Formatting.WHITE + this.ammunition.getName().getString();
+        String gunDamage =      Formatting.GRAY + "Damage: "    + Formatting.WHITE + this.damage;
+        String gunMagazine =    Formatting.GRAY + "Ammo: "      + Formatting.WHITE + GunItem.remainingAmmo(stack) + "/" + this.magazineSize;
+
+        tooltip.add(Text.literal(ammoType));
+        tooltip.add(Text.literal(gunDamage));
+        tooltip.add(Text.literal(gunMagazine));
     }
 
     @Override
@@ -141,14 +149,18 @@ public abstract class GunItem extends Item {
         }
         switch (this.loadingType) {
             case CLIP -> {
-                if (reloadTick < this.reloadCooldown || GunItem.reserveAmmoCount(player, this.ammunition) <= 0) break;
+                if (reloadTick < this.reloadCooldown) break;
+                if (GunItem.reserveAmmoCount(player, this.ammunition) <= 0) break;
+
                 nbtCompound.putInt("currentCycle", 1);
                 this.finishReload(player, stack);
                 nbtCompound.putInt("reloadTick", 0);
             }
             case INDIVIDUAL -> {
-                if (reloadTick < this.reloadSoundStages[2] || nbtCompound.getInt("currentCycle") >= this.reloadCycles || GunItem.reserveAmmoCount(player, this.ammunition) <= 0)
-                    break;
+                if (reloadTick < this.reloadSoundStages[2]) break;
+                if (nbtCompound.getInt("currentCycle") >= this.reloadCycles) break;
+                if (GunItem.reserveAmmoCount(player, this.ammunition) <= 0) break;
+
                 nbtCompound.putInt("Clip", nbtCompound.getInt("Clip") + 1);
                 InventoryUtil.removeItemFromInventory(player, this.ammunition, 1);
                 if (GunItem.remainingAmmo(stack) < this.magazineSize && GunItem.reserveAmmoCount(player, this.ammunition) > 0) {
@@ -236,13 +248,13 @@ public abstract class GunItem extends Item {
     }
 
     @Override
-    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
-        return false;
+    public ItemStack[] getIngredients() {
+        return craftingRequirements;
     }
 
-    public enum AmmoLoadingType {
-        SEMI_AUTOMATIC,
-        AUTOMATIC
+    @Override
+    public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+        return false;
     }
 
     public enum LoadingType {

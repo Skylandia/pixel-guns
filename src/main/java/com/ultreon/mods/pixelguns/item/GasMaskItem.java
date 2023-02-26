@@ -1,16 +1,29 @@
 package com.ultreon.mods.pixelguns.item;
 
 import com.ultreon.mods.pixelguns.armor.HazardArmor;
+import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.GasEntity;
 
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
-import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.animatable.client.RenderProvider;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.renderer.GeoArmorRenderer;
+import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class GasMaskItem extends HazardArmor implements IAnimatable {
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class GasMaskItem extends HazardArmor implements GeoItem {
 
     public GasMaskItem() {
         super(EquipmentSlot.HEAD);
@@ -27,5 +40,55 @@ public class GasMaskItem extends HazardArmor implements IAnimatable {
                 }
             }
         }
+    }
+
+    /*
+     * Animation Side
+     */
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
+
+    @Override
+    public void createRenderer(Consumer<Object> consumer) {
+//        super.createRenderer(consumer);
+        consumer.accept(new RenderProvider() {
+            private GeoItemRenderer<GasMaskItem> renderer;
+
+            @Override
+            public BuiltinModelItemRenderer getCustomRenderer() {
+                if (this.renderer == null)
+                    this.renderer = GeoRendererGenerator.item(GasMaskItem.this);
+
+                return this.renderer;
+            }
+
+            private GeoArmorRenderer<?> armorRenderer;
+
+            @Override
+            public BipedEntityModel<LivingEntity> getHumanoidArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, BipedEntityModel<LivingEntity> original) {
+                if (this.armorRenderer == null)
+                    this.armorRenderer = GeoRendererGenerator.armor(GasMaskItem.this);
+
+                this.armorRenderer.prepForRender(livingEntity, itemStack, equipmentSlot, original);
+
+                return this.armorRenderer;
+            }
+        });
+    }
+
+    @Override
+    public Supplier<Object> getRenderProvider() {
+        return this.renderProvider;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+
+    }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

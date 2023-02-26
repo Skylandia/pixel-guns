@@ -129,3 +129,4 @@ run/
 local/
 
 !libs/*.jar
+/src/main/generated

@@ -3,12 +3,13 @@ package com.ultreon.mods.pixelguns.item.gun.variant;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 public class CombatShotgunItem extends GunItem {
     public CombatShotgunItem() {
         super(
-            GunItem.AmmoLoadingType.SEMI_AUTOMATIC,
+            false,
             5.5f,
             128,
             14,
@@ -19,11 +20,14 @@ public class CombatShotgunItem extends GunItem {
             30.0f,
             5,
             LoadingType.INDIVIDUAL,
-            new SoundEvent[] {SoundRegistry.RELOAD_COMBAT_SHOTGUN_P1, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P2, SoundRegistry.RELOAD_COMBAT_SHOTGUN_P3},
-            SoundRegistry.SHOTGUN_COMBAT,
+            SoundRegistry.COMBAT_SHOTGUN_RELOAD,
+            SoundRegistry.COMBAT_SHOTGUN_FIRE,
             6,
             false,
-            new int[] {1, 4, 13}
+            new int[] {1, 4, 13},
+            new ItemStack[] {
+                new ItemStack(Items.IRON_INGOT, 24)
+            }
         );
     }
 }

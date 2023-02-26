@@ -1,14 +1,10 @@
 package com.ultreon.mods.pixelguns.registry;
 
-import com.ultreon.mods.pixelguns.client.GeoModelGenerator;
-import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Item;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import software.bernie.geckolib3.renderers.geo.GeoArmorRenderer;
 
 public enum ArmorRegistry implements ArmorMaterial {
 
@@ -47,15 +43,6 @@ public enum ArmorRegistry implements ArmorMaterial {
 
     record ProtectionAmounts(int helmet, int chestplate, int leggings, int boots) {}
 
-    public static void registerArmorRenderers() {
-
-        ArmorRegistry.registerArmorRenderer(ARMORED, ItemRegistry.ARMORED_VEST);
-        ArmorRegistry.registerArmorRenderer(HAZARD, ItemRegistry.GAS_MASK);
-    }
-
-    private static void registerArmorRenderer(ArmorRegistry armorType, Item... armorPiece) {
-        GeoArmorRenderer.registerArmorRenderer(GeoRendererGenerator.generateArmorRenderer(GeoModelGenerator.generateArmorModel(armorType)), armorPiece);
-    }
 
     ArmorRegistry(String name, DurabilityAmounts durabilityAmounts, ProtectionAmounts protectionAmounts, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Ingredient ingredient) {
         this.name = name;

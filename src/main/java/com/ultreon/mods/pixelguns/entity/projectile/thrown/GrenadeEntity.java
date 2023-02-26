@@ -4,29 +4,33 @@ import com.ultreon.mods.pixelguns.registry.EntityRegistry;
 import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 import com.ultreon.mods.pixelguns.registry.SoundRegistry;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion.DestructionType;
 
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
-import software.bernie.geckolib3.util.GeckoLibUtil;
+import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
-public class GrenadeEntity extends ThrownItemEntity implements IAnimatable {
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-    private final AnimationFactory factory = GeckoLibUtil.createFactory(this);
+import java.util.Optional;
+
+public class GrenadeEntity extends ThrownItemEntity implements GeoEntity {
 
     public GrenadeEntity(EntityType<? extends GrenadeEntity> entityType, World world) {
         super(entityType, world);
@@ -45,7 +49,12 @@ public class GrenadeEntity extends ThrownItemEntity implements IAnimatable {
     private void explode() {
         if (this.world.isClient) return;
 
-        this.world.createExplosion(this, this.getX(), this.getY(), this.getZ(), 1.0f, false, DestructionType.DESTROY);
+        this.world.createExplosion(this, null, new ExplosionBehavior() {
+            @Override
+            public Optional<Float> getBlastResistance(Explosion explosion, BlockView world, BlockPos pos, BlockState blockState, FluidState fluidState) {
+                return Optional.of(0.0f);
+            }
+        }, this.getX(), this.getY(), this.getZ(), 1.0f, false, World.ExplosionSourceType.MOB);
         this.discard();
     }
 
@@ -56,22 +65,28 @@ public class GrenadeEntity extends ThrownItemEntity implements IAnimatable {
         world.playSound(hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z, SoundRegistry.GRENADE_EXPLODE, SoundCategory.MASTER, 0.8f, 0.8f, false);
     }
 
+    
+
     @Override
     protected Item getDefaultItem() {
         return ItemRegistry.GRENADE;
     }
 
-    private PlayState predicate(AnimationEvent<GrenadeEntity> event) {
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("grenade.entity"));
-        return PlayState.CONTINUE;
+
+
+    /*
+     * Animation Side
+     */
+
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
+        controllerRegistrar.add(new AnimationController<>(this, "controller", state -> PlayState.CONTINUE));
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
-    }
-    @Override
-    public AnimationFactory getFactory() {
-        return factory;
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return this.cache;
     }
 }

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "pixel_guns:gun/pistol_light",
-		"particle": "pixel_guns:gun/pistol_light"
+		"0": "pixel_guns:item/gun/pistol_light",
+		"particle": "pixel_guns:item/gun/pistol_light"
 	},
 	"elements": [
 		{

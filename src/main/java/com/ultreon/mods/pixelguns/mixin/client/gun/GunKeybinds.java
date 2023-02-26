@@ -25,12 +25,12 @@ public abstract class GunKeybinds {
     @Shadow private int itemUseCooldown;
 
     // Allows the GunItem.use() to be called when holding a GunItem and using the attack keybind instead of the use keybind
-
     @Inject(method = "handleInputEvents", at = @At("TAIL"))
     public void handleGunShoot(CallbackInfo info) {
+        assert this.player != null;
         if (this.player.getMainHandStack().getItem() instanceof GunItem gunItem) {
             if (MinecraftClient.getInstance().options.attackKey.isPressed() && this.itemUseCooldown == 0) {
-                if (gunItem.ammoLoadingType.equals(GunItem.AmmoLoadingType.SEMI_AUTOMATIC)) {
+                if (!gunItem.isAutomatic) {
                     MinecraftClient.getInstance().options.attackKey.setPressed(false);
                 }
                 this.itemUseCooldown = gunItem.fireCooldown;
@@ -45,6 +45,7 @@ public abstract class GunKeybinds {
 
     @Inject(method = "handleInputEvents", at = @At("TAIL"))
     public void handleGunReload(CallbackInfo info) {
+        assert this.player != null;
         if (this.player.getMainHandStack().getItem() instanceof GunItem) {
             if (KeybindRegistry.reload.isPressed()) {
                 PacketByteBuf buf = PacketByteBufs.create();
@@ -56,7 +57,6 @@ public abstract class GunKeybinds {
     }
 
     // Prevents default item use cooldown when firing gun
-
     @Inject(method = "doItemUse", at = @At("HEAD"), cancellable = true)
     public void preventGunUseCooldown(CallbackInfo ci) {
         if (this.player == null) {

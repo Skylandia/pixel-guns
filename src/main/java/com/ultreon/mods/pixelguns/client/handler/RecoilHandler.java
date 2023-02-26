@@ -1,6 +1,6 @@
 package com.ultreon.mods.pixelguns.client.handler;
 
-import com.ultreon.mods.pixelguns.Config;
+import com.ultreon.mods.pixelguns.config.PixelGunsConfig;
 import com.ultreon.mods.pixelguns.event.GunFireEvent;
 import com.ultreon.mods.pixelguns.event.forge.TickEvent;
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
@@ -24,7 +24,7 @@ public class RecoilHandler
 		if (!event.isClient())
 			return;
 
-		if (!Config.DO_RECOIL.get())
+		if (!PixelGunsConfig.enable_recoil)
 			return;
 
 		ItemStack heldItem = event.getStack();
@@ -43,7 +43,7 @@ public class RecoilHandler
 		if (mc.player == null)
 			return;
 
-		if (!Config.DO_RECOIL.get())
+		if (!PixelGunsConfig.enable_recoil)
 			return;
 
 		float recoilAmount = cameraRecoil * mc.getTickDelta() * 0.15F;

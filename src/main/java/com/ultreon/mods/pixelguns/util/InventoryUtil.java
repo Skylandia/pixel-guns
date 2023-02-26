@@ -15,6 +15,18 @@ public class InventoryUtil {
         return Math.max(itemCount, 0);
     }
 
+    public static boolean hasStacks(PlayerEntity player, ItemStack[] stacks) {
+        for (ItemStack stack : stacks) {
+            if (InventoryUtil.itemCountInInventory(player, stack.getItem()) < stack.getCount()) return false;
+        }
+        return true;
+    }
+    public static void removeStacks(PlayerEntity player, ItemStack[] stacks) {
+        for (ItemStack stack : stacks) {
+            InventoryUtil.removeItemFromInventory(player, stack.getItem(), stack.getCount());
+        }
+    }
+
     public static void removeItemFromInventory(PlayerEntity player, Item item, int count) {
         int itemsToRemove = count;
         for (int i = 0; i < player.getInventory().size(); ++i) {

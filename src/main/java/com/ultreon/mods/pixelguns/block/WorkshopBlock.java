@@ -1,14 +1,15 @@
 package com.ultreon.mods.pixelguns.block;
 
-import com.ultreon.mods.pixelguns.screen.WorkshopScreenHandler;
+import com.ultreon.mods.pixelguns.client.screen.handler.WorkshopScreenHandler;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
@@ -25,11 +26,11 @@ import net.minecraft.world.World;
 public class WorkshopBlock extends EasyBlock {
 
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    private static final Text TITLE = Text.of("Weapon Table");
+    private static final Text TITLE = Text.of("Workbench");
     protected static final VoxelShape SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 15.0, 16.0);
 
-    public WorkshopBlock(Settings settings) {
-        super(settings);
+    public WorkshopBlock() {
+        super(FabricBlockSettings.of(Material.WOOD).strength(2.5f).sounds(BlockSoundGroup.WOOD).nonOpaque());
         setDefaultState(
                 getDefaultState()
                 .with(WATERLOGGED, false)
@@ -62,52 +63,8 @@ public class WorkshopBlock extends EasyBlock {
         }
     }
 
+    @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((i, playerInventory, playerEntity) -> new WorkshopScreenHandler(i, playerInventory, new Inventory() {
-            @Override
-            public int size() {
-                return 9;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public ItemStack getStack(int i) {
-                return null;
-            }
-
-            @Override
-            public ItemStack removeStack(int i, int j) {
-                return null;
-            }
-
-            @Override
-            public ItemStack removeStack(int i) {
-                return null;
-            }
-
-            @Override
-            public void setStack(int i, ItemStack itemStack) {
-
-            }
-
-            @Override
-            public void markDirty() {
-
-            }
-
-            @Override
-            public boolean canPlayerUse(PlayerEntity playerEntity) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-        }), TITLE);
+        return new SimpleNamedScreenHandlerFactory((syncId, playerInventory, playerEntity) -> new WorkshopScreenHandler(syncId, playerInventory), TITLE);
     }
 }

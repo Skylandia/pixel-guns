@@ -72,7 +72,7 @@ public abstract class EasyBlock extends Block {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState blockState2, WorldAccess worldAccess, BlockPos blockPos, BlockPos blockPos2) {
         if (isWaterloggable() && state.get(Properties.WATERLOGGED)) {
-            worldAccess.createAndScheduleFluidTick(blockPos, Fluids.WATER, Fluids.WATER.getTickRate(worldAccess));
+            worldAccess.scheduleFluidTick(blockPos, Fluids.WATER, Fluids.WATER.getTickRate(worldAccess));
         }
         return super.getStateForNeighborUpdate(state, direction, blockState2, worldAccess, blockPos, blockPos2);
     }
