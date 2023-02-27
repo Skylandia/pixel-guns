@@ -1,6 +1,6 @@
 {
-	"category.pixel_guns.binds" : "Simple Animated Guns",
-	"key.pixel_guns.reloadtoggle" : "Reload Gun",
+	"category.pixel_guns.binds" : "Pixel Guns",
+	"key.pixel_guns.reload" : "Reload",
 
 	"itemGroup.pixel_guns.misc" : "PG - Miscellaneous",
 	"itemGroup.pixel_guns.guns" : "PG - Weapons",
