@@ -1,20 +1,18 @@
 package com.ultreon.mods.pixelguns.item;
 
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
-import com.ultreon.mods.pixelguns.registry.ItemRegistry;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.RangedWeaponItem;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
@@ -32,7 +30,7 @@ import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class GrenadeItem extends RangedWeaponItem implements GeoItem {
+public class GrenadeItem extends Item implements GeoItem {
 
     public GrenadeItem() {
         super(new FabricItemSettings().maxCount(16));
@@ -41,44 +39,9 @@ public class GrenadeItem extends RangedWeaponItem implements GeoItem {
     }
 
     @Override
-    public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
-        if (!(user instanceof PlayerEntity playerEntity)) return;
-
-		if (stack.isEmpty() && !playerEntity.isCreative()) return;
-		int useTicks = this.getMaxUseTime(stack) - remainingUseTicks;
-		float throwStrength = GrenadeItem.getThrowStrength(useTicks);
-
-        if (!world.isClient) {
-			if (remainingUseTicks == 0) {
-				world.createExplosion(null, null, null, user.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
-			} else {
-				GrenadeEntity grenade = new GrenadeEntity(world, playerEntity);
-				grenade.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0f, throwStrength * 2.5f, 1.0f);
-				world.spawnEntity(grenade);
-			}
-        }
-        if (!playerEntity.isCreative()) {
-            stack.decrement(1);
-        }
-		user.swingHand(Hand.MAIN_HAND);
-        playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
-    }
-
-    public static float getThrowStrength(int useTicks) {
-		float throwStrength = (float) useTicks / 30;
-		if (throwStrength < 1) return throwStrength;
-        return 1;
-    }
-
-    @Override
     public int getMaxUseTime(ItemStack stack) {
         return 120;
     }
-
-	@Override
-	public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
-		return false;
-	}
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
@@ -91,6 +54,28 @@ public class GrenadeItem extends RangedWeaponItem implements GeoItem {
     }
 
 	@Override
+	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
+		if (!(user instanceof PlayerEntity playerEntity)) return;
+
+		float throwProgress = (this.getMaxUseTime(stack) - remainingUseTicks) / this.getMaxUseTime(stack);
+
+		if (!world.isClient) {
+			if (remainingUseTicks == 0) {
+				world.createExplosion(null, null, null, user.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
+			} else {
+				GrenadeEntity grenade = new GrenadeEntity(world, playerEntity);
+				grenade.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0f, throwProgress * 2.5f, 1.0f);
+				world.spawnEntity(grenade);
+			}
+		}
+		if (!playerEntity.isCreative()) {
+			stack.decrement(1);
+		}
+		user.swingHand(Hand.MAIN_HAND);
+		playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+	}
+
+	@Override
 	public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
 		if (user instanceof PlayerEntity) {
 			((PlayerEntity) user).getItemCooldownManager().set(this, 20);
@@ -99,15 +84,10 @@ public class GrenadeItem extends RangedWeaponItem implements GeoItem {
         return stack;
     }
 
-    @Override
-    public Predicate<ItemStack> getProjectiles() {
-        return stack -> stack.isOf(ItemRegistry.GRENADE);
-    }
-
-    @Override
-    public int getRange() {
-        return 15;
-    }
+	@Override
+	public boolean allowNbtUpdateAnimation(PlayerEntity player, Hand hand, ItemStack oldStack, ItemStack newStack) {
+		return false;
+	}
 
 
     /*
