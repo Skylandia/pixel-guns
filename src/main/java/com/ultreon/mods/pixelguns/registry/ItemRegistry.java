@@ -8,8 +8,6 @@ import com.ultreon.mods.pixelguns.item.attachment.*;
 import com.ultreon.mods.pixelguns.item.gun.variant.*;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
@@ -19,16 +17,6 @@ import net.minecraft.util.Identifier;
 
 @SuppressWarnings({"unused", "SameParameterValue"})
 public class ItemRegistry {
-
-    // Gun Crafting
-    public static final Item PISTOL_GRIP = ItemRegistry.register("pistol_grip", new Item(new FabricItemSettings().maxCount(64)));
-    public static final Item GUN_SCOPE = ItemRegistry.register("gun_scope", new Item(new FabricItemSettings().maxCount(64)));
-    public static final Item LONG_BARREL = ItemRegistry.register("long_barrel", new Item(new FabricItemSettings().maxCount(64)));
-    public static final Item SHORT_BARREL = ItemRegistry.register("short_barrel", new Item(new FabricItemSettings().maxCount(64)));
-    public static final Item WOODEN_STOCK = ItemRegistry.register("wooden_stock", new Item(new FabricItemSettings().maxCount(64)));
-    public static final Item MODERN_STOCK = ItemRegistry.register("modern_stock", new Item(new FabricItemSettings().maxCount(64)));
-    public static final Item WOODEN_HANDGUARD = ItemRegistry.register("wooden_handguard", new Item(new FabricItemSettings().maxCount(64)));
-    public static final Item MODERN_HANDGUARD = ItemRegistry.register("modern_handguard", new Item(new FabricItemSettings().maxCount(64)));
 
     // Ammunition
     public static final Item SHOTGUN_SHELL = ItemRegistry.register("shotgun_shell", new ShotgunShellItem());
