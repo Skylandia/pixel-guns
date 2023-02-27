@@ -5,6 +5,7 @@ import com.ultreon.mods.pixelguns.network.packet.c2s.play.GunShootC2SPacket;
 import com.ultreon.mods.pixelguns.network.packet.c2s.play.WorkshopCraftC2SPacket;
 import com.ultreon.mods.pixelguns.network.packet.s2c.play.GunRecoilS2CPacket;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
+
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.util.Identifier;
@@ -13,6 +14,7 @@ public class PacketRegistry {
     public static final Identifier GUN_RECOIL = ResourcePath.get("recoil");
     public static final Identifier GUN_RELOAD = ResourcePath.get("reload");
     public static final Identifier GUN_SHOOT = ResourcePath.get("shoot");
+    public static final Identifier GUN_AIM = ResourcePath.get("aim");
     public static final Identifier WORKSHOP_ASSEMBLE = ResourcePath.get("assemble");
 
     public static class CLIENT {
