@@ -2,6 +2,7 @@ package com.ultreon.mods.pixelguns.client;
 
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -13,12 +14,14 @@ import net.minecraft.registry.Registries;
 
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.GeoItem;
+import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.GeoItemRenderer;
+import software.bernie.geckolib.util.RenderUtils;
 
 public class GeoRendererGenerator {
 	public static <T extends GunItem & GeoAnimatable> GeoItemRenderer<T> gun(T item) {
@@ -31,9 +34,9 @@ public class GeoRendererGenerator {
 	public static <T extends Entity & GeoEntity> GeoEntityRenderer<T> entity(EntityType<T> entityType, EntityRendererFactory.Context renderManager) {
 		return new GeoEntityRenderer<>(renderManager, new DefaultedEntityGeoModel<>(Registries.ENTITY_TYPE.getId(entityType))) {
 			@Override
-			public void render(T entity, float entityYaw, float partialTick, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int packedLight) {
-				// TODO something with rotations?
-				super.render(entity, entityYaw, partialTick, matrixStack, vertexConsumerProvider, packedLight);
+			public void preRender(MatrixStack poseStack, T animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+				RenderUtils.faceRotation(poseStack, animatable, partialTick);
+				super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
 			}
 		};
 	}
