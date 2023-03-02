@@ -57,7 +57,7 @@ public class GrenadeItem extends Item implements GeoItem {
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 		if (!(user instanceof PlayerEntity playerEntity)) return;
 
-		float throwProgress = (this.getMaxUseTime(stack) - remainingUseTicks) / this.getMaxUseTime(stack);
+		float throwProgress = ((float) this.getMaxUseTime(stack) - remainingUseTicks) / this.getMaxUseTime(stack);
 
 		if (!world.isClient) {
 			if (remainingUseTicks == 0) {
@@ -73,6 +73,7 @@ public class GrenadeItem extends Item implements GeoItem {
 		}
 		user.swingHand(Hand.MAIN_HAND);
 		playerEntity.incrementStat(Stats.USED.getOrCreateStat(this));
+		stack.removeSubNbt("GeckoLibID");
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class GrenadeItem extends Item implements GeoItem {
 		if (user instanceof PlayerEntity) {
 			((PlayerEntity) user).getItemCooldownManager().set(this, 20);
 		}
-        stack.removeSubNbt("GeckoLibID");
+		this.onStoppedUsing(stack, world, user, 0);
         return stack;
     }
 
