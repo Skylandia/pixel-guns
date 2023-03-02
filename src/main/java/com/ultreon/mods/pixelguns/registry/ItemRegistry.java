@@ -8,7 +8,6 @@ import com.ultreon.mods.pixelguns.item.attachment.*;
 import com.ultreon.mods.pixelguns.item.gun.variant.*;
 import com.ultreon.mods.pixelguns.util.ResourcePath;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
@@ -47,8 +46,6 @@ public class ItemRegistry {
     public static final Item CROWBAR = ItemRegistry.register("crowbar", new CrowbarItem());
     public static final Item GRENADE = ItemRegistry.register("grenade", new GrenadeItem());
     public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new PoliceShieldItem());
-
-    public static final Item JUJU_BOW = ItemRegistry.register("juju_bow", new JujuBowItem(new FabricItemSettings()));
 
     // Attachments
     public static final Item SHORT_SCOPE = ItemRegistry.register("short_scope", new ShortScopeItem());

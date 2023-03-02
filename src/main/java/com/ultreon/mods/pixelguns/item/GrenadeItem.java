@@ -3,7 +3,6 @@ package com.ultreon.mods.pixelguns.item;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.ultreon.mods.pixelguns.PixelGuns;
 import com.ultreon.mods.pixelguns.client.GeoRendererGenerator;
 import com.ultreon.mods.pixelguns.entity.projectile.thrown.GrenadeEntity;
 
@@ -58,10 +57,7 @@ public class GrenadeItem extends Item implements GeoItem {
 	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks) {
 		if (!(user instanceof PlayerEntity playerEntity)) return;
 
-
-		float throwProgress = (float) (this.getMaxUseTime(stack) - remainingUseTicks) / this.getMaxUseTime(stack);
-		PixelGuns.LOGGER.info("sdadsadasd" + this.getMaxUseTime(stack));
-		PixelGuns.LOGGER.info("sdadsadasd" + remainingUseTicks);
+		float throwProgress = (this.getMaxUseTime(stack) - remainingUseTicks) / this.getMaxUseTime(stack);
 
 		if (!world.isClient) {
 			if (remainingUseTicks == 0) {

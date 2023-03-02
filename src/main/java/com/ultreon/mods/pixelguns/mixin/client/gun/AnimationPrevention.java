@@ -1,6 +1,5 @@
 package com.ultreon.mods.pixelguns.mixin.client.gun;
 
-import com.ultreon.mods.pixelguns.item.JujuBowItem;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,9 +24,6 @@ public class AnimationPrevention {
         if (player.getMainHandStack().getItem() instanceof GunItem) {
             info.setReturnValue(false);
         }
-        if (player.getMainHandStack().getItem() instanceof JujuBowItem) {
-            info.setReturnValue(false);
-        }
     }
 
     // Prevent mining animation when holding gun
@@ -36,10 +32,5 @@ public class AnimationPrevention {
         if (player.getMainHandStack().getItem() instanceof GunItem) {
             info.cancel();
         }
-        if (player.getMainHandStack().getItem() instanceof JujuBowItem) {
-            info.cancel();
-        }
     }
-
-
 }
