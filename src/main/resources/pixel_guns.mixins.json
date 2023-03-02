@@ -17,7 +17,8 @@
     "client.gun.GunKeybinds",
     "client.gun.PlayerGunPose",
     "client.gun.ScopedCrosshairRemover",
-    "client.GameRendererMixin"
+    "client.GameRendererMixin",
+    "client.BowKeybinds"
   ],
   "injectors": {
     "defaultRequire": 1
