@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 
 import com.ultreon.mods.pixelguns.item.gun.GunItem;
 
+import com.ultreon.mods.pixelguns.util.ZoomablePlayer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +20,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public abstract class AdsZoom extends PlayerEntity {
+public abstract class AdsZoom extends PlayerEntity implements ZoomablePlayer {
+
+    private boolean isPlayerZoomed = false;
 
     public AdsZoom(World world, BlockPos blockPos, float f, GameProfile gameProfile) {
         super(world, blockPos, f, gameProfile);
@@ -36,7 +39,16 @@ public abstract class AdsZoom extends PlayerEntity {
             } else {
                 ci.setReturnValue(0.8f);
             }
+            isPlayerZoomed = true;
         }
+        else {
+            isPlayerZoomed = false;
+        }
+    }
+
+    @Override
+    public boolean isPlayerZoomed() {
+        return isPlayerZoomed;
     }
 }
 
