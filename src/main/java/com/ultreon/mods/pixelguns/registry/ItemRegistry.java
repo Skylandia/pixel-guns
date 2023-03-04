@@ -45,7 +45,6 @@ public class ItemRegistry {
     public static final Item KATANA = ItemRegistry.register("katana", new KatanaItem());
     public static final Item CROWBAR = ItemRegistry.register("crowbar", new CrowbarItem());
     public static final Item GRENADE = ItemRegistry.register("grenade", new GrenadeItem());
-    public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new PoliceShieldItem());
 
     // Attachments
     public static final Item SHORT_SCOPE = ItemRegistry.register("short_scope", new ShortScopeItem());
