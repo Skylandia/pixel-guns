@@ -55,8 +55,6 @@ public class ItemGroupRegistry {
 
             entries.add(ItemRegistry.GAS_MASK);
             entries.add(ItemRegistry.ARMORED_VEST);
-
-            entries.add(ItemRegistry.POLICE_SHIELD);
         });
     }
 }
