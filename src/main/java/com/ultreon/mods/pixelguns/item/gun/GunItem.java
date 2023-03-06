@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.ItemCooldownManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -112,19 +113,23 @@ public abstract class GunItem extends Item implements WorkshopCraftable {
 
     @Override
     public void inventoryTick(ItemStack stack, @NotNull World world, @NotNull Entity entity, int slot, boolean selected) {
-
         NbtCompound nbtCompound = stack.getOrCreateNbt();
+        ItemCooldownManager cooldownManager = ((PlayerEntity) entity).getItemCooldownManager();
+
         if (!(nbtCompound.contains("reloadTick") && nbtCompound.contains("Clip") && nbtCompound.contains("isScoped") && nbtCompound.contains("isReloading"))) {
             this.setDefaultNBT(nbtCompound);
         }
+
         if (world.isClient() && ((PlayerEntity) entity).getStackInHand(Hand.MAIN_HAND) == stack && KeybindRegistry.reload.isPressed() && GunItem.remainingAmmo(stack) < this.magazineSize && GunItem.reserveAmmoCount((PlayerEntity) entity, this.ammunition) > 0 && !nbtCompound.getBoolean("isReloading")) {
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeBoolean(true);
             ClientPlayNetworking.send(ResourcePath.get("reload"), buf);
         }
+
         if (nbtCompound.getBoolean("isReloading") && (((PlayerEntity) entity).getStackInHand(Hand.MAIN_HAND) != stack || GunItem.reserveAmmoCount((PlayerEntity) entity, this.ammunition) <= 0 && this.reloadCycles <= 1 || nbtCompound.getInt("reloadTick") >= this.reloadCooldown || GunItem.remainingAmmo(stack) >= this.magazineSize && this.reloadCycles <= 1)) {
             nbtCompound.putBoolean("isReloading", false);
         }
+
         if (nbtCompound.getBoolean("isReloading")) {
             this.doReloadTick(world, nbtCompound, (PlayerEntity) entity, stack);
         } else {
@@ -132,6 +137,10 @@ public abstract class GunItem extends Item implements WorkshopCraftable {
                 this.finishReload((PlayerEntity) entity, stack);
             }
             nbtCompound.putInt("reloadTick", 0);
+        }
+
+        if (cooldownManager.isCoolingDown(stack.getItem())) {
+            nbtCompound.putFloat("cooldown_tick", cooldownManager.getCooldownProgress(stack.getItem(), 0));
         }
     }
 
