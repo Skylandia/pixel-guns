@@ -21,6 +21,9 @@ public class ModelPredicateRegistry {
     }
 
     private static void registerGunPredicate(Item gun) {
+        ModelPredicateProviderRegistry.register(gun, ResourcePath.get("cooldown_tick"), (stack, world, entity, seed) ->
+                stack.getOrCreateNbt().getFloat("cooldown_tick"));
+
         ModelPredicateProviderRegistry.register(gun, ResourcePath.get("load_tick"), (stack, world, entity, seed) -> {
             if (entity == null) {
                 return 0.0f;
