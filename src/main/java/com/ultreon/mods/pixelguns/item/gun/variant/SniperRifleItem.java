@@ -10,7 +10,7 @@ public class SniperRifleItem extends GunItem {
     public SniperRifleItem() {
         super(
             false,
-            22.0f,
+            25.0f,
             128,
             20,
             5,

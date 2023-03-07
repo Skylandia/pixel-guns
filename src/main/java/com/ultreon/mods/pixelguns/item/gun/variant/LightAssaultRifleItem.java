@@ -10,7 +10,7 @@ public class LightAssaultRifleItem extends GunItem {
     public LightAssaultRifleItem() {
         super(
             true,
-            5.5f,
+            6.0f,
             128,
             3,
             30,
