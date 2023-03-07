@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 
 public class ModelPredicateRegistry {
     public static void registerModelPredicates() {
@@ -18,6 +19,8 @@ public class ModelPredicateRegistry {
         ModelPredicateRegistry.registerGunPredicate(ItemRegistry.SNIPER_RIFLE);
 
         ModelPredicateProviderRegistry.register(ItemRegistry.ROCKET_LAUNCHER, ResourcePath.get("aiming"), (stack, world, entity, seed) -> entity != null && MinecraftClient.getInstance().options.useKey.isPressed() && GunItem.isLoaded(stack) ? 1.0f : 0.0f);
+        ModelPredicateProviderRegistry.register(ItemRegistry.POLICE_SHIELD, new Identifier("blocking"), (stack, world, entity, seed) ->
+            entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1 : 0);
     }
 
     private static void registerGunPredicate(Item gun) {
