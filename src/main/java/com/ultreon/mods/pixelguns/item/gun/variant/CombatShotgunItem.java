@@ -10,7 +10,7 @@ public class CombatShotgunItem extends GunItem {
     public CombatShotgunItem() {
         super(
             false,
-            5.5f,
+            7.0f,
             128,
             14,
             6,

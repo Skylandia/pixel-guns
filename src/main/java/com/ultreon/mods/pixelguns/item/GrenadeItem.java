@@ -61,7 +61,7 @@ public class GrenadeItem extends Item implements GeoItem {
 
 		if (!world.isClient) {
 			if (remainingUseTicks == 0) {
-				world.createExplosion(null, null, null, user.getPos(), 1.5f, false, World.ExplosionSourceType.MOB);
+				world.createExplosion(null, null, null, user.getPos(), 4.5f, false, World.ExplosionSourceType.MOB);
 			} else {
 				GrenadeEntity grenade = new GrenadeEntity(world, playerEntity);
 				grenade.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0f, throwProgress * 2.5f, 1.0f);

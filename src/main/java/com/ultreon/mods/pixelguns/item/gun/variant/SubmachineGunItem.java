@@ -10,7 +10,7 @@ public class SubmachineGunItem extends GunItem {
     public SubmachineGunItem() {
         super(
             true,
-            5.0f,
+            9.0f,
             128,
             2,
             30,

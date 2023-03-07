@@ -36,7 +36,7 @@ public class RocketLauncherItem extends GunItem implements GeoItem {
     public RocketLauncherItem() {
         super(
             false,
-            25.0f,
+            50.0f,
             128,
             30,
             1,
