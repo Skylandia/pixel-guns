@@ -56,6 +56,8 @@ public class ItemRegistry {
     // Block Items
     public static final Item WORKSHOP = ItemRegistry.register(BlockRegistry.WORKSHOP, ItemGroupRegistry.MISC);
 
+    public static final Item POLICE_SHIELD = ItemRegistry.register("police_shield", new ShieldItem(new Item.Settings().maxCount(800)));
+
     private static Item register(Block block, ItemGroup itemGroup) {
         BlockItem blockItem = new BlockItem(block, new Item.Settings());
         return ItemRegistry.register(Registries.BLOCK.getId(blockItem.getBlock()), blockItem);
